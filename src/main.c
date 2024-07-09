@@ -1,6 +1,7 @@
 #include <stdio.h>
+#include "../include/preprocess.h"
 
 int main(void) {
-    printf("Hello, World!\n");
-    return 0;
+    preprocess("test.txt");
 }
+
