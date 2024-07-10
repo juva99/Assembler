@@ -2,6 +2,6 @@
 #include "../include/preprocess.h"
 
 int main(void) {
-    preprocess("test.txt");
+    preprocess("test_files/test.txt");
 }
 

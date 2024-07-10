@@ -86,14 +86,16 @@ int insert(MacroTable *table, const char *key, const char *value) {
 
     while (table->table[index]) {
         if (strcmp(table->table[index]->key, key) == 0) {
-            return 0; // Key already exists
+            /* return 0 if key already exists*/
+            return 0;
         }
         index = (index + 1) % table->size;
     }
 
     table->table[index] = create_entry(key, value);
     if (!table->table[index]) {
-        return 0; // Memory allocation failure
+        /* return 0 if memory alloc failed */
+        return 0;
     }
     table->count++;
     return 1;

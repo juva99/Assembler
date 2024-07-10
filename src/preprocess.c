@@ -77,7 +77,7 @@ int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros) 
 }
 
 /* handle macro declaration */
-void handle_macro(char line[], FILE *file, MacroTable *macros) {
+void handle_macro(char *line, FILE *file, MacroTable *macros) {
     size_t len;
     size_t total_length = 0;
     size_t buffer_size;

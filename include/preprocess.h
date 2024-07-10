@@ -14,7 +14,7 @@ int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros);
 int is_macro(char *line);
 
 
-void handle_macro(char line[], FILE *file, MacroTable *macros);
+void handle_macro(char *line, FILE *file, MacroTable *macros);
 
 #endif //OPENU_PROJECT_PREPROCESS_H
 
