@@ -1,0 +1,12 @@
+blabla
+macr m_macr
+  inc r2
+  mov A,r1
+endmacr
+bla
+bla
+bla
+m_macr
+blabla
+m_macr
+bla

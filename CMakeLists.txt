@@ -3,4 +3,34 @@ project(openu_project C)
 
 set(CMAKE_C_STANDARD 90)
 
-add_executable(openu_project src/main.c)
+# Include directories
+include_directories(include)
+
+# Source files
+set(SOURCES
+        src/main.c
+        src/macro_table.c
+        src/preprocess.c
+        src/utils.c
+        src/preprocess.c
+)
+
+# Create the main executable
+add_executable(openu_project ${SOURCES})
+
+# Unit tests
+set(TEST_SOURCES
+        tests/macro_table_test.c
+        src/macro_table.c
+        src/preprocess.c
+        src/utils.c
+)
+
+# Create the test executable
+add_executable(macro_table_test ${TEST_SOURCES})
+
+# Enable testing
+enable_testing()
+
+# Add a test
+add_test(NAME MacroTableTest COMMAND macro_table_test)
