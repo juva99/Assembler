@@ -1,7 +1,6 @@
 #include "../include/preprocess.h"
 #include "../include/consts.h"
 
-
 /* preprocess function */
 int preprocess(char filename[]) {
     MacroTable *macros;
@@ -12,30 +11,41 @@ int preprocess(char filename[]) {
     /* open file */
     file = fopen(filename, "r");
     if (file == NULL) {
-        /* TODO: print error */
+        fprintf(stderr, "Error opening file: %s\n", filename);
         ret_code = 0;
         return ret_code;
     }
     /* initialize macro table */
     macros = create_table();
+    if (macros == NULL) {
+        fprintf(stderr, "Error creating macro table\n");
+        fclose(file);
+        return 0;
+    }
 
     /* read lines */
     final_file = fopen("preprocessed.txt", "w"); /* TODO: create final file name */
     if (final_file == NULL) {
-        /* TODO: print error */
-        fclose(final_file);
+        fprintf(stderr, "Error opening final file for writing\n");
+        free_table(macros);
+        fclose(file);
         return 0;
     }
 
     while (fgets(line, sizeof(line), file)) {
         n_line++;
-        if (strcmp(line, "\n") != 0)
+        /* preprocess line if not empty */
+        if (strcmp(line, "\n") != 0) {
             if (!process_line(line, file, final_file, macros)) {
                 ret_code = 0;
-                return ret_code;
+                break;
             }
+        }
     }
 
+    free_table(macros);
+    fclose(file);
+    fclose(final_file);
     return ret_code;
 }
 
@@ -56,7 +66,7 @@ int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros) 
         mac_name = first_token;
         mac_content = search(macros, mac_name);
         if (mac_content == NULL) {
-            /* TODO: PRINT ERROR MAC NOT DECLARED */
+            fprintf(stderr, "Error: Macro %s not declared\n", mac_name);
             return 0;
         }
         fprintf(final_file, "%s", mac_content);
@@ -66,6 +76,7 @@ int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros) 
     return 1;
 }
 
+/* handle macro declaration */
 void handle_macro(char line[], FILE *file, MacroTable *macros) {
     size_t len;
     size_t total_length = 0;
@@ -74,7 +85,7 @@ void handle_macro(char line[], FILE *file, MacroTable *macros) {
     char *mac_content;
 
     /* extracting the macro name */
-    extract_next(line, mac_name, ' ');
+    extract_next(line, mac_name, ' '); /* TODO: validate macro name */
 
     buffer_size = MAX_LINE_LENGTH * sizeof(char) * 10;
     mac_content = malloc(buffer_size);
@@ -98,8 +109,10 @@ void handle_macro(char line[], FILE *file, MacroTable *macros) {
         total_length += len;
     }
     insert(macros, mac_name, mac_content);
+    free(mac_content);
 }
 
+/* check if line is macro declaration */
 int is_macro(char *line) {
     return starts_with(line, "macr");
 }
