@@ -109,6 +109,7 @@ void handle_macro(char line[], FILE *file, MacroTable *macros) {
         total_length += len;
     }
     insert(macros, mac_name, mac_content);
+    free(mac_content);
 }
 
 /* check if line is macro declaration */
