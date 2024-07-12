@@ -1,6 +1,11 @@
 #include "../include/preprocess.h"
 #include "../include/consts.h"
 
+char* opcodes[] = {"mov","cmp","add","sub","lea","clr","not","inc","dec","jmp","bne","red","prn","jsr","rts","stop"};
+char* instructions[] = {".data", ".string","entry","extern"};
+char* registers[] = {"r0", "r1","r2","r3","r4","r5","r6","r7"};
+/* temp^ */
+
 /* preprocess function */
 int preprocess(char filename[]) {
     MacroTable *macros;
@@ -60,7 +65,8 @@ int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros) 
     extract_next(line, first_token, ' ');
 
     if (is_macro(first_token)) {
-        handle_macro(line, file, macros);
+        if(!handle_macro(line, file, macros))
+            return 0;
         return 1;
     } else if (is_member(macros, first_token)) {
         mac_name = first_token;
@@ -77,15 +83,28 @@ int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros) 
 }
 
 /* handle macro declaration */
-void handle_macro(char *line, FILE *file, MacroTable *macros) {
+int handle_macro(char *line, FILE *file, MacroTable *macros) {
     size_t len;
     size_t total_length = 0;
     size_t buffer_size;
     char mac_name[MAX_LINE_LENGTH];
     char *mac_content;
+    char extra[MAX_LINE_LENGTH];
 
     /* extracting the macro name */
-    extract_next(line, mac_name, ' '); /* TODO: validate macro name */
+    extract_next(line, mac_name, ' ');
+    if (!is_macro_name_valid(mac_name)) {
+        printf("Macro name is invalid\n");
+        printf("File is terminated\n");
+        return 0;
+    }
+
+    /* checks if rest is empty */
+    if (strlen(line) != 0) {
+        printf("Extraneous text after end of macro declaration\n");
+        printf("File is terminated\n");
+        return 0;
+    }
 
     buffer_size = MAX_LINE_LENGTH * sizeof(char) * 10;
     mac_content = malloc(buffer_size);
@@ -110,9 +129,29 @@ void handle_macro(char *line, FILE *file, MacroTable *macros) {
     }
     insert(macros, mac_name, mac_content);
     free(mac_content);
+
+    return 1;
 }
 
 /* check if line is macro declaration */
 int is_macro(char *line) {
     return starts_with(line, "macr");
 }
+int is_macro_name_valid(char *mac_name) {
+    int i;
+
+    if (mac_name == NULL) {
+        printf("Invalid macro declaration");
+        return 0;
+    }
+
+    if (what_instrct(mac_name) >=0 || what_opcode(mac_name) >=0 || what_regs(mac_name) >=0)
+        return 0;
+
+    if (strcmp(mac_name,"macr") == 0)
+        return 0;
+
+    return 1;
+}
+
+

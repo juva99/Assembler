@@ -48,3 +48,45 @@ int extract_next(char *src, char *next, char delimiter) {
     *ptr = '\0';
     return (found > 0);
 }
+
+int what_instrct(char *token) {
+    int i;
+
+    if (token == NULL)
+        return -1;
+
+    for (i = 0; i < INSTRUCTIONS_COUNT; i++){
+    if (strcmp(token,instructions[i]) == 0)
+        return i; /* returns the index in instructions array */
+    }
+
+    return -1; /* returns -1 if token isn't instruction */
+}
+
+int what_opcode(char *token) {
+    int i;
+
+    if (token == NULL)
+        return -1;
+
+    for (i = 0; i < OPCODES_COUNT; i++){
+        if (strcmp(token,opcodes[i]) == 0)
+            return i; /* returns the index in instructions array */
+    }
+
+    return -1; /* returns -1 if token isn't instruction */
+}
+
+int what_regs(char *token) {
+    int i;
+
+    if (token == NULL)
+        return -1;
+
+    for (i = 0; i < REGISTER_COUNT; i++){
+        if (strcmp(token,registers[i]) == 0)
+            return i; /* returns the index in instructions array */
+    }
+
+    return -1; /* returns -1 if token isn't instruction */
+}
