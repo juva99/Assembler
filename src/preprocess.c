@@ -6,6 +6,7 @@ int preprocess(char filename[]) {
     MacroTable *macros;
     int ret_code = 1, n_line = 0;
     char line[MAX_LINE_LENGTH + 1];
+    char *preprocessed_file_name;
     FILE *file, *final_file;
 
     /* open file */
@@ -23,8 +24,12 @@ int preprocess(char filename[]) {
         return 0;
     }
 
+    preprocessed_file_name = ""; // check if needed - otherwise compiler warn us that string might be uninitiallized
+    extract_file_name(filename,&preprocessed_file_name);
+
     /* read lines */
-    final_file = fopen("preprocessed.txt", "w"); /* TODO: create final file name */
+    final_file = fopen(preprocessed_file_name, "w"); /* TODO: create final file name */
+    free(preprocessed_file_name);
     if (final_file == NULL) {
         fprintf(stderr, "Error opening final file for writing\n");
         free_table(macros);
@@ -115,4 +120,37 @@ void handle_macro(char *line, FILE *file, MacroTable *macros) {
 /* check if line is macro declaration */
 int is_macro(char *line) {
     return starts_with(line, "macr");
+}
+
+int extract_file_name(char filename[], char **preprocessed){
+    char *dot, *path_separator;
+    int name_length;
+    int preprocessed_type_length;
+
+    preprocessed_type_length = strlen(PREPROCESSED_FILE_TYPE);
+
+    dot = strrchr(filename, '.');
+    path_separator = strrchr(filename, '\\'); /* paths in windows are separated with '\'*/
+    if (path_separator == NULL)
+         path_separator = strrchr(filename, '/'); /* paths in linux/mac are separated with '/' */
+
+    if(path_separator != NULL)
+        name_length = dot - path_separator - 1;
+    else
+        name_length = dot - filename;
+
+    *preprocessed = (char *) malloc(name_length + preprocessed_type_length + 1); /* 3 for ".as" and 1 for null terminator - check if need to use final or max filename length */
+    if (*preprocessed == NULL){
+        printf("Memory allocation failed");
+        return 0;
+    }
+
+    if (path_separator != NULL)
+        snprintf(*preprocessed, name_length + 1, "%s", path_separator + 1);
+    else
+        snprintf(*preprocessed, name_length + 1, "%s", filename);
+
+    strcat(*preprocessed, PREPROCESSED_FILE_TYPE);
+
+    return 1;
 }
