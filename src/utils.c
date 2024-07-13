@@ -1,5 +1,11 @@
 #include "../include/utils.h"
 
+char *opcodes[] = {"mov", "cmp", "add", "sub", "lea", "clr", "not", "inc", "dec", "jmp", "bne", "red", "prn", "jsr",
+                   "rts", "stop"};
+char *instructions[] = {".data", ".string", "entry", "extern"};
+char *registers[] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7"};
+
+
 int starts_with(const char *str, const char *pre) {
     return strncmp(pre, str, strlen(pre)) == 0;
 }
@@ -15,7 +21,7 @@ int extract_next(char *src, char *next, char delimiter) {
     }
 
     /* Copy characters to next until reaching delimiter or null terminator is encountered */
-    while (*ptr != delimiter && *ptr != '\0') {
+    while (*ptr != delimiter && *ptr != '\0' && *ptr != '\n') {
         found++;
         *next = *ptr;
         next++;
@@ -47,4 +53,46 @@ int extract_next(char *src, char *next, char delimiter) {
     /* Null-terminate the modified source string */
     *ptr = '\0';
     return (found > 0);
+}
+
+int what_instrct(char *token) {
+    int i;
+
+    if (token == NULL)
+        return -1;
+
+    for (i = 0; i < INSTRUCTIONS_COUNT; i++) {
+        if (strcmp(token, instructions[i]) == 0)
+            return i; /* returns the index in instructions array */
+    }
+
+    return -1; /* returns -1 if token isn't instruction */
+}
+
+int what_opcode(char *token) {
+    int i;
+
+    if (token == NULL)
+        return -1;
+
+    for (i = 0; i < OPCODES_COUNT; i++) {
+        if (strcmp(token, opcodes[i]) == 0)
+            return i; /* returns the index in instructions array */
+    }
+
+    return -1; /* returns -1 if token isn't instruction */
+}
+
+int what_regs(char *token) {
+    int i;
+
+    if (token == NULL)
+        return -1;
+
+    for (i = 0; i < REGISTER_COUNT; i++) {
+        if (strcmp(token, registers[i]) == 0)
+            return i; /* returns the index in instructions array */
+    }
+
+    return -1; /* returns -1 if token isn't instruction */
 }
