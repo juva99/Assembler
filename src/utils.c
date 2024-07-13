@@ -1,5 +1,11 @@
 #include "../include/utils.h"
 
+char *opcodes[] = {"mov", "cmp", "add", "sub", "lea", "clr", "not", "inc", "dec", "jmp", "bne", "red", "prn", "jsr",
+                   "rts", "stop"};
+char *instructions[] = {".data", ".string", "entry", "extern"};
+char *registers[] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7"};
+
+
 int starts_with(const char *str, const char *pre) {
     return strncmp(pre, str, strlen(pre)) == 0;
 }
@@ -55,9 +61,9 @@ int what_instrct(char *token) {
     if (token == NULL)
         return -1;
 
-    for (i = 0; i < INSTRUCTIONS_COUNT; i++){
-    if (strcmp(token,instructions[i]) == 0)
-        return i; /* returns the index in instructions array */
+    for (i = 0; i < INSTRUCTIONS_COUNT; i++) {
+        if (strcmp(token, instructions[i]) == 0)
+            return i; /* returns the index in instructions array */
     }
 
     return -1; /* returns -1 if token isn't instruction */
@@ -69,8 +75,8 @@ int what_opcode(char *token) {
     if (token == NULL)
         return -1;
 
-    for (i = 0; i < OPCODES_COUNT; i++){
-        if (strcmp(token,opcodes[i]) == 0)
+    for (i = 0; i < OPCODES_COUNT; i++) {
+        if (strcmp(token, opcodes[i]) == 0)
             return i; /* returns the index in instructions array */
     }
 
@@ -83,8 +89,8 @@ int what_regs(char *token) {
     if (token == NULL)
         return -1;
 
-    for (i = 0; i < REGISTER_COUNT; i++){
-        if (strcmp(token,registers[i]) == 0)
+    for (i = 0; i < REGISTER_COUNT; i++) {
+        if (strcmp(token, registers[i]) == 0)
             return i; /* returns the index in instructions array */
     }
 

@@ -1,10 +1,4 @@
 #include "../include/preprocess.h"
-#include "../include/consts.h"
-
-char* opcodes[] = {"mov","cmp","add","sub","lea","clr","not","inc","dec","jmp","bne","red","prn","jsr","rts","stop"};
-char* instructions[] = {".data", ".string","entry","extern"};
-char* registers[] = {"r0", "r1","r2","r3","r4","r5","r6","r7"};
-/* temp^ */
 
 /* preprocess function */
 int preprocess(char filename[]) {
@@ -65,7 +59,7 @@ int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros) 
     extract_next(line, first_token, ' ');
 
     if (is_macro(first_token)) {
-        if(!handle_macro(line, file, macros)) {
+        if (!handle_macro(line, file, macros)) {
             return 0;
         }
     } else if (is_member(macros, first_token)) {
@@ -137,6 +131,7 @@ int handle_macro(char *line, FILE *file, MacroTable *macros) {
 int is_macro(char *line) {
     return starts_with(line, "macr");
 }
+
 int is_macro_name_valid(char *mac_name) {
     int i;
 
@@ -145,10 +140,10 @@ int is_macro_name_valid(char *mac_name) {
         return 0;
     }
 
-    if (what_instrct(mac_name) >=0 || what_opcode(mac_name) >=0 || what_regs(mac_name) >=0)
+    if (what_instrct(mac_name) >= 0 || what_opcode(mac_name) >= 0 || what_regs(mac_name) >= 0)
         return 0;
 
-    if (strcmp(mac_name,"macr") == 0)
+    if (strcmp(mac_name, "macr") == 0)
         return 0;
 
     return 1;
