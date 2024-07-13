@@ -5,6 +5,7 @@ int preprocess(char filename[]) {
     MacroTable *macros;
     int ret_code = 1, n_line = 0;
     char line[MAX_LINE_LENGTH + 1];
+    char *preprocessed_file_name;
     FILE *file, *final_file;
 
     /* open file */
@@ -22,8 +23,11 @@ int preprocess(char filename[]) {
         return 0;
     }
 
+    extract_file_name(filename, &preprocessed_file_name);
+
     /* read lines */
-    final_file = fopen("preprocessed.txt", "w"); /* TODO: create final file name */
+    final_file = fopen(preprocessed_file_name, "w");
+    free(preprocessed_file_name);
     if (final_file == NULL) {
         fprintf(stderr, "Error opening final file for writing\n");
         free_table(macros);
@@ -130,6 +134,26 @@ int handle_macro(char *line, FILE *file, MacroTable *macros) {
 /* check if line is macro declaration */
 int is_macro(char *line) {
     return starts_with(line, "macr");
+}
+
+int extract_file_name(char filename[], char **preprocessed) {
+    char *dot;
+    int filename_len;
+
+    filename_len = strlen(filename);
+    *preprocessed = (char *) malloc(filename_len + 1);
+    if (*preprocessed == NULL) {
+        printf("Memory allocation failed");
+        return 0;
+    }
+
+    strcpy(*preprocessed, filename);
+    dot = strrchr(*preprocessed, '.');
+    if (dot != NULL)
+        *dot = '\0';
+    strcat(*preprocessed,PREPROCESSED_FILE_TYPE);
+
+    return 1;
 }
 
 int is_macro_name_valid(char *mac_name) {
