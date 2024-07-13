@@ -5,5 +5,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../include/utils.h"
+#include "../include/symbol_table.h"
 
 #endif //OPENU_PROJECT_FIRST_STAGE_H

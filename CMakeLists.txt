@@ -13,6 +13,8 @@ set(SOURCES
         src/preprocess.c
         src/utils.c
         src/preprocess.c
+        src/symbol_table.c
+        include/symbol_table.h
 )
 
 # Create the main executable
@@ -25,6 +27,9 @@ set(TEST_SOURCES
         src/preprocess.c
         src/utils.c
         src/first_stage.c
+        src/symbol_table.c
+        include/symbol_table.h
+        tests/symbol_table_test.c
 )
 
 # Create the test executable
