@@ -26,7 +26,7 @@ int preprocess(char filename[]) {
     extract_file_name(filename, &preprocessed_file_name);
 
     /* read lines */
-    final_file = fopen(preprocessed_file_name, "w"); /* TODO: create final file name */
+    final_file = fopen(preprocessed_file_name, "w");
     free(preprocessed_file_name);
     if (final_file == NULL) {
         fprintf(stderr, "Error opening final file for writing\n");
@@ -141,13 +141,13 @@ int extract_file_name(char filename[], char **preprocessed) {
     int filename_len;
 
     filename_len = strlen(filename);
-    *preprocessed = (char *)malloc(filename_len + 1);
-    if (*preprocessed == NULL){
+    *preprocessed = (char *) malloc(filename_len + 1);
+    if (*preprocessed == NULL) {
         printf("Memory allocation failed");
         return 0;
     }
 
-    strcpy(*preprocessed,filename);
+    strcpy(*preprocessed, filename);
     dot = strrchr(*preprocessed, '.');
     if (dot != NULL)
         *dot = '\0';
@@ -155,6 +155,7 @@ int extract_file_name(char filename[], char **preprocessed) {
 
     return 1;
 }
+
 int is_macro_name_valid(char *mac_name) {
     int i;
 
