@@ -24,6 +24,7 @@ set(TEST_SOURCES
         src/macro_table.c
         src/preprocess.c
         src/utils.c
+        src/first_stage.c
 )
 
 # Create the test executable
