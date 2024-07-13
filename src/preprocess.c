@@ -65,9 +65,9 @@ int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros) 
     extract_next(line, first_token, ' ');
 
     if (is_macro(first_token)) {
-        if(!handle_macro(line, file, macros))
+        if(!handle_macro(line, file, macros)) {
             return 0;
-        return 1;
+        }
     } else if (is_member(macros, first_token)) {
         mac_name = first_token;
         mac_content = search(macros, mac_name);
