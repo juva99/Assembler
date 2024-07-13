@@ -15,7 +15,7 @@ int extract_next(char *src, char *next, char delimiter) {
     }
 
     /* Copy characters to next until reaching delimiter or null terminator is encountered */
-    while (*ptr != delimiter && *ptr != '\0') {
+    while (*ptr != delimiter && *ptr != '\0' && *ptr != '\n') {
         found++;
         *next = *ptr;
         next++;
