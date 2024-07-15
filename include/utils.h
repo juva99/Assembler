@@ -15,5 +15,9 @@ int what_opcode(char *token);
 
 int what_regs(char *token);
 
+int is_symbol(char *line, char **sym_name);
+
+int data_instruction(char *line);
+
 #endif //OPENU_PROJECT_UTILS_H
 

@@ -1,9 +1,15 @@
 #include "../include/utils.h"
 
-char *opcodes[] = {"mov", "cmp", "add", "sub", "lea", "clr", "not", "inc", "dec", "jmp", "bne", "red", "prn", "jsr",
-                   "rts", "stop"};
+#include <stdio.h>
+#include <stdlib.h>
+
+char *opcodes[] = {
+    "mov", "cmp", "add", "sub", "lea", "clr", "not", "inc", "dec", "jmp", "bne", "red", "prn", "jsr",
+    "rts", "stop"
+};
 char *instructions[] = {".data", ".string", "entry", "extern"};
 char *registers[] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7"};
+char *symbols[] = {"MAIN", "LOOP", "LIST", "STR", "K", "END"};
 
 
 int starts_with(const char *str, const char *pre) {
@@ -96,3 +102,46 @@ int what_regs(char *token) {
 
     return -1; /* returns -1 if token isn't instruction */
 }
+
+int is_symbol(char *line, char **sym_name) {
+    int i;
+    char first_token[MAX_LINE_LENGTH];
+
+    extract_next(line, first_token, ':');
+
+    if (first_token == NULL)
+        return 0;
+
+    for (i = 0; i < SYMBOL_COUNT; i++) {
+        if (strcmp(first_token, symbols[i]) == 0) {
+            *sym_name = (char *) malloc(MAX_LINE_LENGTH);
+            if (*sym_name == NULL) {
+                printf("Memory allocation failed");
+                return 0;
+            }
+            strcpy(*sym_name, first_token);
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int data_instruction(char *line) {
+    int i;
+    char token[MAX_LINE_LENGTH];
+    char original_line[MAX_LINE_LENGTH];
+
+    strcpy(original_line, line);
+    extract_next(line, token, ' ');
+
+    if (token == NULL)
+        return 0;
+
+    if (strcmp(token, ".data") == 0 || strcmp(token, ".string") == 0) {
+        return 1;
+    }
+    strcpy(line, original_line); /* going back to original line to prevent loss of token */
+    return 0;
+}
+
+

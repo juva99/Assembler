@@ -5,6 +5,7 @@
 #define OPCODES_COUNT 16
 #define REGISTER_COUNT 8
 #define INSTRUCTIONS_COUNT 4
+#define SYMBOL_COUNT 6
 
 #define PREPROCESSED_FILE_TYPE ".am"
 

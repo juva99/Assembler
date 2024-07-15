@@ -16,7 +16,7 @@ int first_stage_process(char *filename) {
     while (fgets(line, sizeof(line), file)) {
         symbol = 0;
         /* check if line has a symbol #3 */
-        if (is_symbol(line, sym_name)) {
+        if (is_symbol(line, &sym_name)) {
             symbol = 1;
         }
         /* check if line is a data storing instruction #5 */
