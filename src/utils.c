@@ -9,7 +9,6 @@ char *opcodes[] = {
 };
 char *instructions[] = {".data", ".string", "entry", "extern"};
 char *registers[] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7"};
-char *symbols[] = {"MAIN", "LOOP", "LIST", "STR", "K", "END"};
 
 
 int starts_with(const char *str, const char *pre) {
