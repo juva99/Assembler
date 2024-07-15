@@ -3,20 +3,19 @@
 int first_stage_process(char *filename) {
     int ic, dc, symbol, data_size, instr_len, opcode, errors;
     char *line;
-    char *sym_name;
+    char sym_name[MAX_LABEL_LENGTH + 1];
     char *opcode_name;
 
     SymTable *sym_table; /* hash table to store symbols */
 
     FILE *file;
-
     ic = 0;
     dc = 0;
     errors = 0;
     while (fgets(line, sizeof(line), file)) {
         symbol = 0;
         /* check if line has a symbol #3 */
-        if (is_symbol(line, &sym_name)) {
+        if (is_symbol(line, sym_name)) {
             symbol = 1;
         }
         /* check if line is a data storing instruction #5 */

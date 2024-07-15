@@ -16,6 +16,16 @@ int starts_with(const char *str, const char *pre) {
     return strncmp(pre, str, strlen(pre)) == 0;
 }
 
+int is_valid_string(const char *str) {
+    while (*str) {
+        if (!isalpha(*str) && !isdigit(*str)) {
+            return 0; // False, the string contains invalid characters
+        }
+        str++;
+    }
+    return 1; // True, the string is valid
+}
+
 int extract_next(char *src, char *next, char delimiter) {
     char *ptr = src;
     char *rest_start;
@@ -103,27 +113,37 @@ int what_regs(char *token) {
     return -1; /* returns -1 if token isn't instruction */
 }
 
-int is_symbol(char *line, char **sym_name) {
+int is_symbol(char *line, char *sym_name) {
     int i;
-    char first_token[MAX_LINE_LENGTH];
+    char first_token[MAX_LINE_LENGTH] = "";
+
+    if (strstr(line, ":") == NULL) {
+        return 0; // ':' not found
+    }
 
     extract_next(line, first_token, ':');
 
-    if (first_token == NULL)
+    /* token is bigger than size of label or empty -  its invalid */
+    if (strlen(first_token) > (MAX_LABEL_LENGTH + 1) || strlen(first_token) == 0)
         return 0;
 
-    for (i = 0; i < SYMBOL_COUNT; i++) {
-        if (strcmp(first_token, symbols[i]) == 0) {
-            *sym_name = (char *) malloc(MAX_LINE_LENGTH);
-            if (*sym_name == NULL) {
-                printf("Memory allocation failed");
-                return 0;
-            }
-            strcpy(*sym_name, first_token);
-            return 1;
-        }
+    /*starts with english char */
+    if (!isalpha(*first_token)) {
+        return 0;
     }
-    return 0;
+
+    /* contain only english chars and numbers */
+    if (!is_valid_string(first_token)) {
+        return 0;
+    }
+
+    /* isnt  opcode, instruct or register name */
+    if (what_instrct(first_token) > -1 || what_opcode(first_token) > -1 || what_regs(first_token) > -1) {
+        return 0;
+    }
+
+    strcpy(sym_name, first_token);
+    return 1;
 }
 
 int data_instruction(char *line) {
