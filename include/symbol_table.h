@@ -18,7 +18,7 @@ typedef struct {
 
 SymTable *create_symtable();
 
-void free_symbol(Symbol *symbol);
+void free_symbol(SymTable *, char *);
 
 void free_table(SymTable *table);
 

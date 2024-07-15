@@ -36,19 +36,27 @@ SymTable *create_symtable() {
     return table;
 }
 
-void free_symbol(Symbol *symbol) {
-    if (symbol) {
-        free(symbol->key);
-        free(symbol->instr_type);
-        free(symbol);
+void free_symbol(SymTable *table, char *sym_name) {
+    unsigned int index;
+
+    index = hash_sym(sym_name, table->size);
+    while (table->table[index]) {
+        if (strcmp(table->table[index]->key, sym_name) == 0) {
+            free(table->table[index]->key);
+            free(table->table[index]->instr_type);
+            free(table->table[index]);
+        }
+        index = (index + 1) % table->size;
     }
+
+    return;
 }
 
 void free_symtable(SymTable *table) {
     unsigned int i;
 
     for (i = 0; i < table->size; i++) {
-        free_symbol(table->table[i]);
+        free_symbol(table, table->table[i]->key);
     }
     free(table->table);
     free(table);
@@ -62,7 +70,7 @@ void enlarge_table(SymTable *table) {
     Symbol **new_table = (Symbol **) calloc(table->size, sizeof(Symbol *));
     if (!new_table) {
         printf("Memory allocation falid for symbol table\n");
-        return NULL;
+        return;
     }
 
     for (i = 0; i < old_size; ++i) {
