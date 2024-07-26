@@ -4,7 +4,7 @@ int first_stage_process(char *filename) {
     int ic, dc, symbol, data_size, instr_len, opcode, errors;
     char *line;
     char sym_name[MAX_LABEL_LENGTH + 1];
-    char *opcode_name;
+    char opcode_name[MAX_OPCODE_LENGTH + 1];
 
     SymTable *sym_table; /* hash table to store symbols */
 
@@ -15,7 +15,7 @@ int first_stage_process(char *filename) {
     while (fgets(line, sizeof(line), file)) {
         symbol = 0;
         /* check if line has a symbol #3 */
-        if (is_symbol(line, sym_name)) {
+        if (extract_symbol(line, sym_name, ':')) {
             symbol = 1;
         }
         /* check if line is a data storing instruction #5 */
@@ -33,34 +33,41 @@ int first_stage_process(char *filename) {
             continue;
         }
         /* #8 */
-        if (is_extern(line) || is_entry()) {
-            /* #9 */
-            if (is_extern(line)) {
-                while (extract_symbol(line, sym_name)) {
-                    insert_symbol_table(sym_table, sym_name, ".external", NULL);
+        if (is_extern(line)) {
+            if (extract_symbol(line, sym_name, ' ')) {
+                if (!insert_symbol_table(sym_table, sym_name, ".external", NULL)) {
+                    /* error */
+                    errors++;
                 }
-                continue;
             }
-            if (symbol) {
+            continue;
+        }
+
+        if (is_entry(line)) {
+            if (extract_symbol(line, sym_name, ' ')) {
                 if (!insert_symbol_table(sym_table, sym_name, ".code", ic + IC_OFFSET)) {
                     /* error */
                     errors++;
                 }
-                opcode_name = extract_inst(line);
-                opcode = what_opcode(opcode_name);
-                if (opcode < 0) {
-                    /* error */
-                    errors++;
-                }
-                /* construct the instruction and return the length of it */
-                instr_len = calc_opcode_instr(line, opcode);
-                ic += instr_len;
             }
+            continue;
         }
+
+        opcode = extract_opcode(line, opcode_name);
+        if (opcode < 0) {
+            /* error */
+            errors++;
+        }
+        /* construct the instruction and return the length of it */
+        instr_len = calc_opcode_instr(line, opcode);
+        ic += instr_len;
     }
+
     if (errors > 0) {
         return 0;
     }
+
     update_data_symbols(sym_table, ic + IC_OFFSET);
+
     return 1;
 }

@@ -112,39 +112,6 @@ int what_regs(char *token) {
     return -1; /* returns -1 if token isn't instruction */
 }
 
-int is_symbol(char *line, char *sym_name) {
-    int i;
-    char first_token[MAX_LINE_LENGTH] = "";
-
-    if (strstr(line, ":") == NULL) {
-        return 0; // ':' not found
-    }
-
-    extract_next(line, first_token, ':');
-
-    /* token is bigger than size of label or empty -  its invalid */
-    if (strlen(first_token) > (MAX_LABEL_LENGTH + 1) || strlen(first_token) == 0)
-        return 0;
-
-    /*starts with english char */
-    if (!isalpha(*first_token)) {
-        return 0;
-    }
-
-    /* contain only english chars and numbers */
-    if (!is_valid_string(first_token)) {
-        return 0;
-    }
-
-    /* isnt  opcode, instruct or register name */
-    if (what_instrct(first_token) > -1 || what_opcode(first_token) > -1 || what_regs(first_token) > -1) {
-        return 0;
-    }
-
-    strcpy(sym_name, first_token);
-    return 1;
-}
-
 int data_instruction(char *line) {
     int i;
     char token[MAX_LINE_LENGTH];
@@ -159,8 +126,110 @@ int data_instruction(char *line) {
     if (strcmp(token, ".data") == 0 || strcmp(token, ".string") == 0) {
         return 1;
     }
-    strcpy(line, original_line); /* going back to original line to prevent loss of token */
+    strcpy(line, original_line);
     return 0;
 }
 
+int is_extern(char *line) {
+    int i;
+    char token[MAX_LINE_LENGTH];
+    char original_line[MAX_LINE_LENGTH];
 
+    strcpy(original_line, line);
+    extract_next(line, token, ' ');
+
+    if (strlen(token) == 0)
+        return 0;
+
+    /* if line doesnt start with .extern */
+    if (!starts_with(token, ".extern")) {
+        strcpy(line, original_line);
+        return 0;
+    }
+
+    return 1;
+}
+
+int is_entry(char *line) {
+    int i;
+    char token[MAX_LINE_LENGTH];
+    char original_line[MAX_LINE_LENGTH];
+
+    strcpy(original_line, line);
+    extract_next(line, token, ' ');
+
+    if (strlen(token) == 0)
+        return 0;
+
+    /* if line doesnt start with .entry */
+    if (!starts_with(token, ".entry")) {
+        strcpy(line, original_line);
+        return 0;
+    }
+
+    return 1;
+}
+
+int extract_symbol(char *line, char *sym_name, char delimeter) {
+    int ret_code;
+    char first_token[MAX_LINE_LENGTH] = "";
+    char original_line[MAX_LINE_LENGTH];
+
+    ret_code = 1;
+    strcpy(original_line, line);
+
+    if (delimeter == ':' && strchr(line, delimeter) == NULL) {
+        return 0; // ':' not found
+    }
+
+    extract_next(line, first_token, delimeter);
+
+    /* token is bigger than size of label or empty -  its invalid */
+    if (strlen(first_token) > (MAX_LABEL_LENGTH + 1) || strlen(first_token) == 0) {
+        strcpy(line, original_line);
+        return 0;
+    }
+
+    /*starts with english char */
+    if (!isalpha(*first_token)) {
+        ret_code = 0;
+    }
+
+    /* contain only english chars and numbers */
+    if (!is_valid_string(first_token)) {
+        ret_code = 0;
+    }
+
+    /* isnt  opcode, instruct or register name */
+    if (what_instrct(first_token) > -1 || what_opcode(first_token) > -1 || what_regs(first_token) > -1) {
+        ret_code = 0;
+    }
+
+    if (!ret_code) {
+        strcpy(line, original_line);
+        return ret_code;
+    }
+
+    strcpy(sym_name, first_token);
+    return 1;
+}
+
+int extract_opcode(char *line, char *opcode_name) {
+    int opcode;
+    char token[MAX_LINE_LENGTH] = "";
+    char original_line[MAX_LINE_LENGTH];
+
+    strcpy(original_line, line);
+
+    extract_next(line, token, ' ');
+
+    opcode = what_opcode(token);
+    strcpy(opcode_name, token);
+
+    if (opcode < 0) {
+        strcpy(line, original_line);
+        return opcode;
+    }
+
+    return opcode;
+}
