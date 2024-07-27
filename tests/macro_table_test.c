@@ -1,8 +1,11 @@
 #include "../include/macro_table.h"
+#include "../include/command.h"
 #include <stdio.h>
 
 int main() {
+    cmd_struct *cmd;
     MacroTable *table = create_table();
+    char bla[] = "LAB: mov r1,*r2";
     if (!table) {
         fprintf(stderr, "Failed to create table\n");
         return 1;
@@ -26,5 +29,14 @@ int main() {
 
 
     free_table(table);
+
+    cmd = build_command(bla);
+    printf("%s\n", cmd->label);
+    printf("%s\n", cmd->src);
+    printf("%s\n", cmd->dst);
+    printf("%d\n", cmd->src_method);
+    printf("%d\n", cmd->dst_method);
+    printf("%d\n", cmd->length);
+
     return 0;
 }
