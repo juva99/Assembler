@@ -44,7 +44,10 @@ int check_address_type_2(char *str);
 
 int check_address_type_3(char *str);
 
-int check_opcode_address(int opcode, char *src, char *dst);
+int get_src_add_method(int opcode, char *src);
+
+int get_dst_add_method(int opcode, char *dst);
+
 
 #endif //OPENU_PROJECT_UTILS_H
 

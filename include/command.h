@@ -6,10 +6,13 @@
 #include <string.h>
 
 typedef struct cmd_struct {
-    char *label;
-    int opcode;
-    char *src;
-    char *dst;
+    char *label; /* label of command */
+    int opcode; /* opcode number of command */
+    char *src; /* source address of command */
+    char *dst; /* dest address of command */
+    int src_method; /* src address method id */
+    int dst_method; /* dst address method id */
+    int length; /* command line length */
 } cmd_struct;
 
 

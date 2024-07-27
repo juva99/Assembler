@@ -308,32 +308,28 @@ int check_address_type_3(char *str) {
     return what_regs(str) >= 0;
 }
 
-/* check source and dest for given opcode */
-int check_opcode_address(int opcode, char *src, char *dst) {
+/* get source address method */
+int get_src_add_method(int opcode, char *src) {
     int i;
-    int src_valid = 1;
-    int dst_valid = 1;
-
     /* Check source address */
     for (i = 0; i < MAX_ADDRESS_METHODS; i++) {
-        if (opcodes[opcode].add_methods_src[i] != -1) {
-            src_valid = 0;
-            if (check_address_functions[opcodes[opcode].add_methods_src[i]](src)) {
-                src_valid = 1;
-                break;
-            }
+        if (opcodes[opcode].add_methods_src[i] != -1 &&
+            check_address_functions[opcodes[opcode].add_methods_src[i]](src)) {
+            return opcodes[opcode].add_methods_src[i];
         }
     }
+    return -1;
+}
 
-    /* Check destination address */
+/* get dest address method */
+int get_dst_add_method(int opcode, char *dst) {
+    int i;
+    /* Check dest address */
     for (i = 0; i < MAX_ADDRESS_METHODS; i++) {
-        if (opcodes[opcode].add_methods_dst[i] != -1) {
-            dst_valid = 0;
-            if (check_address_functions[opcodes[opcode].add_methods_dst[i]](dst)) {
-                dst_valid = 1;
-                break;
-            }
+        if (opcodes[opcode].add_methods_dst[i] != -1 &&
+            check_address_functions[opcodes[opcode].add_methods_dst[i]](dst)) {
+            return opcodes[opcode].add_methods_dst[i];
         }
     }
-    return src_valid && dst_valid;
+    return -1;
 }

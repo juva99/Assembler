@@ -1,10 +1,11 @@
+#include "../include/command.h"
 #include "../include/first_stage.h"
 
 int first_stage_process(char *filename) {
     int ic, dc, symbol, data_size, instr_len, opcode, errors;
     char *line;
     char sym_name[MAX_LABEL_LENGTH + 1];
-    char opcode_name[MAX_OPCODE_LENGTH + 1];
+    cmd_struct *command;
 
     SymTable *sym_table; /* hash table to store symbols */
 
@@ -53,14 +54,14 @@ int first_stage_process(char *filename) {
             continue;
         }
 
-        opcode = extract_opcode(line, opcode_name);
-        if (opcode < 0) {
+        /* construct the instruction and return the length of it */
+        command = build_command(line);
+        if (command == NULL) {
             /* error */
             errors++;
+            continue;
         }
-        /* construct the instruction and return the length of it */
-        instr_len = calc_opcode_instr(line, opcode);
-        ic += instr_len;
+        ic += command->length;
     }
 
     if (errors > 0) {
