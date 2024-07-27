@@ -29,6 +29,7 @@ set(TEST_SOURCES
         src/first_stage.c
         src/symbol_table.c
         tests/symbol_table_test.c
+        src/command.c
 )
 
 # Create the test executable
