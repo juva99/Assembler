@@ -3,10 +3,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-char *opcodes[] = {
-    "mov", "cmp", "add", "sub", "lea", "clr", "not", "inc", "dec", "jmp", "bne", "red", "prn", "jsr",
-    "rts", "stop"
+opcode opcodes[] = {
+        {"mov",  2, {0,  1,  2,  3},  {1,  2,  3,  -1}},
+        {"cmp",  2, {0,  1,  2,  3},  {0,  1,  2,  3}},
+        {"add",  2, {0,  1,  2,  3},  {1,  2,  3,  -1}},
+        {"sub",  2, {0,  1,  2,  3},  {1,  2,  3,  -1}},
+        {"lea",  2, {1,  -1, -1, -1}, {1,  2,  3,  -1}},
+        {"clr",  1, {-1, -1, -1, -1}, {1,  2,  3,  -1}},
+        {"not",  1, {-1, -1, -1, -1}, {1,  2,  3,  -1}},
+        {"inc",  1, {-1, -1, -1, -1}, {1,  2,  3,  -1}},
+        {"dec",  1, {-1, -1, -1, -1}, {1,  2,  3,  -1}},
+        {"jmp",  1, {-1, -1, -1, -1}, {1,  2,  -1, -1}},
+        {"bne",  1, {-1, -1, -1, -1}, {1,  2,  -1, -1}},
+        {"red",  1, {-1, -1, -1, -1}, {1,  2,  3,  -1}},
+        {"prn",  1, {-1, -1, -1, -1}, {0,  1,  2,  3}},
+        {"jsr",  1, {-1, -1, -1, -1}, {1,  2,  -1, -1}},
+        {"rts",  0, {-1, -1, -1, -1}, {-1, -1, -1, -1}},
+        {"stop", 0, {-1, -1, -1, -1}, {-1, -1, -1, -1}}
 };
+
 char *instructions[] = {".data", ".string", "entry", "extern"};
 char *registers[] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7"};
 
@@ -91,7 +106,7 @@ int what_opcode(char *token) {
         return -1;
 
     for (i = 0; i < OPCODES_COUNT; i++) {
-        if (strcmp(token, opcodes[i]) == 0)
+        if (strcmp(token, opcodes[i].name) == 0)
             return i; /* returns the index in instructions array */
     }
 
@@ -161,7 +176,7 @@ int is_entry(char *line) {
     if (strlen(token) == 0)
         return 0;
 
-    /* if line doesnt start with .entry */
+    /* if line does not start with .entry */
     if (!starts_with(token, ".entry")) {
         strcpy(line, original_line);
         return 0;
@@ -214,7 +229,7 @@ int extract_symbol(char *line, char *sym_name, char delimeter) {
     return 1;
 }
 
-int extract_opcode(char *line, char *opcode_name) {
+int extract_opcode(char *line) {
     int opcode;
     char token[MAX_LINE_LENGTH] = "";
     char original_line[MAX_LINE_LENGTH];
@@ -224,12 +239,16 @@ int extract_opcode(char *line, char *opcode_name) {
     extract_next(line, token, ' ');
 
     opcode = what_opcode(token);
-    strcpy(opcode_name, token);
 
     if (opcode < 0) {
         strcpy(line, original_line);
         return opcode;
     }
-
     return opcode;
+}
+
+int get_opcode_args(int opcode) {
+    if (opcode < 0 || opcode >= OPCODES_COUNT)
+        return -1;
+    return opcodes[opcode].args;
 }

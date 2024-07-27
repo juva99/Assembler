@@ -5,6 +5,13 @@
 #include <ctype.h>
 #include "../include/consts.h"
 
+typedef struct opcode {
+    char *name; /* name of opcode */
+    int args; /* amount of args of opcode */
+    int add_methods_src[MAX_ADDRESS_METHODS]; /* valid address methods for src */
+    int add_methods_dst[MAX_ADDRESS_METHODS]; /* valid address methods for dst */
+} opcode;
+
 int extract_next(char *src, char *next, char delimiter);
 
 int starts_with(const char *str, const char *pre);
