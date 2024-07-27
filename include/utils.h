@@ -6,6 +6,10 @@
 #include "../include/consts.h"
 #include "../include/code_container.h"
 
+/* i think it is not necessary */
+typedef enum { NOT_DATA, DATA, STRING };
+
+
 int extract_next(char *src, char *next, char delimiter);
 
 int starts_with(const char *str, const char *pre);

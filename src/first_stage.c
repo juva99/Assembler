@@ -20,7 +20,8 @@ int first_stage_process(char *filename) {
             symbol = 1;
         }
         /* check if line is a data storing instruction #5 */
-        if ((data_type = data_instruction(line)) > 0) {
+        data_type = data_instruction(line);
+        if (data_type > 0) {
             if (symbol) {
                 /* insert to data table #6 */
                 if (!insert_symbol_table(sym_table, sym_name, ".data", dc)) {
@@ -29,7 +30,7 @@ int first_stage_process(char *filename) {
                 }
             }
             /* encode data to memory return size and increase DC #7 */
-            data_size = encode_data(line, data_type, data, &dc);
+            data_size = encode_data(line, data_type, &data, &dc);
             if (!data_size) {
                 /* error */
             }

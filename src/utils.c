@@ -239,62 +239,84 @@ int extract_opcode(char *line, char *opcode_name) {
     return opcode;
 }
 
-/*need to add line location in file for error description*/
-int encode_data(char *line, int data_type, code_cont **data, int *dc) {
+int encode_numeric_data(char *line, code_cont **data, int *dc) {
     int i, count;
     unsigned short val;
     char *curr_token;
 
     count = 0;
 
-    /* data type is .data */
-    if (data_type == 1) {
-        while (extract_next(line, curr_token, ",")) {
-            if (*curr_token == '\0') {
-                /* error - empty token */
-            }
-
-            i = 0;
-            if (*curr_token == '-') {
-                /* negative num */
-                i = 1;
-            }
-            /* valid number */
-            for (i; i < strlen(curr_token); i++) {
-                if (!isdigit(curr_token[i])) {
-                    /*error - not num*/
-                    return 0;
-                }
-            }
-            val = dec_to_bin(atoi(curr_token));
-            add_data(&data, val, &dc);
-
-            count++;
-        }
-    }
-
-    /*data type is .string*/
-    else {
-        extract_next(line, curr_token, "\"");
-        if (*curr_token != '\0') {
-            /* error - extra text before first " */
-            /* return */
+    while (extract_next(line, curr_token, ",")) {
+        if (*curr_token == '\0') {
+            /* error - empty token */
         }
 
-        extract_next(line, curr_token, "\"");
-        while (*curr_token != '\0') {
-            val = dec_to_bin((int) *curr_token);
-            add_data(&data, val, &dc);
-
-            count++;
+        i = 0;
+        if (*curr_token == '-') {
+            /* negative num */
+            i = 1;
         }
-        /*null-terminator*/
-        add_data(&data, 0, &dc);
+
+        /* valid number */
+        for (i; i < strlen(curr_token); i++) {
+            if (!isdigit(curr_token[i])) {
+                /*error - not num*/
+                return 0;
+            }
+        }
+        val = dec_to_bin(atoi(curr_token));
+        add_data(data, val, dc);
+
         count++;
     }
 
     return count;
 }
+
+int encode_string(char *line, code_cont **data, int *dc) {
+    int count;
+    unsigned short val;
+    char *curr_token;
+
+    count = 0;
+
+    extract_next(line, curr_token, "\"");
+    if (*curr_token != '\0') {
+        /* error - extra text before first " */
+        /* return */
+    }
+
+    extract_next(line, curr_token, "\"");
+    while (*curr_token != '\0') {
+        val = dec_to_bin((int) *curr_token);
+        add_data(data, val, dc);
+
+        count++;
+    }
+    /*null-terminator*/
+    add_data(data, 0, dc);
+    count++;
+
+    return count;
+}
+
+/*need to add line location in file for error description*/
+int encode_data(char *line, int data_type, code_cont **data, int *dc) {
+    int count;
+
+    /* data type is .data */
+    if (data_type == DATA) {
+        count = encode_numeric_data(line, data, dc);
+    }
+
+    /*data type is .string*/
+    else {
+        count = encode_string(line, data, dc);
+    }
+
+    return count;
+}
+
 
 unsigned short dec_to_bin(int decimalNum) {
     int bit_location, bit_value, negative_bool;
