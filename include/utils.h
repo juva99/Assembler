@@ -36,5 +36,15 @@ int extract_opcode(char *line);
 
 int get_opcode_args(int opcode);
 
+int check_address_type_0(char *str);
+
+int check_address_type_1(char *str);
+
+int check_address_type_2(char *str);
+
+int check_address_type_3(char *str);
+
+int check_opcode_address(int opcode, char *src, char *dst);
+
 #endif //OPENU_PROJECT_UTILS_H
 

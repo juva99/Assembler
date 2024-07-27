@@ -25,6 +25,13 @@ opcode opcodes[] = {
 char *instructions[] = {".data", ".string", "entry", "extern"};
 char *registers[] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7"};
 
+int (*check_address_functions[])(char *str) = {
+        check_address_type_0,
+        check_address_type_1,
+        check_address_type_2,
+        check_address_type_3,
+};
+
 
 int starts_with(const char *str, const char *pre) {
     return strncmp(pre, str, strlen(pre)) == 0;
@@ -254,4 +261,79 @@ int get_opcode_args(int opcode) {
     if (opcode < 0 || opcode >= OPCODES_COUNT)
         return -1;
     return opcodes[opcode].args;
+}
+
+/* check if string is valid type 0 address */
+int check_address_type_0(char *str) {
+    /* Check if the first character is '#' */
+    if (*str != '#') {
+        return 0;
+    }
+    /* Move to the next character */
+    str++;
+    /* Check if the next character is a '-' (optional) */
+    if (*str == '-') {
+        str++;
+    }
+    /* Check if the next character(s) form a whole decimal number */
+    if (!isdigit(*str)) {
+        return 0;
+    }
+    while (*str != '\0') {
+        if (!isdigit(*str)) {
+            return 0;
+        }
+        str++;
+    }
+    /* If we reached here, the string starts with '#' followed by a whole decimal number (possibly negative) */
+    return 1;
+}
+
+/* check if string is valid type 1 address */
+int check_address_type_1(char *str) {
+    return check_symbol_name(str);
+}
+
+/* check if string is valid type 2 address */
+int check_address_type_2(char *str) {
+    /* Check if the first character is '#' */
+    if (*str != '*') {
+        return 0;
+    }
+    return check_address_type_3(++str);
+}
+
+/* check if string is valid type 3 address */
+int check_address_type_3(char *str) {
+    return what_regs(str) >= 0;
+}
+
+/* check source and dest for given opcode */
+int check_opcode_address(int opcode, char *src, char *dst) {
+    int i;
+    int src_valid = 1;
+    int dst_valid = 1;
+
+    /* Check source address */
+    for (i = 0; i < MAX_ADDRESS_METHODS; i++) {
+        if (opcodes[opcode].add_methods_src[i] != -1) {
+            src_valid = 0;
+            if (check_address_functions[opcodes[opcode].add_methods_src[i]](src)) {
+                src_valid = 1;
+                break;
+            }
+        }
+    }
+
+    /* Check destination address */
+    for (i = 0; i < MAX_ADDRESS_METHODS; i++) {
+        if (opcodes[opcode].add_methods_dst[i] != -1) {
+            dst_valid = 0;
+            if (check_address_functions[opcodes[opcode].add_methods_dst[i]](dst)) {
+                dst_valid = 1;
+                break;
+            }
+        }
+    }
+    return src_valid && dst_valid;
 }
