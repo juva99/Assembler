@@ -198,11 +198,21 @@ int extract_symbol(char *line, char *sym_name, char delimeter) {
     }
 
     extract_next(line, first_token, delimeter);
+    ret_code = check_symbol_name(first_token);
 
-    /* token is bigger than size of label or empty -  its invalid */
-    if (strlen(first_token) > (MAX_LABEL_LENGTH + 1) || strlen(first_token) == 0) {
+    if (!ret_code) {
         strcpy(line, original_line);
-        return 0;
+        return ret_code;
+    }
+
+    strcpy(sym_name, first_token);
+    return 1;
+}
+
+int check_symbol_name(char *first_token) {
+    int ret_code = 1; /* token is bigger than size of label or empty -  its invalid */
+    if (strlen(first_token) > (MAX_LABEL_LENGTH + 1) || strlen(first_token) == 0) {
+        ret_code = 0;
     }
 
     /*starts with english char */
@@ -219,14 +229,7 @@ int extract_symbol(char *line, char *sym_name, char delimeter) {
     if (what_instrct(first_token) > -1 || what_opcode(first_token) > -1 || what_regs(first_token) > -1) {
         ret_code = 0;
     }
-
-    if (!ret_code) {
-        strcpy(line, original_line);
-        return ret_code;
-    }
-
-    strcpy(sym_name, first_token);
-    return 1;
+    return ret_code;
 }
 
 int extract_opcode(char *line) {

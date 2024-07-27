@@ -30,7 +30,11 @@ int is_entry(char *line);
 
 int extract_symbol(char *line, char *sym_name, char delimeter);
 
-int extract_opcode(char *line, char *opcode_name);
+int check_symbol_name(char *first_token);
+
+int extract_opcode(char *line);
+
+int get_opcode_args(int opcode);
 
 #endif //OPENU_PROJECT_UTILS_H
 
