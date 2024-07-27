@@ -14,6 +14,8 @@ set(SOURCES
         src/utils.c
         src/preprocess.c
         src/symbol_table.c
+        src/code_container.c
+        include/code_container.h
 )
 
 # Create the main executable

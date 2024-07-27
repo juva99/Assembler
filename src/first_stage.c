@@ -1,10 +1,11 @@
 #include "../include/first_stage.h"
 
 int first_stage_process(char *filename) {
-    int ic, dc, symbol, data_size, instr_len, opcode, errors;
+    int ic, dc, symbol, data_type, data_size, instr_len, opcode, errors;
     char *line;
     char sym_name[MAX_LABEL_LENGTH + 1];
     char opcode_name[MAX_OPCODE_LENGTH + 1];
+    code_cont *data;
 
     SymTable *sym_table; /* hash table to store symbols */
 
@@ -19,7 +20,7 @@ int first_stage_process(char *filename) {
             symbol = 1;
         }
         /* check if line is a data storing instruction #5 */
-        if (data_instruction(line)) {
+        if ((data_type = data_instruction(line)) > 0) {
             if (symbol) {
                 /* insert to data table #6 */
                 if (!insert_symbol_table(sym_table, sym_name, ".data", dc)) {
@@ -28,8 +29,10 @@ int first_stage_process(char *filename) {
                 }
             }
             /* encode data to memory return size and increase DC #7 */
-            data_size = encode_data(line);
-            dc += data_size;
+            data_size = encode_data(line, data_type, data, &dc);
+            if (!data_size) {
+                /* error */
+            }
             continue;
         }
         /* #8 */

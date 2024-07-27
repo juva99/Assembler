@@ -123,9 +123,14 @@ int data_instruction(char *line) {
     if (token == NULL)
         return 0;
 
-    if (strcmp(token, ".data") == 0 || strcmp(token, ".string") == 0) {
+    if (strcmp(token, ".data") == 0) {
         return 1;
     }
+
+    if (strcmp(token, ".string") == 0) {
+        return 2;
+    }
+
     strcpy(line, original_line);
     return 0;
 }
@@ -232,4 +237,89 @@ int extract_opcode(char *line, char *opcode_name) {
     }
 
     return opcode;
+}
+
+/*need to add line location in file for error description*/
+int encode_data(char *line, int data_type, code_cont **data, int *dc) {
+    int i, count;
+    unsigned short val;
+    char *curr_token;
+
+    count = 0;
+
+    /* data type is .data */
+    if (data_type == 1) {
+        while (extract_next(line, curr_token, ",")) {
+            if (*curr_token == '\0') {
+                /* error - empty token */
+            }
+
+            i = 0;
+            if (*curr_token == '-') {
+                /* negative num */
+                i = 1;
+            }
+            /* valid number */
+            for (i; i < strlen(curr_token); i++) {
+                if (!isdigit(curr_token[i])) {
+                    /*error - not num*/
+                    return 0;
+                }
+            }
+            val = dec_to_bin(atoi(curr_token));
+            add_data(&data, val, &dc);
+
+            count++;
+        }
+    }
+
+    /*data type is .string*/
+    else {
+        extract_next(line, curr_token, "\"");
+        if (*curr_token != '\0') {
+            /* error - extra text before first " */
+            /* return */
+        }
+
+        extract_next(line, curr_token, "\"");
+        while (*curr_token != '\0') {
+            val = dec_to_bin((int) *curr_token);
+            add_data(&data, val, &dc);
+
+            count++;
+        }
+        /*null-terminator*/
+        add_data(&data, 0, &dc);
+        count++;
+    }
+
+    return count;
+}
+
+unsigned short dec_to_bin(int decimalNum) {
+    int bit_location, bit_value, negative_bool;
+    unsigned short bin;
+    char bin_str[MAX_BIN_LENGTH + 1];
+
+    bin = 0;
+    bit_location = 0;
+    negative_bool = 0;
+
+    if (decimalNum < 0) {
+        negative_bool = 1;
+    }
+
+    while (decimalNum) {
+        bit_value = decimalNum % 2;
+        if (bit_value) {
+            bin = bin | (1 << bit_location);
+        }
+        bit_location++;
+        decimalNum /= 2;
+    }
+
+    if (negative_bool) {
+        bin = ~bin ^ 1;
+    }
+    return bin;
 }
