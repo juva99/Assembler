@@ -61,6 +61,8 @@ int encode_data(char *line, DataType data_type, code_cont **data, int *dc);
 
 unsigned short conv_to_ushort(int dec_num);
 
+char *strduplic(const char *s);
+
 
 #endif //OPENU_PROJECT_UTILS_H
 
