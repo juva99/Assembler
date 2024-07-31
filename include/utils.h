@@ -1,10 +1,7 @@
 #ifndef OPENU_PROJECT_UTILS_H
 #define OPENU_PROJECT_UTILS_H
 
-#include <string.h>
-#include <ctype.h>
 #include "../include/consts.h"
-#include "../include/code_container.h"
 
 typedef enum {
     NOT_DATA,
@@ -19,6 +16,13 @@ typedef struct opcode {
     int add_methods_src[MAX_ADDRESS_METHODS]; /* valid address methods for src */
     int add_methods_dst[MAX_ADDRESS_METHODS]; /* valid address methods for dst */
 } opcode;
+
+
+#include "../include/code_container.h"
+
+#include <string.h>
+#include <ctype.h>
+
 
 int extract_next(char *src, char *next, char delimiter);
 
@@ -56,8 +60,11 @@ int get_src_add_method(int opcode, char *src);
 
 int get_dst_add_method(int opcode, char *dst);
 
+int encode_string(char *line, code_cont **data, int *dc);
 
 int encode_data(char *line, DataType data_type, code_cont **data, int *dc);
+
+int encode_numeric_data(char *line, code_cont **data, int *dc);
 
 unsigned short conv_to_ushort(int dec_num);
 
