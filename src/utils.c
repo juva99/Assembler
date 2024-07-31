@@ -112,7 +112,7 @@ int what_regs(char *token) {
     return -1; /* returns -1 if token isn't instruction */
 }
 
-int data_instruction(char *line) {
+DataType data_instruction(char *line) {
     int i;
     char token[MAX_LINE_LENGTH];
     char original_line[MAX_LINE_LENGTH];
@@ -121,18 +121,18 @@ int data_instruction(char *line) {
     extract_next(line, token, ' ');
 
     if (token == NULL)
-        return 0;
+        return NOT_DATA;
 
     if (strcmp(token, ".data") == 0) {
-        return 1;
+        return DATA;
     }
 
     if (strcmp(token, ".string") == 0) {
-        return 2;
+        return STRING;
     }
 
     strcpy(line, original_line);
-    return 0;
+    return NOT_DATA;
 }
 
 int is_extern(char *line) {

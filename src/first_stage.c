@@ -1,8 +1,9 @@
 #include "../include/first_stage.h"
 
 int first_stage_process(char *filename) {
-    int ic, dc, symbol, data_type, data_size, instr_len, opcode, errors;
+    int ic, dc, symbol, data_size, instr_len, opcode, errors;
     char *line;
+    DataType data_type;
     char sym_name[MAX_LABEL_LENGTH + 1];
     char opcode_name[MAX_OPCODE_LENGTH + 1];
     code_cont *data;
@@ -21,7 +22,7 @@ int first_stage_process(char *filename) {
         }
         /* check if line is a data storing instruction #5 */
         data_type = data_instruction(line);
-        if (data_type > 0) {
+        if (data_type != NOT_DATA) {
             if (symbol) {
                 /* insert to data table #6 */
                 if (!insert_symbol_table(sym_table, sym_name, ".data", dc)) {

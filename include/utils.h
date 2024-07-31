@@ -6,8 +6,11 @@
 #include "../include/consts.h"
 #include "../include/code_container.h"
 
-/* i think it is not necessary */
-typedef enum { NOT_DATA, DATA, STRING };
+typedef enum {
+    NOT_DATA,
+    DATA,
+    STRING
+} DataType;
 
 
 int extract_next(char *src, char *next, char delimiter);
@@ -20,7 +23,7 @@ int what_opcode(char *token);
 
 int what_regs(char *token);
 
-int data_instruction(char *line);
+DataType data_instruction(char *line);
 
 int is_extern(char *line);
 
