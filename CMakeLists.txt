@@ -14,6 +14,7 @@ set(SOURCES
         src/utils.c
         src/preprocess.c
         src/symbol_table.c
+        src/code_container.c
         src/command.c
 )
 

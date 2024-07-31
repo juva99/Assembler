@@ -4,6 +4,14 @@
 #include <string.h>
 #include <ctype.h>
 #include "../include/consts.h"
+#include "../include/code_container.h"
+
+typedef enum {
+    NOT_DATA,
+    DATA,
+    STRING
+} DataType;
+
 
 typedef struct opcode {
     char *name; /* name of opcode */
@@ -22,7 +30,7 @@ int what_opcode(char *token);
 
 int what_regs(char *token);
 
-int data_instruction(char *line);
+DataType data_instruction(char *line);
 
 int is_extern(char *line);
 
@@ -47,6 +55,11 @@ int check_address_type_3(char *str);
 int get_src_add_method(int opcode, char *src);
 
 int get_dst_add_method(int opcode, char *dst);
+
+
+int encode_data(char *line, DataType data_type, code_cont **data, int *dc);
+
+unsigned short conv_to_ushort(int dec_num);
 
 
 #endif //OPENU_PROJECT_UTILS_H

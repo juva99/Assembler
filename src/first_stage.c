@@ -4,7 +4,9 @@
 int first_stage_process(char *filename) {
     int ic, dc, symbol, data_size, instr_len, opcode, errors;
     char *line;
+    DataType data_type;
     char sym_name[MAX_LABEL_LENGTH + 1];
+    code_cont *data;
     cmd_struct *command;
 
     SymTable *sym_table; /* hash table to store symbols */
@@ -20,7 +22,8 @@ int first_stage_process(char *filename) {
             symbol = 1;
         }
         /* check if line is a data storing instruction #5 */
-        if (data_instruction(line)) {
+        data_type = data_instruction(line);
+        if (data_type != NOT_DATA) {
             if (symbol) {
                 /* insert to data table #6 */
                 if (!insert_symbol_table(sym_table, sym_name, ".data", dc)) {
@@ -29,8 +32,10 @@ int first_stage_process(char *filename) {
                 }
             }
             /* encode data to memory return size and increase DC #7 */
-            data_size = encode_data(line);
-            dc += data_size;
+            data_size = encode_data(line, data_type, &data, &dc);
+            if (!data_size) {
+                /* error */
+            }
             continue;
         }
         /* #8 */
