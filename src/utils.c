@@ -428,3 +428,12 @@ unsigned short conv_to_ushort(int dec_num) {
     /* return ushort value of dec_num as 15bit */
     return (dec_num & ~(1U << MAX_BIN_LENGTH));
 }
+
+char *strduplic(const char *s) {
+    size_t len = strlen(s) + 1;
+    char *copy = malloc(len);
+    if (copy) {
+        memcpy(copy, s, len);
+    }
+    return copy;
+}
