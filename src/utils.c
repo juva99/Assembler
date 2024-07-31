@@ -4,8 +4,8 @@
 #include <stdlib.h>
 
 char *opcodes[] = {
-    "mov", "cmp", "add", "sub", "lea", "clr", "not", "inc", "dec", "jmp", "bne", "red", "prn", "jsr",
-    "rts", "stop"
+        "mov", "cmp", "add", "sub", "lea", "clr", "not", "inc", "dec", "jmp", "bne", "red", "prn", "jsr",
+        "rts", "stop"
 };
 char *instructions[] = {".data", ".string", "entry", "extern"};
 char *registers[] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7"};
@@ -112,7 +112,7 @@ int what_regs(char *token) {
     return -1; /* returns -1 if token isn't instruction */
 }
 
-int data_instruction(char *line) {
+DataType data_instruction(char *line) {
     int i;
     char token[MAX_LINE_LENGTH];
     char original_line[MAX_LINE_LENGTH];
@@ -121,13 +121,18 @@ int data_instruction(char *line) {
     extract_next(line, token, ' ');
 
     if (token == NULL)
-        return 0;
+        return NOT_DATA;
 
-    if (strcmp(token, ".data") == 0 || strcmp(token, ".string") == 0) {
-        return 1;
+    if (strcmp(token, ".data") == 0) {
+        return DATA;
     }
+
+    if (strcmp(token, ".string") == 0) {
+        return STRING;
+    }
+
     strcpy(line, original_line);
-    return 0;
+    return NOT_DATA;
 }
 
 int is_extern(char *line) {
@@ -232,4 +237,94 @@ int extract_opcode(char *line, char *opcode_name) {
     }
 
     return opcode;
+}
+
+int encode_numeric_data(char *line, code_cont **data, int *dc) {
+    int i, count;
+    unsigned short val;
+    char *curr_token;
+
+    count = 0;
+
+    while (extract_next(line, curr_token, ",")) {
+        if (*curr_token == '\0') {
+            /* error - empty token */
+        }
+
+        i = 0;
+        if (*curr_token == '-') {
+            /* negative num */
+            i = 1;
+        }
+
+        /* valid number */
+        for (i; i < strlen(curr_token); i++) {
+            if (!isdigit(curr_token[i])) {
+                /*error - not num*/
+                return 0;
+            }
+        }
+        val = conv_to_ushort(atoi(curr_token));
+        add_data(data, val, dc);
+
+        count++;
+    }
+
+    return count;
+}
+
+int encode_string(char *line, code_cont **data, int *dc) {
+    int count;
+    unsigned short val;
+    char curr_token[MAX_LINE_LENGTH];
+
+    count = 0;
+
+    extract_next(line, curr_token, '\"');
+    if (*curr_token != '\0') {
+        /* error - extra text before first " */
+        /* return */
+    }
+
+    extract_next(line, curr_token, '\"');
+    while (*curr_token != '\0') {
+        val = conv_to_ushort((int) *curr_token);
+        add_data(data, val, dc);
+
+        count++;
+    }
+    /*null-terminator*/
+    add_data(data, 0, dc);
+    count++;
+
+    return count;
+}
+
+/* need to add line location in file for error description */
+int encode_data(char *line, DataType data_type, code_cont **data, int *dc) {
+    int count;
+
+    /* data type is .data */
+    switch (data_type) {
+        case DATA: {
+            count = encode_numeric_data(line, data, dc);
+            break;
+        }
+        case STRING: {
+            count = encode_string(line, data, dc);
+            break;
+        }
+        default: {
+            /* error */
+            count = 0;
+        }
+    }
+    return count;
+}
+
+
+unsigned short conv_to_ushort(int dec_num) {
+    unsigned short bin = 0;
+    /* return ushort value of dec_num as 15bit */
+    return (dec_num & ~(1U << MAX_BIN_LENGTH));
 }
