@@ -340,23 +340,23 @@ int get_dst_add_method(int opcode, char *dst) {
 }
 
 int encode_numeric_data(char *line, code_cont **data, int *dc) {
-    int i, count;
+    int i, count, is_negative, num;
     unsigned short val;
     char curr_token[MAX_LINE_LENGTH];
 
     count = 0;
+    is_negative = 1;
 
     while (extract_next(line, curr_token, ',')) {
         if (*curr_token == '\0') {
             /* error - empty token */
         }
-
         i = 0;
         if (*curr_token == '-') {
             /* negative num */
+            is_negative = -1;
             i = 1;
         }
-
         /* valid number */
         for (i; i < strlen(curr_token); i++) {
             if (!isdigit(curr_token[i])) {
@@ -364,7 +364,8 @@ int encode_numeric_data(char *line, code_cont **data, int *dc) {
                 return 0;
             }
         }
-        val = conv_to_ushort(atoi(curr_token));
+        num = atoi(curr_token) * is_negative;
+        val = conv_to_ushort(num);
         add_data(data, val, dc);
 
         count++;
