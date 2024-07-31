@@ -33,9 +33,9 @@ int extract_symbol(char *line, char *sym_name, char delimeter);
 
 int extract_opcode(char *line, char *opcode_name);
 
-int encode_data(char *line, int data_type, code_cont **data, int *dc);
+int encode_data(char *line, DataType data_type, code_cont **data, int *dc);
 
-unsigned short dec_to_bin(int decimalNum);
+unsigned short conv_to_ushort(int dec_num);
 
 
 #endif //OPENU_PROJECT_UTILS_H

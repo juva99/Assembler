@@ -4,8 +4,8 @@
 #include <stdlib.h>
 
 char *opcodes[] = {
-    "mov", "cmp", "add", "sub", "lea", "clr", "not", "inc", "dec", "jmp", "bne", "red", "prn", "jsr",
-    "rts", "stop"
+        "mov", "cmp", "add", "sub", "lea", "clr", "not", "inc", "dec", "jmp", "bne", "red", "prn", "jsr",
+        "rts", "stop"
 };
 char *instructions[] = {".data", ".string", "entry", "extern"};
 char *registers[] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7"};
@@ -264,7 +264,7 @@ int encode_numeric_data(char *line, code_cont **data, int *dc) {
                 return 0;
             }
         }
-        val = dec_to_bin(atoi(curr_token));
+        val = conv_to_ushort(atoi(curr_token));
         add_data(data, val, dc);
 
         count++;
@@ -276,19 +276,19 @@ int encode_numeric_data(char *line, code_cont **data, int *dc) {
 int encode_string(char *line, code_cont **data, int *dc) {
     int count;
     unsigned short val;
-    char *curr_token;
+    char curr_token[MAX_LINE_LENGTH];
 
     count = 0;
 
-    extract_next(line, curr_token, "\"");
+    extract_next(line, curr_token, '\"');
     if (*curr_token != '\0') {
         /* error - extra text before first " */
         /* return */
     }
 
-    extract_next(line, curr_token, "\"");
+    extract_next(line, curr_token, '\"');
     while (*curr_token != '\0') {
-        val = dec_to_bin((int) *curr_token);
+        val = conv_to_ushort((int) *curr_token);
         add_data(data, val, dc);
 
         count++;
@@ -300,48 +300,31 @@ int encode_string(char *line, code_cont **data, int *dc) {
     return count;
 }
 
-/*need to add line location in file for error description*/
-int encode_data(char *line, int data_type, code_cont **data, int *dc) {
+/* need to add line location in file for error description */
+int encode_data(char *line, DataType data_type, code_cont **data, int *dc) {
     int count;
 
     /* data type is .data */
-    if (data_type == DATA) {
-        count = encode_numeric_data(line, data, dc);
+    switch (data_type) {
+        case DATA: {
+            count = encode_numeric_data(line, data, dc);
+            break;
+        }
+        case STRING: {
+            count = encode_string(line, data, dc);
+            break;
+        }
+        default: {
+            /* error */
+            count = 0;
+        }
     }
-
-    /*data type is .string*/
-    else {
-        count = encode_string(line, data, dc);
-    }
-
     return count;
 }
 
 
-unsigned short dec_to_bin(int decimalNum) {
-    int bit_location, bit_value, negative_bool;
-    unsigned short bin;
-    char bin_str[MAX_BIN_LENGTH + 1];
-
-    bin = 0;
-    bit_location = 0;
-    negative_bool = 0;
-
-    if (decimalNum < 0) {
-        negative_bool = 1;
-    }
-
-    while (decimalNum) {
-        bit_value = decimalNum % 2;
-        if (bit_value) {
-            bin = bin | (1 << bit_location);
-        }
-        bit_location++;
-        decimalNum /= 2;
-    }
-
-    if (negative_bool) {
-        bin = ~bin ^ 1;
-    }
-    return bin;
+unsigned short conv_to_ushort(int dec_num) {
+    unsigned short bin = 0;
+    /* return ushort value of dec_num as 15bit */
+    return (dec_num & ~(1U << MAX_BIN_LENGTH));
 }
