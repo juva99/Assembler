@@ -342,11 +342,11 @@ int get_dst_add_method(int opcode, char *dst) {
 int encode_numeric_data(char *line, code_cont **data, int *dc) {
     int i, count;
     unsigned short val;
-    char *curr_token;
+    char curr_token[MAX_LINE_LENGTH];
 
     count = 0;
 
-    while (extract_next(line, curr_token, ",")) {
+    while (extract_next(line, curr_token, ',')) {
         if (*curr_token == '\0') {
             /* error - empty token */
         }
