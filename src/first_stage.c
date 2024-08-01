@@ -71,7 +71,7 @@ int first_stage_process(char *filename) {
             errors++;
             continue;
         }
-        ic += command->length;
+        add_command(&code, command, &ic);
     }
 
     if (errors > 0) {
