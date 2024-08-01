@@ -6,10 +6,15 @@ int first_stage_process(char *filename) {
     char *line;
     DataType data_type;
     char sym_name[MAX_LABEL_LENGTH + 1];
-    code_cont *data;
+    code_cont *data, *code;
     cmd_struct *command;
 
     SymTable *sym_table; /* hash table to store symbols */
+
+    /* initialize data storage */
+    sym_table = create_symtable();
+    data = create_container();
+    code = create_container();
 
     FILE *file;
     ic = 0;
