@@ -42,3 +42,92 @@ code_cont *create_container() {
     return temp;
 }
 
+int add_command(code_cont **code, cmd_struct *cmd, int *ic) {
+    unsigned short command = 0;
+    unsigned short src_command = 0;
+    unsigned short dst_command = 0;
+
+    /* add command opcode */
+    command = (cmd->opcode << OPCODE_OFFSET);
+    /* add source address method */
+    if (cmd->src_method >= 0) {
+        command |= 1u << (SRC_OFFSET + cmd->src_method);
+        src_command = create_method_line(cmd, cmd->src_method, cmd->src, 1);
+    }
+    /* add dest address method */
+    if (cmd->dst_method >= 0) {
+        command |= 1u << (DST_OFFSET + cmd->dst_method);
+        dst_command = create_method_line(cmd, cmd->dst_method, cmd->dst, 0);
+    }
+    /* turn ABSOLUTE flag */
+    command |= 1U << ABSOLUTE;
+    /* write command */
+    if (!write_data(code, command, ic))
+        return 0;
+    /* if both methods reg merge them */
+    if (src_command && dst_command && cmd->length == 2) {
+        return write_data(code, src_command | dst_command, ic);
+    }
+    /* handle source command */
+    if (src_command) {
+        if (!write_data(code, src_command, ic)) {
+            return 0;
+        }
+    } else if (cmd->src_method == 1) {
+        if (!write_data_label(code, src_command, ic, cmd->src)) {
+            return 0;
+        }
+    }
+    /* handle dest command */
+    if (dst_command) {
+        if (!write_data(code, dst_command, ic)) {
+            return 0;
+        }
+    } else if (cmd->dst_method == 1) {
+        if (!write_data_label(code, dst_command, ic, cmd->dst)) {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+unsigned short create_method_line(cmd_struct *cmd, int method, char *value, int is_src) {
+    int reg_num, offset;
+    unsigned short method_line = 0;
+    int is_negative = 1;
+
+
+    switch (method) {
+        case 0: {
+            method_line = 1U << ABSOLUTE;
+            value++;
+            if (*value == '-') {
+                is_negative = -1;
+                value++;
+            }
+            method_line |= ((atoi(value) * is_negative) << DATA_OFFSET);
+            break;
+        }
+        case 1: {
+            break;
+        }
+        case 2:
+            value++;
+        case 3: {
+            method_line = 1U << ABSOLUTE;
+            reg_num = what_regs(value);
+            offset = REG_DST_OFFSET;
+            if (is_src) {
+                offset = REG_SRC_OFFSET;
+            }
+            method_line |= reg_num << offset;
+            break;
+        }
+        default: {
+            /* invalid method */
+            break;
+        }
+    }
+    return method_line;
+}
+

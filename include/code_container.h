@@ -1,6 +1,25 @@
 #ifndef CODE_CONTAINER_H
 #define CODE_CONTAINER_H
 
+
+/* offsets for command structure */
+#define OPCODE_OFFSET 11
+#define SRC_OFFSET 7
+#define DST_OFFSET 3
+
+/* offsets for SRC and DST lines*/
+#define DATA_OFFSET 3
+#define REG_DST_OFFSET 3
+#define REG_SRC_OFFSET 6
+
+
+/* A.R.E enum offsets */
+typedef enum {
+    EXTERNAL = 0,
+    RELOCATABLE = 1,
+    ABSOLUTE = 2
+} ARE;
+
 typedef struct code_cont {
     unsigned short bin_rep;
     int code_line;
