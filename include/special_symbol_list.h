@@ -21,6 +21,7 @@ typedef struct {
     Node *head;
 } SpecialSymList;
 
+void create_spec_symbol_list(SpecialSymList *list);
 
 
 #endif //SPECIAL_SYMBOL_LIST_H
