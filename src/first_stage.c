@@ -11,13 +11,13 @@ int first_stage_process(char *filename) {
     cmd_struct *command;
 
     SymTable *sym_table; /* hash table to store symbols */
-    SpecialSymList entries_list;
+    SpecialSymList *entries_list;
 
     /* initialize data storage */
     sym_table = create_symtable();
     data = create_container();
     code = create_container();
-    create_spec_symbol_list(&entries_list);
+    create_spec_symbol_list(entries_list);
 
     FILE *file;
     ic = 0;
@@ -59,7 +59,7 @@ int first_stage_process(char *filename) {
 
         if (is_entry(line)) {
             if (extract_symbol(line, sym_name, ' ')) {
-                if (!insert_spec_symbol(&entries_list, sym_name, ic + IC_OFFSET)) {
+                if (!insert_spec_symbol(entries_list, sym_name, ic + IC_OFFSET)) {
                     /* error */
                     errors++;
                 }

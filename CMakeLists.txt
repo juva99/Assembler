@@ -28,10 +28,10 @@ set(TEST_SOURCES
         src/macro_table.c
         src/preprocess.c
         src/utils.c
-        src/first_stage.c
         src/symbol_table.c
-        tests/symbol_table_test.c
         src/command.c
+        src/code_container.c
+        src/special_symbol_list.c
 )
 
 # Create the test executable

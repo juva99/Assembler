@@ -4,7 +4,7 @@
 #define SPECIAL_SYMBOL_LIST_H
 
 /* sumboltype is quite unnecessasry */
-typedef struct Entry {
+typedef struct SpecialSym {
     char *label;
     int value;
 } SpecialSym;
@@ -24,4 +24,5 @@ int insert_spec_symbol(SpecialSymList *list, char *label, int ic);
 
 int free_spec_symbol_list(SpecialSymList *list);
 
+int print_spec_symbol_list(SpecialSymList *list);
 #endif //SPECIAL_SYMBOL_LIST_H

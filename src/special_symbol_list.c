@@ -43,3 +43,15 @@ int free_spec_symbol_list(SpecialSymList *list) {
     return 1;
 }
 
+int print_spec_symbol_list(SpecialSymList *list) {
+    Node *current_node;
+
+    current_node = list->head;
+    while (current_node != NULL) {
+        printf(current_node->data->label);
+        printf("\n %d \n", current_node->data->value);
+
+        current_node = current_node->next;
+    }
+}
+
