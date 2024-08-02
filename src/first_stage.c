@@ -1,6 +1,4 @@
-#include "../include/command.h"
 #include "../include/first_stage.h"
-
 
 int first_stage_process(char *filename) {
     int ic, dc, symbol, data_size, instr_len, opcode, errors;

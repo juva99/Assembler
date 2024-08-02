@@ -1,9 +1,10 @@
-
-
 #ifndef SPECIAL_SYMBOL_LIST_H
 #define SPECIAL_SYMBOL_LIST_H
 
-/* sumboltype is quite unnecessasry */
+#include "../include/utils.h"
+#include <stdlib.h>
+#include <string.h>
+
 typedef struct SpecialSym {
     char *label;
     int value;
@@ -24,5 +25,6 @@ int insert_spec_symbol(SpecialSymList *list, char *label, int ic);
 
 int free_spec_symbol_list(SpecialSymList *list);
 
-int print_spec_symbol_list(SpecialSymList *list);
+void print_spec_symbol_list(SpecialSymList *list);
+
 #endif //SPECIAL_SYMBOL_LIST_H

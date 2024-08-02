@@ -1,7 +1,4 @@
 #include "../include/special_symbol_list.h"
-#include "../include/utils.h"
-#include <stdlib.h>
-#include <string.h>
 
 void create_spec_symbol_list(SpecialSymList *list) {
     list->head = NULL;
@@ -43,7 +40,7 @@ int free_spec_symbol_list(SpecialSymList *list) {
     return 1;
 }
 
-int print_spec_symbol_list(SpecialSymList *list) {
+void print_spec_symbol_list(SpecialSymList *list) {
     Node *current_node;
 
     current_node = list->head;
