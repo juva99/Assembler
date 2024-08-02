@@ -17,7 +17,6 @@ set(SOURCES
         src/code_container.c
         src/command.c
         src/special_symbol_list.c
-        include/special_symbol_list.h
 )
 
 # Create the main executable
