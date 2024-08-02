@@ -29,3 +29,18 @@ int insert_spec_symbol(SpecialSymList *list, char *label, char *symbol_type, int
 
     return 1;
 }
+
+int free_spec_symbol_list(SpecialSymList *list) {
+    Node *current;
+
+    while (list->head != NULL) {
+        current = list->head;
+        list->head = list->head->next;
+        free(current->data->label);
+        free(current->data->symbol_type);
+        free(current->data);
+        free(current);
+    }
+
+    return 1;
+}
