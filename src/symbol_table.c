@@ -54,7 +54,7 @@ void free_symtable(SymTable *table) {
     free(table);
 }
 
-void enlarge_table(SymTable *table) {
+int enlarge_table(SymTable *table) {
     int old_size, i;
 
     old_size = table->size;
@@ -62,7 +62,7 @@ void enlarge_table(SymTable *table) {
     Symbol **new_table = (Symbol **) calloc(table->size, sizeof(Symbol *));
     if (!new_table) {
         printf("Memory allocation falid for symbol table\n");
-        return NULL;
+        return 0;
     }
 
     for (i = 0; i < old_size; ++i) {
@@ -77,6 +77,7 @@ void enlarge_table(SymTable *table) {
 
     free(table->table);
     table->table = new_table;
+    return 1;
 }
 
 
