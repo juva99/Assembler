@@ -71,6 +71,12 @@ int first_stage_process(char *filename) {
             errors++;
             continue;
         }
+        if (command->label != NULL && strcmp(command->label, "") != 0) {
+            if (!insert_symbol_table(sym_table, command->label, ".code", ic + IC_OFFSET)) {
+                /* error */
+                errors++;
+            }
+        }
         add_command(&code, command, &ic);
     }
 
