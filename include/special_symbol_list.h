@@ -1,6 +1,4 @@
-//
-// Created by yuval on 02/08/2024.
-//
+
 
 #ifndef SPECIAL_SYMBOL_LIST_H
 #define SPECIAL_SYMBOL_LIST_H
@@ -23,5 +21,8 @@ typedef struct {
 
 void create_spec_symbol_list(SpecialSymList *list);
 
+int insert_spec_symbol(SpecialSymList *list, char *label, char *symbol_type, int ic);
+
+int free_spec_symbol_list(SpecialSymList *list);
 
 #endif //SPECIAL_SYMBOL_LIST_H

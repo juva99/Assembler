@@ -44,3 +44,4 @@ int free_spec_symbol_list(SpecialSymList *list) {
 
     return 1;
 }
+
