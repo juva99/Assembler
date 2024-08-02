@@ -30,4 +30,6 @@ int insert_symbol_table(SymTable *table, char *key, char *type, int value);
 
 int find_sym_value(SymTable *table, char *key);
 
+void update_data_symbols(SymTable *table, int ic);
+
 #endif //OPENU_PROJECT_SYMBOL_TABLE_H

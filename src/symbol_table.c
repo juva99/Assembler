@@ -127,5 +127,15 @@ int find_sym_value(SymTable *table, char *key) {
     /* the function can work as is_member as well - note the false answer will be -1 */
 }
 
-
-
+void update_data_symbols(SymTable *table, int ic) {
+    int i;
+    Symbol *temp;
+    for (i = 0; i < table->size; i++) {
+        if (table->table[i] != NULL) {
+            temp = table->table[i];
+            if (strcmp(temp->instr_type, ".data") == 0) {
+                temp->value += ic;
+            }
+        }
+    }
+}
