@@ -27,14 +27,14 @@ set(TEST_SOURCES
         src/macro_table.c
         src/preprocess.c
         src/utils.c
-        src/first_stage.c
         src/symbol_table.c
-        tests/symbol_table_test.c
         src/command.c
+        src/code_container.c
 )
 
 # Create the test executable
 add_executable(macro_table_test ${TEST_SOURCES})
+
 
 # Enable testing
 enable_testing()
