@@ -7,7 +7,7 @@ void create_spec_symbol_list(SpecialSymList *list) {
     list->head = NULL;
 }
 
-int insert_spec_symbol(SpecialSymList *list, char *label, char *symbol_type, int ic) {
+int insert_spec_symbol(SpecialSymList *list, char *label, int ic) {
     Node *newNode = (Node *) malloc(sizeof(Node));
     if (!newNode) {
         /* error */
@@ -22,8 +22,7 @@ int insert_spec_symbol(SpecialSymList *list, char *label, char *symbol_type, int
     }
 
     newNode->data->label = strduplic(label);
-    newNode->data->symbol_type = strduplic(symbol_type);
-    newNode->data->ic = ic;
+    newNode->data->value = ic;
     newNode->next = list->head;
     list->head = newNode;
 
@@ -37,7 +36,6 @@ int free_spec_symbol_list(SpecialSymList *list) {
         current = list->head;
         list->head = list->head->next;
         free(current->data->label);
-        free(current->data->symbol_type);
         free(current->data);
         free(current);
     }

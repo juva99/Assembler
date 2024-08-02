@@ -6,8 +6,7 @@
 /* sumboltype is quite unnecessasry */
 typedef struct Entry {
     char *label;
-    char *symbol_type;
-    int ic;
+    int value;
 } SpecialSym;
 
 typedef struct Node {
@@ -21,7 +20,7 @@ typedef struct {
 
 void create_spec_symbol_list(SpecialSymList *list);
 
-int insert_spec_symbol(SpecialSymList *list, char *label, char *symbol_type, int ic);
+int insert_spec_symbol(SpecialSymList *list, char *label, int ic);
 
 int free_spec_symbol_list(SpecialSymList *list);
 

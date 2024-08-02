@@ -2,7 +2,6 @@
 #include "../include/first_stage.h"
 
 
-
 int first_stage_process(char *filename) {
     int ic, dc, symbol, data_size, instr_len, opcode, errors;
     char *line;
@@ -60,7 +59,7 @@ int first_stage_process(char *filename) {
 
         if (is_entry(line)) {
             if (extract_symbol(line, sym_name, ' ')) {
-                if (!insert_spec_symbol(&entries_list, sym_name, ".entry", ic + IC_OFFSET)) {
+                if (!insert_spec_symbol(&entries_list, sym_name, ic + IC_OFFSET)) {
                     /* error */
                     errors++;
                 }
