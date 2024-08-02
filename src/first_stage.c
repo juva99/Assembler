@@ -1,3 +1,4 @@
+#include "../include/command.h"
 #include "../include/first_stage.h"
 
 int first_stage_process(char *filename) {
@@ -5,10 +6,15 @@ int first_stage_process(char *filename) {
     char *line;
     DataType data_type;
     char sym_name[MAX_LABEL_LENGTH + 1];
-    char opcode_name[MAX_OPCODE_LENGTH + 1];
-    code_cont *data;
+    code_cont *data, *code;
+    cmd_struct *command;
 
     SymTable *sym_table; /* hash table to store symbols */
+
+    /* initialize data storage */
+    sym_table = create_symtable();
+    data = create_container();
+    code = create_container();
 
     FILE *file;
     ic = 0;
@@ -58,14 +64,14 @@ int first_stage_process(char *filename) {
             continue;
         }
 
-        opcode = extract_opcode(line, opcode_name);
-        if (opcode < 0) {
+        /* construct the instruction and return the length of it */
+        command = build_command(line);
+        if (command == NULL) {
             /* error */
             errors++;
+            continue;
         }
-        /* construct the instruction and return the length of it */
-        instr_len = calc_opcode_instr(line, opcode);
-        ic += instr_len;
+        add_command(&code, command, &ic);
     }
 
     if (errors > 0) {

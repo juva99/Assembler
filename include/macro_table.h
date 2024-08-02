@@ -1,6 +1,8 @@
 #ifndef OPENU_PROJECT_MACRO_TABLE_H
 #define OPENU_PROJECT_MACRO_TABLE_H
 
+#include "../include/utils.h"
+
 #define INITIAL_SIZE 10
 #define LOAD_FACTOR 0.75
 

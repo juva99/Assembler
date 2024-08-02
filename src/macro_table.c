@@ -20,8 +20,8 @@ Macro *create_entry(const char *key, const char *value) {
     if (!entry) {
         return NULL;
     }
-    entry->key = strdup(key);
-    entry->value = strdup(value);
+    entry->key = strduplic(key);
+    entry->value = strduplic(value);
     return entry;
 }
 

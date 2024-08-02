@@ -102,8 +102,8 @@ int insert_symbol_table(SymTable *table, char *key, char *type, int value) {
         printf("Memory allocation failed");
         return 0;
     }
-    newSymbol->key = strdup(key);
-    newSymbol->instr_type = strdup(type);
+    newSymbol->key = strduplic(key);
+    newSymbol->instr_type = strduplic(type);
     newSymbol->value = value;
     table->table[i] = newSymbol;
     table->count++;
