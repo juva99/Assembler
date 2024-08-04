@@ -54,7 +54,7 @@ void free_symtable(SymTable *table) {
     free(table);
 }
 
-void enlarge_table(SymTable *table) {
+int enlarge_table(SymTable *table) {
     int old_size, i;
 
     old_size = table->size;
@@ -62,7 +62,7 @@ void enlarge_table(SymTable *table) {
     Symbol **new_table = (Symbol **) calloc(table->size, sizeof(Symbol *));
     if (!new_table) {
         printf("Memory allocation falid for symbol table\n");
-        return NULL;
+        return 0;
     }
 
     for (i = 0; i < old_size; ++i) {
@@ -77,6 +77,7 @@ void enlarge_table(SymTable *table) {
 
     free(table->table);
     table->table = new_table;
+    return 1;
 }
 
 
@@ -126,5 +127,15 @@ int find_sym_value(SymTable *table, char *key) {
     /* the function can work as is_member as well - note the false answer will be -1 */
 }
 
-
-
+void update_data_symbols(SymTable *table, int ic) {
+    int i;
+    Symbol *temp;
+    for (i = 0; i < table->size; i++) {
+        if (table->table[i] != NULL) {
+            temp = table->table[i];
+            if (strcmp(temp->instr_type, ".data") == 0) {
+                temp->value += ic;
+            }
+        }
+    }
+}

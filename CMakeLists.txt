@@ -37,6 +37,7 @@ set(TEST_SOURCES
 # Create the test executable
 add_executable(macro_table_test ${TEST_SOURCES})
 
+
 # Enable testing
 enable_testing()
 
