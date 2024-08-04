@@ -12,6 +12,7 @@ endmacr
  dec K
  jmp LOOP
 END: stop
-STR: .string “abcd”
+STR: .string "abcd"
 LIST: .data 6, -9
-K: .data -100
+.data -100
+K: .data 31
