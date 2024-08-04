@@ -9,13 +9,13 @@ int first_stage_process(char *filename) {
     cmd_struct *command;
 
     SymTable *sym_table; /* hash table to store symbols */
-    SpecialSymList *entries_list;
+    SymbolList *entries_list;
 
     /* initialize data storage */
     sym_table = create_symtable();
     data = create_container();
     code = create_container();
-    create_spec_symbol_list(entries_list);
+    entries_list = create_symbol_list();
 
     FILE *file;
     ic = 0;
