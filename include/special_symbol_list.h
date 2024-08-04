@@ -21,7 +21,7 @@ typedef struct {
 
 void create_spec_symbol_list(SpecialSymList *list);
 
-int insert_spec_symbol(SpecialSymList *list, char *label, int ic);
+int insert_spec_symbol(SpecialSymList *list, char *label, int value);
 
 int free_spec_symbol_list(SpecialSymList *list);
 
