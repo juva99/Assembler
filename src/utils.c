@@ -345,7 +345,6 @@ int encode_numeric_data(char *line, code_cont **data, int *dc) {
     char curr_token[MAX_LINE_LENGTH];
 
     count = 0;
-    is_negative = 1;
 
     while (extract_next(line, curr_token, ',')) {
         if (*curr_token == '\0') {
@@ -354,7 +353,6 @@ int encode_numeric_data(char *line, code_cont **data, int *dc) {
         i = 0;
         if (*curr_token == '-') {
             /* negative num */
-            is_negative = -1;
             i = 1;
         }
         /* valid number */
@@ -364,7 +362,7 @@ int encode_numeric_data(char *line, code_cont **data, int *dc) {
                 return 0;
             }
         }
-        num = atoi(curr_token) * is_negative;
+        num = atoi(curr_token);
         val = conv_to_ushort(num);
         add_data(data, val, dc);
 
@@ -388,8 +386,8 @@ int encode_string(char *line, code_cont **data, int *dc) {
     }
 
     extract_next(line, curr_token, '\"');
-    while (*curr_token != '\0') {
-        val = conv_to_ushort((int) *curr_token);
+    while (curr_token[count] != '\0') {
+        val = conv_to_ushort((int) curr_token[count]);
         add_data(data, val, dc);
 
         count++;
