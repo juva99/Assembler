@@ -2,6 +2,9 @@
 #define OPENU_PROJECT_UTILS_H
 
 #include "../include/consts.h"
+#include "../include/symbol_table.h"
+#include "../include/special_symbol_table.h"
+
 
 typedef enum {
     NOT_DATA,
@@ -69,6 +72,8 @@ int encode_numeric_data(char *line, code_cont **data, int *dc);
 unsigned short conv_to_ushort(int dec_num);
 
 char *strduplic(const char *s);
+
+int handle_entries(char *filename, SymTable *sym_table, SpecialSymList entries);
 
 
 #endif //OPENU_PROJECT_UTILS_H

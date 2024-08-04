@@ -438,3 +438,54 @@ char *strduplic(const char *s) {
     }
     return copy;
 }
+
+int handle_entries(char *filename, SymTable *sym_table, SpecialSymList entries) {
+    int i, found, entries_count, line_val;
+    Node *entry;
+    char *fullFilename[strlen(filename) + ENTERIES_FILE_EXTENSION_LEN + 1];
+
+    FILE *entries_file;
+
+    found = entries_count = 0;
+    entry = entries->head;
+
+    /* entries_file creation */
+    sprintf(fullFilename, "%s%s", filename, ENTERIES_FILE_EXTENSION);
+    entries_file = fopen(fullFilename, "w");
+    if (entries_file == NULL) {
+        /* error */
+    }
+
+    while (entry != NULL) {
+        entries_count++;
+        for (i = 0; i < sym_table->size; i++) {
+            if (sym_table->table[i] != NULL) {
+                if (strcmp(entry->data.label, sym_table->table[i]->key) == 0) {
+                    found = 1;
+                    line_val = sym_table->table[i]->value;
+                    break;
+                }
+            }
+        }
+
+        if (found == 0) {
+            /* error - entry without definition */
+            return 0;
+        }
+
+        /*add entry name and ic to file .ent */
+        fprintf(entries_file, "%s %d\n", entry->data->label, line_val);
+
+        entry = entry->next;
+    }
+
+    /* check if file removal needed when there are no entries */
+    // if (entries_count == 0) {
+    //     remove(entries_file);
+    // return 1;
+    // }
+
+    fclose(entries_file);
+
+    return 1;
+}
