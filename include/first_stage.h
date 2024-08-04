@@ -6,5 +6,7 @@
 #include <string.h>
 #include "../include/utils.h"
 #include "../include/symbol_table.h"
+#include "../include/special_symbol_list.h"
+#include "../include/command.h"
 
 #endif //OPENU_PROJECT_FIRST_STAGE_H

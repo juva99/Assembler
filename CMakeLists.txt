@@ -16,6 +16,7 @@ set(SOURCES
         src/symbol_table.c
         src/code_container.c
         src/command.c
+        src/special_symbol_list.c
 )
 
 # Create the main executable
@@ -30,6 +31,7 @@ set(TEST_SOURCES
         src/symbol_table.c
         src/command.c
         src/code_container.c
+        src/special_symbol_list.c
 )
 
 # Create the test executable
