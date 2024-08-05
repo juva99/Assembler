@@ -6,16 +6,18 @@
 
 int second_stage_process(char *filename, code_cont *data, code_cont *code, SymTable *sym_table, SpecialSymList entries,
                          int ic) {
-    int i, errors;
+    int i, errors, entries_count;
     char line;
     char sym_name[MAX_LABEL_LENGTH + 1];
     cmd_struct *command;
 
     FILE *file;
 
-    if (!handle_entries(filename, sym_table, entries)) {
+    entries_count = validate_entries(sym_table, entries);
+    if (entries_count == -1) {
         /* error */
     }
+    print_entries(filename, entries);
 
     for (i = 0; i < ic; ++i) {
         if ((code + i)->bin_rep == 0) {

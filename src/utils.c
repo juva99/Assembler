@@ -439,44 +439,46 @@ char *strduplic(const char *s) {
     return copy;
 }
 
-int handle_entries(char *filename, SymTable *sym_table, SpecialSymList entries) {
-    int i, found, entries_count, line_val;
-    Node *entry;
-    char *fullFilename[strlen(filename) + ENTERIES_FILE_EXTENSION_LEN + 1];
+int validate_entries(SymTable *sym_table, SpecialSymList entries) {
+    int entries_count, entry_value;
+    Node *curr_node;
 
+    entries_count = 0;
+    curr_node = entries->head;
+
+    while (curr_node != NULL) {
+        entries_count++;
+
+        entry_value = find_sym_value(sym_table, curr_node->data->label);
+        if (entry_value == -1) {
+            /* error - entry without definition */
+            return -1;
+        }
+        curr_node->data->value = entry_value;
+
+        curr_node = curr_node->next;
+    }
+    return entries_count;
+}
+
+void print_entries(char *filename, SpecialSymList entries) {
+    char *full_filename[strlen(filename) + ENTERIES_FILE_EXTENSION_LEN + 1];
     FILE *entries_file;
+    Node *curr_node;
 
-    found = entries_count = 0;
-    entry = entries->head;
-
-    /* entries_file creation */
-    sprintf(fullFilename, "%s%s", filename, ENTERIES_FILE_EXTENSION);
-    entries_file = fopen(fullFilename, "w");
+    sprintf(full_filename, "%s%s", filename, ENTERIES_FILE_EXTENSION);
+    entries_file = fopen(full_filename, "w");
     if (entries_file == NULL) {
         /* error */
     }
 
-    while (entry != NULL) {
-        entries_count++;
-        for (i = 0; i < sym_table->size; i++) {
-            if (sym_table->table[i] != NULL) {
-                if (strcmp(entry->data.label, sym_table->table[i]->key) == 0) {
-                    found = 1;
-                    line_val = sym_table->table[i]->value;
-                    break;
-                }
-            }
-        }
+    curr_node = entries->head;
 
-        if (found == 0) {
-            /* error - entry without definition */
-            return 0;
-        }
-
+    while (curr_node != NULL) {
         /*add entry name and ic to file .ent */
-        fprintf(entries_file, "%s %d\n", entry->data->label, line_val);
+        fprintf(entries_file, "%s %d\n", curr_node->data->label, curr_node->data->value);
 
-        entry = entry->next;
+        curr_node = curr_node->next;
     }
 
     /* check if file removal needed when there are no entries */
@@ -486,6 +488,4 @@ int handle_entries(char *filename, SymTable *sym_table, SpecialSymList entries) 
     // }
 
     fclose(entries_file);
-
-    return 1;
 }
