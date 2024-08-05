@@ -12,11 +12,11 @@ set(SOURCES
         src/macro_table.c
         src/preprocess.c
         src/utils.c
-        src/preprocess.c
         src/symbol_table.c
         src/code_container.c
         src/command.c
-        src/special_symbol_list.c
+        src/symbol_list.c
+        src/first_stage.c
 )
 
 # Create the main executable
@@ -31,7 +31,7 @@ set(TEST_SOURCES
         src/symbol_table.c
         src/command.c
         src/code_container.c
-        src/special_symbol_list.c
+        src/symbol_list.c
 )
 
 # Create the test executable

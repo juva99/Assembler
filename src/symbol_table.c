@@ -20,19 +20,18 @@ SymTable *create_symtable() {
 
     table = (SymTable *) malloc(sizeof(SymTable));
     if (!table) {
-        printf("Memory allocation falid for symbol table\n");
+        printf("Memory allocation failed for symbol table\n");
         return NULL;
     }
 
     table->size = INITIAL_SIZE;
     table->count = 0;
-    table->table = (Symbol **) calloc(INITIAL_SIZE, sizeof(Symbol));
+    table->table = (Symbol **) calloc(table->size, sizeof(Symbol *));
     if (!table->table) {
-        printf("Memory allocation falid for symbol table\n");
+        printf("Memory allocation failed for symbol table\n");
         free(table);
         return NULL;
     }
-
     return table;
 }
 
@@ -82,14 +81,14 @@ int enlarge_table(SymTable *table) {
 
 
 int insert_symbol_table(SymTable *table, char *key, char *type, int value) {
-    unsigned i;
+    unsigned int i;
     Symbol *newSymbol;
     if ((float) table->count / table->size > LOAD_FACTOR) {
         enlarge_table(table);
     }
 
     i = hash_sym(key, table->size);
-    while (table->table[i] != NULL) {
+    while (table->table[i]) {
         if (strcmp(table->table[i]->key, key) == 0) {
             /* If the key already exists - return 0 */
             return 0;

@@ -30,7 +30,7 @@ void test_create_symtable() {
     } else {
         printf("test_create_symtable FAILED\n");
     }
-    free_table(table);
+    free_symtable(table);
 }
 
 // Test inserting into the symbol table
@@ -51,7 +51,7 @@ void test_insert_symbol_table() {
         printf("test_insert_symbol_table FAILED\n");
     }
 
-    free_table(table);
+    free_symtable(table);
 }
 
 // Test finding a symbol's value
@@ -75,7 +75,7 @@ void test_find_sym_value() {
         printf("test_find_sym_value FAILED\n");
     }
 
-    free_table(table);
+    free_symtable(table);
 }
 
 // Test freeing the symbol table
@@ -89,7 +89,7 @@ void test_free_table() {
     insert_symbol_table(table, "symbol1", "type1", 100);
     insert_symbol_table(table, "symbol2", "type2", 200);
 
-    free_table(table);
+    free_symtable(table);
     // If there are no memory leaks and the program runs without errors, we can assume it passed.
     printf("test_free_table PASSED (manual check for memory leaks needed)\n");
 }
@@ -113,7 +113,7 @@ void test_enlarge_table() {
         result = insert_symbol_table(table, key, type, value + i);
         if (result == 0) {
             printf("test_enlarge_table FAILED (insertion failed)\n");
-            free_table(table);
+            free_symtable(table);
             return;
         }
     }
@@ -134,5 +134,5 @@ void test_enlarge_table() {
         printf("test_enlarge_table FAILED\n");
     }
 
-    free_table(table);
+    free_symtable(table);
 }
