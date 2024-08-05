@@ -20,8 +20,7 @@ set(SOURCES
 
 # Create the main executable
 add_executable(openu_project ${SOURCES}
-        src/second_stage.c
-        include/second_stage.h)
+        src/second_stage.c)
 
 # Unit tests
 set(TEST_SOURCES
