@@ -15,6 +15,7 @@ set(SOURCES
         src/symbol_table.c
         src/code_container.c
         src/command.c
+        src/second_stage.c
         src/symbol_list.c
         src/first_stage.c
 )
