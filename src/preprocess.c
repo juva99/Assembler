@@ -22,7 +22,6 @@ int preprocess(char filename[]) {
         fclose(file);
         return 0;
     }
-
     extract_file_name(filename, &preprocessed_file_name);
 
     /* read lines */
@@ -151,7 +150,7 @@ int extract_file_name(char filename[], char **preprocessed) {
     dot = strrchr(*preprocessed, '.');
     if (dot != NULL)
         *dot = '\0';
-    strcat(*preprocessed,PREPROCESSED_FILE_TYPE);
+    strcat(*preprocessed, PREPROCESSED_FILE_TYPE);
 
     return 1;
 }

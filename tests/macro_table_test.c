@@ -1,6 +1,7 @@
 #include "../include/macro_table.h"
 #include "../include/command.h"
 #include "../include/code_container.h"
+#include "../include/symbol_table.h"
 #include <stdio.h>
 
 
@@ -17,6 +18,7 @@ int main() {
     cmd_struct *cmd;
     code_cont *code = create_container();
     MacroTable *table = create_table();
+    SymTable *sym_table;
     int ic = 0;
     char bla[] = "jmp  LOOP  ";
     if (!table) {
@@ -53,7 +55,18 @@ int main() {
     add_command(&code, cmd, &ic);
     printBinary(code->bin_rep);
     printBinary((code + 1)->bin_rep);
-    printf("%s", (code + 1)->label);
+    printf("%s\n", (code + 1)->label);
+
+
+    sym_table = create_symtable();
+    insert_symbol_table(sym_table, "sym1", ".data", 100);
+    insert_symbol_table(sym_table, "sym2", ".code", 100);
+    insert_symbol_table(sym_table, "sym3", ".data", 105);
+
+    update_data_symbols(sym_table, 100);
+    printf("sym1: %d\n", find_sym_value(sym_table, "sym1"));
+    printf("sym2: %d\n", find_sym_value(sym_table, "sym2"));
+    printf("sym3: %d\n", find_sym_value(sym_table, "sym3"));
 
     return 0;
 }
