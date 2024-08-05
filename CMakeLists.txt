@@ -16,11 +16,11 @@ set(SOURCES
         src/symbol_table.c
         src/code_container.c
         src/command.c
+        src/second_stage.c
 )
 
 # Create the main executable
-add_executable(openu_project ${SOURCES}
-        src/second_stage.c)
+add_executable(openu_project ${SOURCES})
 
 # Unit tests
 set(TEST_SOURCES
