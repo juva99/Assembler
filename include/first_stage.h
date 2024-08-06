@@ -8,6 +8,7 @@
 #include "../include/symbol_table.h"
 #include "../include/symbol_list.h"
 #include "../include/command.h"
+#include "../include/second_stage.h"
 
 int first_stage_process(char *filename);
 
