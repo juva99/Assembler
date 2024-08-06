@@ -112,18 +112,11 @@ int insert_symbol_table(SymTable *table, char *key, char *type, int value) {
 }
 
 int find_sym_value(SymTable *table, char *key) {
-    unsigned int index;
-
-    index = hash_sym(key, table->size);
-    while (table->table[index]) {
-        if (strcmp(table->table[index]->key, key) == 0) {
-            return table->table[index]->value;
-        }
-        index = (index + 1) % table->size;
-    }
-
-    return -1;
-    /* the function can work as is_member as well - note the false answer will be -1 */
+    Symbol *sym;
+    sym = get_symbol(table, key);
+    if (sym == NULL)
+        return -1;
+    return sym->value;
 }
 
 void update_data_symbols(SymTable *table, int ic) {
@@ -137,4 +130,17 @@ void update_data_symbols(SymTable *table, int ic) {
             }
         }
     }
+}
+
+Symbol *get_symbol(SymTable *table, char *key) {
+    unsigned int index;
+
+    index = hash_sym(key, table->size);
+    while (table->table[index]) {
+        if (strcmp(table->table[index]->key, key) == 0) {
+            return (Symbol *) table->table[index];
+        }
+        index = (index + 1) % table->size;
+    }
+    return NULL;
 }
