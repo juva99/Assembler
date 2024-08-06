@@ -131,3 +131,23 @@ unsigned short create_method_line(cmd_struct *cmd, int method, char *value, int 
     return method_line;
 }
 
+int update_line(code_cont *code, Symbol *symbol) {
+    ARE line_are;
+    unsigned short new_val = 0;
+
+    /* set ARE type based on instruction type */
+    if (strcmp(symbol->instr_type, ".data") == 0)
+        line_are = RELOCATABLE;
+    else if (strcmp(symbol->instr_type, ".external") == 0)
+        line_are = EXTERNAL;
+    else {
+        /* error */
+        return 0;
+    }
+
+    /* creating new line */
+    new_val |= 1U << line_are;
+    new_val |= symbol->value << DATA_OFFSET;
+    code->bin_rep = new_val;
+    return 1;
+}
