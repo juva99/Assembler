@@ -22,8 +22,13 @@ int second_stage_process(code_cont *data, code_cont *code, SymTable *sym_table, 
                     /* error */
                     continue;
                 }
+                /* if symbol is external add it to ext list */
+                if (strcmp(symbol->key, ".external") == 0) {
+                    add_symbol(externals, symbol->key, i + IC_OFFSET);
+                }
             } else {
                 /*error*/
+                continue;
             }
         }
     }
@@ -31,4 +36,5 @@ int second_stage_process(code_cont *data, code_cont *code, SymTable *sym_table, 
     /* merge code and data */
 
     /* save binary file */
+    return 1;
 }
