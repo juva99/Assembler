@@ -8,6 +8,9 @@ int second_stage_process(code_cont *data, code_cont *code, SymTable *sym_table, 
 
     FILE *file;
 
+    /* initialize data */
+    externals = create_symbol_list();
+
     /* check entries */
 
     for (i = 0; i < ic; ++i) {
