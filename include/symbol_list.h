@@ -13,6 +13,7 @@ typedef struct Node {
 
 typedef struct {
     Node *head;
+    int count;
 } SymbolList;
 
 SymbolList *create_symbol_list();
