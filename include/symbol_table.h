@@ -1,12 +1,11 @@
 #ifndef OPENU_PROJECT_SYMBOL_TABLE_H
 #define OPENU_PROJECT_SYMBOL_TABLE_H
 
-#include "../include/utils.h"
 
 #define INITIAL_SIZE 10
 #define LOAD_FACTOR 0.75
 
-typedef struct Entry {
+typedef struct Symbol {
     char *key;
     char *instr_type;
     int value;
@@ -18,16 +17,23 @@ typedef struct {
     int count;
 } SymTable;
 
+#include "../include/utils.h"
+
+
 SymTable *create_symtable();
 
 void free_symbol(Symbol *symbol);
 
-void free_table(SymTable *table);
+void free_symtable(SymTable *table);
 
-void enlarge_table(SymTable *table);
+int enlarge_table(SymTable *table);
 
 int insert_symbol_table(SymTable *table, char *key, char *type, int value);
 
 int find_sym_value(SymTable *table, char *key);
+
+void update_data_symbols(SymTable *table, int ic);
+
+Symbol *get_symbol(SymTable *table, char *key);
 
 #endif //OPENU_PROJECT_SYMBOL_TABLE_H

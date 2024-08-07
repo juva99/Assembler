@@ -28,6 +28,7 @@ typedef struct code_cont {
 
 #include "../include/utils.h"
 #include "../include/command.h"
+#include "../include/symbol_table.h"
 
 int write_data(code_cont **container, unsigned short data, int *counter);
 
@@ -42,5 +43,7 @@ int add_command(code_cont **code, cmd_struct *cmd, int *ic);
 unsigned short create_method_line(cmd_struct *cmd, int method, char *value, int is_src);
 
 code_cont *create_container();
+
+int update_line(code_cont *code, Symbol *symbol);
 
 #endif //CODE_CONTAINER_H
