@@ -1,12 +1,10 @@
 #include "../include/second_stage.h"
 
 
-
 int second_stage_process(code_cont *data, code_cont *code, SymTable *sym_table, SymbolList *entries, int ic, int dc) {
     int i, errors;
-    char line;
-    char sym_name[MAX_LABEL_LENGTH + 1];
-    cmd_struct *command;
+    Symbol *symbol;
+    SymbolList *externals;
 
     FILE *file;
 
