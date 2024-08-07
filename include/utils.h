@@ -78,9 +78,6 @@ unsigned short conv_to_ushort(int dec_num);
 
 char *strduplic(const char *s);
 
-int validate_entries(SymTable *sym_table, SpecialSymList entries);
-
-void print_entries(char *filename, SpecialSymList entries);
 
 
 #endif //OPENU_PROJECT_UTILS_H

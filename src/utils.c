@@ -4,32 +4,32 @@
 #include <stdlib.h>
 
 opcode opcodes[] = {
-        {"mov",  2, {0,  1,  2,  3},  {1,  2,  3,  -1}},
-        {"cmp",  2, {0,  1,  2,  3},  {0,  1,  2,  3}},
-        {"add",  2, {0,  1,  2,  3},  {1,  2,  3,  -1}},
-        {"sub",  2, {0,  1,  2,  3},  {1,  2,  3,  -1}},
-        {"lea",  2, {1,  -1, -1, -1}, {1,  2,  3,  -1}},
-        {"clr",  1, {-1, -1, -1, -1}, {1,  2,  3,  -1}},
-        {"not",  1, {-1, -1, -1, -1}, {1,  2,  3,  -1}},
-        {"inc",  1, {-1, -1, -1, -1}, {1,  2,  3,  -1}},
-        {"dec",  1, {-1, -1, -1, -1}, {1,  2,  3,  -1}},
-        {"jmp",  1, {-1, -1, -1, -1}, {1,  2,  -1, -1}},
-        {"bne",  1, {-1, -1, -1, -1}, {1,  2,  -1, -1}},
-        {"red",  1, {-1, -1, -1, -1}, {1,  2,  3,  -1}},
-        {"prn",  1, {-1, -1, -1, -1}, {0,  1,  2,  3}},
-        {"jsr",  1, {-1, -1, -1, -1}, {1,  2,  -1, -1}},
-        {"rts",  0, {-1, -1, -1, -1}, {-1, -1, -1, -1}},
-        {"stop", 0, {-1, -1, -1, -1}, {-1, -1, -1, -1}}
+    {"mov", 2, {0, 1, 2, 3}, {1, 2, 3, -1}},
+    {"cmp", 2, {0, 1, 2, 3}, {0, 1, 2, 3}},
+    {"add", 2, {0, 1, 2, 3}, {1, 2, 3, -1}},
+    {"sub", 2, {0, 1, 2, 3}, {1, 2, 3, -1}},
+    {"lea", 2, {1, -1, -1, -1}, {1, 2, 3, -1}},
+    {"clr", 1, {-1, -1, -1, -1}, {1, 2, 3, -1}},
+    {"not", 1, {-1, -1, -1, -1}, {1, 2, 3, -1}},
+    {"inc", 1, {-1, -1, -1, -1}, {1, 2, 3, -1}},
+    {"dec", 1, {-1, -1, -1, -1}, {1, 2, 3, -1}},
+    {"jmp", 1, {-1, -1, -1, -1}, {1, 2, -1, -1}},
+    {"bne", 1, {-1, -1, -1, -1}, {1, 2, -1, -1}},
+    {"red", 1, {-1, -1, -1, -1}, {1, 2, 3, -1}},
+    {"prn", 1, {-1, -1, -1, -1}, {0, 1, 2, 3}},
+    {"jsr", 1, {-1, -1, -1, -1}, {1, 2, -1, -1}},
+    {"rts", 0, {-1, -1, -1, -1}, {-1, -1, -1, -1}},
+    {"stop", 0, {-1, -1, -1, -1}, {-1, -1, -1, -1}}
 };
 
 char *instructions[] = {".data", ".string", "entry", "extern"};
 char *registers[] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7"};
 
 int (*check_address_functions[])(char *str) = {
-        check_address_type_0,
-        check_address_type_1,
-        check_address_type_2,
-        check_address_type_3,
+    check_address_type_0,
+    check_address_type_1,
+    check_address_type_2,
+    check_address_type_3,
 };
 
 
@@ -437,82 +437,3 @@ char *strduplic(const char *s) {
     return copy;
 }
 
-int validate_entries(SymTable *sym_table, SpecialSymList entries) {
-    int entries_count, entry_value;
-    Node *curr_node;
-
-    entries_count = 0;
-    curr_node = entries->head;
-
-    while (curr_node != NULL) {
-        entries_count++;
-
-        entry_value = find_sym_value(sym_table, curr_node->label);
-        if (entry_value == -1) {
-            /* error - entry without definition */
-            return -1;
-        }
-        curr_node->value = entry_value;
-
-        curr_node = curr_node->next;
-    }
-    return entries_count;
-}
-
-int print_symbol_list(char *filename, ListType *list_type, SpecialSymList list) {
-    char *full_filename;
-    FILE *list_file;
-    Node *curr_node;
-
-    switch (list_type) {
-        case ENTRY: {
-            full_filename = (char *) malloc(strlen(filename) + ENTERIES_FILE_EXTENSION_LEN + 1);
-            if (full_filename == NULL) {
-                /* error */
-            }
-
-            sprintf(full_filename, "%s%s", filename, ENTERIES_FILE_EXTENSION);
-            list_file = fopen(full_filename, "w");
-            if (list_file == NULL) {
-                /* error */
-            }
-            break;
-        }
-        case EXTERN: {
-            full_filename = (char *) malloc(strlen(filename) + EXTERNS_FILE_EXTENSION_LEN + 1);
-            if (full_filename == NULL) {
-                /* error */
-            }
-
-            sprintf(full_filename, "%s%s", filename, EXTERNS_FILE_EXTENSION);
-            list_file = fopen(full_filename, "w");
-            if (list_file == NULL) {
-                /* error */
-            }
-            break;
-        }
-        default: {
-            /* error */
-            return 0;
-        }
-    }
-
-    curr_node = list->head;
-
-    while (curr_node != NULL) {
-        /*add entry name and ic to file .ent */
-        fprintf(list_file, "%s %d\n", curr_node->label, curr_node->value);
-
-        curr_node = curr_node->next;
-    }
-
-    /* check if file removal needed when there are no entries */
-    // if (entries_count == 0) {
-    //     remove(entries_file);
-    // return 1;
-    // }
-
-    fclose(list_file);
-    free(full_filename);
-    return 1;
-}

@@ -22,6 +22,8 @@ int add_symbol(SymbolList *list, char *label, int value);
 
 int free_symbol_list(SymbolList *list);
 
+int validate_entries(SymTable *sym_table, SpecialSymList entries);
+
 void print_symbol_list(SymbolList *list);
 
 #endif //SPECIAL_SYMBOL_LIST_H

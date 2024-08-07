@@ -8,10 +8,10 @@ int second_stage_process(code_cont *data, code_cont *code, SymTable *sym_table, 
 
     FILE *file;
 
-    /* initialize data */
-    externals = create_symbol_list();
-
-    /* check entries */
+    if (!validate_entries(sym_table, entries)) {
+        /* error */
+    }
+    print_entries(entries);
 
     for (i = 0; i < ic; ++i) {
         if ((code + i)->bin_rep == 0) {
