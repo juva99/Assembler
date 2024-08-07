@@ -461,22 +461,49 @@ int validate_entries(SymTable *sym_table, SpecialSymList entries) {
     return entries_count;
 }
 
-void print_entries(char *filename, SpecialSymList entries) {
-    char *full_filename[strlen(filename) + ENTERIES_FILE_EXTENSION_LEN + 1];
-    FILE *entries_file;
+int print_symbol_list(char *filename, ListType *list_type, SpecialSymList list) {
+    char *full_filename;
+    FILE *list_file;
     Node *curr_node;
 
-    sprintf(full_filename, "%s%s", filename, ENTERIES_FILE_EXTENSION);
-    entries_file = fopen(full_filename, "w");
-    if (entries_file == NULL) {
-        /* error */
+    switch (list_type) {
+        case ENTRY: {
+            full_filename = (char *) malloc(strlen(filename) + ENTERIES_FILE_EXTENSION_LEN + 1);
+            if (full_filename == NULL) {
+                /* error */
+            }
+
+            sprintf(full_filename, "%s%s", filename, ENTERIES_FILE_EXTENSION);
+            list_file = fopen(full_filename, "w");
+            if (list_file == NULL) {
+                /* error */
+            }
+            break;
+        }
+        case EXTERN: {
+            full_filename = (char *) malloc(strlen(filename) + EXTERNS_FILE_EXTENSION_LEN + 1);
+            if (full_filename == NULL) {
+                /* error */
+            }
+
+            sprintf(full_filename, "%s%s", filename, EXTERNS_FILE_EXTENSION);
+            list_file = fopen(full_filename, "w");
+            if (list_file == NULL) {
+                /* error */
+            }
+            break;
+        }
+        default: {
+            /* error */
+            return 0;
+        }
     }
 
-    curr_node = entries->head;
+    curr_node = list->head;
 
     while (curr_node != NULL) {
         /*add entry name and ic to file .ent */
-        fprintf(entries_file, "%s %d\n", curr_node->label, curr_node->value);
+        fprintf(list_file, "%s %d\n", curr_node->label, curr_node->value);
 
         curr_node = curr_node->next;
     }
@@ -487,5 +514,7 @@ void print_entries(char *filename, SpecialSymList entries) {
     // return 1;
     // }
 
-    fclose(entries_file);
+    fclose(list_file);
+    free(full_filename);
+    return 1;
 }

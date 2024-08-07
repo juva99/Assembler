@@ -12,6 +12,11 @@ typedef enum {
     STRING
 } DataType;
 
+typedef enum {
+    ENTRY,
+    EXTERN
+} ListType;
+
 
 typedef struct opcode {
     char *name; /* name of opcode */
