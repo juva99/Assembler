@@ -449,12 +449,12 @@ int validate_entries(SymTable *sym_table, SpecialSymList entries) {
     while (curr_node != NULL) {
         entries_count++;
 
-        entry_value = find_sym_value(sym_table, curr_node->data->label);
+        entry_value = find_sym_value(sym_table, curr_node->label);
         if (entry_value == -1) {
             /* error - entry without definition */
             return -1;
         }
-        curr_node->data->value = entry_value;
+        curr_node->value = entry_value;
 
         curr_node = curr_node->next;
     }
@@ -476,7 +476,7 @@ void print_entries(char *filename, SpecialSymList entries) {
 
     while (curr_node != NULL) {
         /*add entry name and ic to file .ent */
-        fprintf(entries_file, "%s %d\n", curr_node->data->label, curr_node->data->value);
+        fprintf(entries_file, "%s %d\n", curr_node->label, curr_node->value);
 
         curr_node = curr_node->next;
     }
