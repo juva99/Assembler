@@ -1,10 +1,8 @@
 #include "../include/second_stage.h"
 
-#include <consts.h>
-#include <stdio.h>
-#include <utils.h>
 
-int second_stage_process(code_cont *data, code_cont *code, SymTable *sym_table, SymTable entries, int ic) {
+
+int second_stage_process(code_cont *data, code_cont *code, SymTable *sym_table, SymbolList *entries, int ic, int dc) {
     int i, errors;
     char line;
     char sym_name[MAX_LABEL_LENGTH + 1];

@@ -54,7 +54,7 @@ int first_stage_process(char *filename) {
         /* #8 */
         if (is_extern(line)) {
             if (extract_symbol(line, sym_name, ' ')) {
-                if (!insert_symbol_table(sym_table, sym_name, ".external", NULL)) {
+                if (!insert_symbol_table(sym_table, sym_name, ".external", 0)) {
                     /* error */
                     errors++;
                 }
@@ -91,8 +91,6 @@ int first_stage_process(char *filename) {
     if (errors > 0) {
         return 0;
     }
-
     update_data_symbols(sym_table, ic + IC_OFFSET);
-
-    return 1;
+    return second_stage_process(data, code, sym_table, entries_list, ic, dc);
 }
