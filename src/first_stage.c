@@ -92,5 +92,5 @@ int first_stage_process(char *filename) {
         return 0;
     }
     update_data_symbols(sym_table, ic + IC_OFFSET);
-    return second_stage_process(data, code, sym_table, entries_list, ic, dc);
+    return second_stage_process(filename, data, code, sym_table, entries_list, ic, dc);
 }

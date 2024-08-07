@@ -57,3 +57,5 @@ cmake-build-debug
 
 # Project ignores
 *.am
+*.ent
+*.ext

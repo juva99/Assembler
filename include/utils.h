@@ -2,12 +2,18 @@
 #define OPENU_PROJECT_UTILS_H
 
 #include "../include/consts.h"
+#include "../include/symbol_table.h"
 
 typedef enum {
     NOT_DATA,
     DATA,
     STRING
 } DataType;
+
+typedef enum {
+    ENTRY,
+    EXTERN
+} ListType;
 
 
 typedef struct opcode {

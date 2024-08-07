@@ -1,17 +1,19 @@
 #include "../include/second_stage.h"
 
 
-int second_stage_process(code_cont *data, code_cont *code, SymTable *sym_table, SymbolList *entries, int ic, int dc) {
+int second_stage_process(char *filename, code_cont *data, code_cont *code, SymTable *sym_table, SymbolList *entries,
+                         int ic, int dc) {
     int i, errors;
     Symbol *symbol;
     SymbolList *externals;
 
     FILE *file;
 
-    /* initialize data */
     externals = create_symbol_list();
 
-    /* check entries */
+    if (!validate_entries(sym_table, entries)) {
+        /* error */
+    }
 
     for (i = 0; i < ic; ++i) {
         if ((code + i)->bin_rep == 0) {
@@ -23,7 +25,7 @@ int second_stage_process(code_cont *data, code_cont *code, SymTable *sym_table, 
                     continue;
                 }
                 /* if symbol is external add it to ext list */
-                if (strcmp(symbol->key, ".external") == 0) {
+                if (strcmp(symbol->instr_type, ".external") == 0) {
                     add_symbol(externals, symbol->key, i + IC_OFFSET);
                 }
             } else {
@@ -32,9 +34,11 @@ int second_stage_process(code_cont *data, code_cont *code, SymTable *sym_table, 
             }
         }
     }
-
     /* merge code and data */
 
     /* save binary file */
+    save_symbol_list(filename, ENTRY, entries);
+    save_symbol_list(filename, EXTERN, externals);
+
     return 1;
 }

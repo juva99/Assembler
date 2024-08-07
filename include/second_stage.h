@@ -11,6 +11,7 @@
 #include "../include/code_container.h"
 #include "../include/symbol_list.h"
 
-int second_stage_process(code_cont *data, code_cont *code, SymTable *sym_table, SymbolList *entries, int ic, int dc);
+int second_stage_process(char *filename, code_cont *data, code_cont *code, SymTable *sym_table, SymbolList *entries,
+                         int ic, int dc);
 
 #endif //SECOND_STAGE_H
