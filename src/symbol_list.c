@@ -6,6 +6,7 @@ SymbolList *create_symbol_list() {
         return NULL;
     }
     list->head = NULL;
+    list->count = 0;
     return list;
 }
 
@@ -26,6 +27,7 @@ int add_symbol(SymbolList *list, char *label, int value) {
     }
     node->next = list->head;
     list->head = node;
+    list->count++;
     return 1;
 }
 
@@ -48,7 +50,7 @@ void print_symbol_list(SymbolList *list) {
     while (current_node != NULL) {
         printf(current_node->label);
         printf("\n %d \n", current_node->value);
-        
+
         current_node = current_node->next;
     }
 }

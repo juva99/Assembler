@@ -136,7 +136,7 @@ int update_line(code_cont *code, Symbol *symbol) {
     unsigned short new_val = 0;
 
     /* set ARE type based on instruction type */
-    if (strcmp(symbol->instr_type, ".data") == 0)
+    if (strcmp(symbol->instr_type, ".data") == 0 || strcmp(symbol->instr_type, ".code") == 0)
         line_are = RELOCATABLE;
     else if (strcmp(symbol->instr_type, ".external") == 0)
         line_are = EXTERNAL;

@@ -54,3 +54,6 @@ dkms.conf
 # CLion files
 cmake-build-debug
 .idea
+
+# Project ignores
+*.am
