@@ -75,7 +75,7 @@ int validate_entries(SymTable *sym_table, SymbolList *entries) {
     return 1;
 }
 
-int print_symbol_list(char *filename, ListType *list_type, SymbolList *list) {
+int save_symbol_list(char *filename, ListType list_type, SymbolList *list) {
     char *full_filename;
     FILE *list_file;
     Node *curr_node;
