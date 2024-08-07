@@ -19,6 +19,7 @@ int add_symbol(SymbolList *list, char *label, int value) {
     /* set new node values */
     node->label = strduplic(label);
     node->value = value;
+    node->next = NULL;
 
     /* place node in list */
     if (list->head == NULL) {

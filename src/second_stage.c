@@ -25,7 +25,7 @@ int second_stage_process(char *filename, code_cont *data, code_cont *code, SymTa
                     continue;
                 }
                 /* if symbol is external add it to ext list */
-                if (strcmp(symbol->key, ".external") == 0) {
+                if (strcmp(symbol->instr_type, ".external") == 0) {
                     add_symbol(externals, symbol->key, i + IC_OFFSET);
                 }
             } else {
@@ -34,7 +34,6 @@ int second_stage_process(char *filename, code_cont *data, code_cont *code, SymTa
             }
         }
     }
-
     /* merge code and data */
 
     /* save binary file */
