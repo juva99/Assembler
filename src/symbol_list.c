@@ -3,6 +3,7 @@
 SymbolList *create_symbol_list() {
     SymbolList *list = (SymbolList *) malloc(sizeof(SymbolList));
     if (!list) {
+        /*error */
         return NULL;
     }
     list->head = NULL;

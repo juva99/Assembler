@@ -1,5 +1,6 @@
 #include "../include/first_stage.h"
 
+/*error mapping needed*/
 int first_stage_process(char *filename) {
     int ic, dc, symbol, data_size, instr_len, opcode, errors;
     char line[MAX_LINE_LENGTH + 1];

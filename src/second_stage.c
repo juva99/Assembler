@@ -1,6 +1,6 @@
 #include "../include/second_stage.h"
 
-
+/*error mapping needed*/
 int second_stage_process(char *filename, code_cont *data, code_cont *code, SymTable *sym_table, SymbolList *entries,
                          int ic, int dc) {
     int i, errors;

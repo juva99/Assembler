@@ -340,7 +340,7 @@ int get_dst_add_method(int opcode, char *dst) {
 }
 
 int encode_numeric_data(char *line, code_cont **data, int *dc) {
-    int i, count, is_negative, num;
+    int i, count, num;
     unsigned short val;
     char curr_token[MAX_LINE_LENGTH];
 
@@ -348,7 +348,13 @@ int encode_numeric_data(char *line, code_cont **data, int *dc) {
 
     while (extract_next(line, curr_token, ',')) {
         if (*curr_token == '\0') {
-            /* error - empty token */
+            if (count == 0) {
+                /* error - no numeric values */
+            }
+            else {
+                /*error - line finished with ',' */
+            }
+            return 0;
         }
         i = 0;
         if (*curr_token == '-') {
