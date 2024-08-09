@@ -323,3 +323,8 @@ char *strduplic(const char *s) {
     return copy;
 }
 
+char *add_file_extension(char *filename, char *extension) {
+    char *dup_filename = strduplic(filename);
+    strcat(dup_filename, extension);
+    return dup_filename;
+}

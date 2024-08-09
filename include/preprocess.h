@@ -6,9 +6,10 @@
 #include <string.h>
 #include "../include/macro_table.h"
 #include "../include/utils.h"
+#include "../include/file.h"
 
 
-int preprocess(char filename[]);
+int preprocess(file_struct *curr_file);
 
 int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros);
 

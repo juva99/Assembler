@@ -1,20 +1,23 @@
 #include "../include/preprocess.h"
 
 /* preprocess function */
-int preprocess(char filename[]) {
+int preprocess(file_struct *curr_file) {
     MacroTable *macros;
     int ret_code = 1, n_line = 0;
     char line[MAX_LINE_LENGTH + 1];
-    char *preprocessed_file_name;
-    FILE *file, *final_file;
+    char *preprocessed_filename;
+    char *processed_filename;
+    FILE *file, *proccessed_file;
 
     /* open file */
-    file = fopen(filename, "r");
+    preprocessed_filename = add_file_extension(curr_file->filename, PREPROCESSED_FILE_TYPE);
+    file = fopen(preprocessed_filename, "r");
     if (file == NULL) {
-        fprintf(stderr, "Error opening file: %s\n", filename);
+        fprintf(stderr, "Error opening file: %s\n", curr_file->filename);
         ret_code = 0;
         return ret_code;
     }
+
     /* initialize macro table */
     macros = create_table();
     if (macros == NULL) {
@@ -22,12 +25,11 @@ int preprocess(char filename[]) {
         fclose(file);
         return 0;
     }
-    extract_file_name(filename, &preprocessed_file_name);
+    processed_filename = add_file_extension(curr_file->filename, PROCESSED_FILE_TYPE);
 
     /* read lines */
-    final_file = fopen(preprocessed_file_name, "w");
-    free(preprocessed_file_name);
-    if (final_file == NULL) {
+    proccessed_file = fopen(processed_filename, "w");
+    if (proccessed_file == NULL) {
         fprintf(stderr, "Error opening final file for writing\n");
         free_table(macros);
         fclose(file);
@@ -38,7 +40,7 @@ int preprocess(char filename[]) {
         n_line++;
         /* preprocess line if not empty */
         if (strcmp(line, "\n") != 0) {
-            if (!process_line(line, file, final_file, macros)) {
+            if (!process_line(line, file, proccessed_file, macros)) {
                 ret_code = 0;
                 break;
             }
@@ -47,7 +49,7 @@ int preprocess(char filename[]) {
 
     free_table(macros);
     fclose(file);
-    fclose(final_file);
+    fclose(proccessed_file);
     return ret_code;
 }
 
