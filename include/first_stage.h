@@ -9,7 +9,9 @@
 #include "../include/symbol_list.h"
 #include "../include/command.h"
 #include "../include/second_stage.h"
+#include "../include/file.h"
 
-int first_stage_process(char *filename);
+
+int first_stage_process(file_struct *curr_file);
 
 #endif //OPENU_PROJECT_FIRST_STAGE_H
