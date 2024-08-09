@@ -3,34 +3,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-opcode opcodes[] = {
-    {"mov", 2, {0, 1, 2, 3}, {1, 2, 3, -1}},
-    {"cmp", 2, {0, 1, 2, 3}, {0, 1, 2, 3}},
-    {"add", 2, {0, 1, 2, 3}, {1, 2, 3, -1}},
-    {"sub", 2, {0, 1, 2, 3}, {1, 2, 3, -1}},
-    {"lea", 2, {1, -1, -1, -1}, {1, 2, 3, -1}},
-    {"clr", 1, {-1, -1, -1, -1}, {1, 2, 3, -1}},
-    {"not", 1, {-1, -1, -1, -1}, {1, 2, 3, -1}},
-    {"inc", 1, {-1, -1, -1, -1}, {1, 2, 3, -1}},
-    {"dec", 1, {-1, -1, -1, -1}, {1, 2, 3, -1}},
-    {"jmp", 1, {-1, -1, -1, -1}, {1, 2, -1, -1}},
-    {"bne", 1, {-1, -1, -1, -1}, {1, 2, -1, -1}},
-    {"red", 1, {-1, -1, -1, -1}, {1, 2, 3, -1}},
-    {"prn", 1, {-1, -1, -1, -1}, {0, 1, 2, 3}},
-    {"jsr", 1, {-1, -1, -1, -1}, {1, 2, -1, -1}},
-    {"rts", 0, {-1, -1, -1, -1}, {-1, -1, -1, -1}},
-    {"stop", 0, {-1, -1, -1, -1}, {-1, -1, -1, -1}}
-};
 
 char *instructions[] = {".data", ".string", "entry", "extern"};
 char *registers[] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7"};
-
-int (*check_address_functions[])(char *str) = {
-    check_address_type_0,
-    check_address_type_1,
-    check_address_type_2,
-    check_address_type_3,
-};
 
 
 int starts_with(const char *str, const char *pre) {
@@ -106,19 +81,6 @@ int what_instrct(char *token) {
     return -1; /* returns -1 if token isn't instruction */
 }
 
-int what_opcode(char *token) {
-    int i;
-
-    if (token == NULL)
-        return -1;
-
-    for (i = 0; i < OPCODES_COUNT; i++) {
-        if (strcmp(token, opcodes[i].name) == 0)
-            return i; /* returns the index in instructions array */
-    }
-
-    return -1; /* returns -1 if token isn't instruction */
-}
 
 int what_regs(char *token) {
     int i;
@@ -262,82 +224,6 @@ int extract_opcode(char *line) {
     return opcode;
 }
 
-int get_opcode_args(int opcode) {
-    if (opcode < 0 || opcode >= OPCODES_COUNT)
-        return -1;
-    return opcodes[opcode].args;
-}
-
-/* check if string is valid type 0 address */
-int check_address_type_0(char *str) {
-    /* Check if the first character is '#' */
-    if (*str != '#') {
-        return 0;
-    }
-    /* Move to the next character */
-    str++;
-    /* Check if the next character is a '-' (optional) */
-    if (*str == '-') {
-        str++;
-    }
-    /* Check if the next character(s) form a whole decimal number */
-    if (!isdigit(*str)) {
-        return 0;
-    }
-    while (*str != '\0') {
-        if (!isdigit(*str)) {
-            return 0;
-        }
-        str++;
-    }
-    /* If we reached here, the string starts with '#' followed by a whole decimal number (possibly negative) */
-    return 1;
-}
-
-/* check if string is valid type 1 address */
-int check_address_type_1(char *str) {
-    return check_symbol_name(str);
-}
-
-/* check if string is valid type 2 address */
-int check_address_type_2(char *str) {
-    /* Check if the first character is '#' */
-    if (*str != '*') {
-        return 0;
-    }
-    return check_address_type_3(++str);
-}
-
-/* check if string is valid type 3 address */
-int check_address_type_3(char *str) {
-    return what_regs(str) >= 0;
-}
-
-/* get source address method */
-int get_src_add_method(int opcode, char *src) {
-    int i;
-    /* Check source address */
-    for (i = 0; i < MAX_ADDRESS_METHODS; i++) {
-        if (opcodes[opcode].add_methods_src[i] != -1 &&
-            check_address_functions[opcodes[opcode].add_methods_src[i]](src)) {
-            return opcodes[opcode].add_methods_src[i];
-        }
-    }
-    return -1;
-}
-
-/* get dest address method */
-int get_dst_add_method(int opcode, char *dst) {
-    int i;
-    /* Check dest address */
-    for (i = 0; i < MAX_ADDRESS_METHODS; i++) {
-        if (opcodes[opcode].add_methods_dst[i] != -1 &&
-            check_address_functions[opcodes[opcode].add_methods_dst[i]](dst)) {
-            return opcodes[opcode].add_methods_dst[i];
-        }
-    }
-    return -1;
-}
 
 int encode_numeric_data(char *line, code_cont **data, int *dc) {
     int i, count, num;
