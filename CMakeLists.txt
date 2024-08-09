@@ -18,6 +18,7 @@ set(SOURCES
         src/second_stage.c
         src/symbol_list.c
         src/first_stage.c
+        src/file.c
 )
 
 # Create the main executable
