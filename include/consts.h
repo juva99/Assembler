@@ -19,5 +19,5 @@
 
 #define IC_OFFSET 100
 
-#endif //OPENU_PROJECT_CONSTS_H
+#endif
 

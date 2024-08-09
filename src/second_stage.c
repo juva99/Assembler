@@ -7,9 +7,6 @@ second_stage_process(file_struct *curr_file, code_cont *data, code_cont *code, S
     int i, errors;
     Symbol *symbol;
     SymbolList *externals;
-
-    FILE *file;
-
     externals = create_symbol_list();
 
     if (!validate_entries(sym_table, entries)) {

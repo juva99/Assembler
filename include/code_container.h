@@ -52,4 +52,4 @@ unsigned int to_octal(unsigned short number);
 
 void free_container(code_cont *container, int size);
 
-#endif //CODE_CONTAINER_H
+#endif

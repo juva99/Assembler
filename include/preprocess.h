@@ -22,5 +22,5 @@ int is_macro_name_valid(char *mac_name);
 int extract_file_name(char filename[], char **preprocessed);
 
 
-#endif //OPENU_PROJECT_PREPROCESS_H
+#endif
 

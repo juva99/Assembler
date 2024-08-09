@@ -15,11 +15,11 @@ int starts_with(const char *str, const char *pre) {
 int is_valid_string(const char *str) {
     while (*str) {
         if (!isalpha(*str) && !isdigit(*str)) {
-            return 0; // False, the string contains invalid characters
+            return 0;
         }
         str++;
     }
-    return 1; // True, the string is valid
+    return 1;
 }
 
 int extract_next(char *src, char *next, char delimiter) {
@@ -168,7 +168,7 @@ int extract_symbol(char *line, char *sym_name, char delimeter) {
     strcpy(original_line, line);
 
     if (delimeter == ':' && strchr(line, delimeter) == NULL) {
-        return 0; // ':' not found
+        return 0;
     }
 
     extract_next(line, first_token, delimeter);

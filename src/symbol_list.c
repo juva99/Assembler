@@ -50,8 +50,7 @@ void print_symbol_list(SymbolList *list) {
 
     current_node = list->head;
     while (current_node != NULL) {
-        printf(current_node->label);
-        printf("\n %d \n", current_node->value);
+        printf("%s: %d \n", current_node->label, current_node->value);
 
         current_node = current_node->next;
     }
