@@ -40,6 +40,6 @@ second_stage_process(file_struct *curr_file, code_cont *data, code_cont *code, S
     /* save binary file */
     save_symbol_list(curr_file->filename, ENTRY, entries);
     save_symbol_list(curr_file->filename, EXTERN, externals);
-
+    save_object_file(curr_file->filename, code, data, ic, dc);
     return 1;
 }
