@@ -1,8 +1,9 @@
 #include "../include/second_stage.h"
 
 
-int second_stage_process(char *filename, code_cont *data, code_cont *code, SymTable *sym_table, SymbolList *entries,
-                         int ic, int dc) {
+int
+second_stage_process(file_struct *curr_file, code_cont *data, code_cont *code, SymTable *sym_table,
+                     SymbolList *entries, int ic, int dc) {
     int i, errors;
     Symbol *symbol;
     SymbolList *externals;
@@ -37,8 +38,8 @@ int second_stage_process(char *filename, code_cont *data, code_cont *code, SymTa
     /* merge code and data */
 
     /* save binary file */
-    save_symbol_list(filename, ENTRY, entries);
-    save_symbol_list(filename, EXTERN, externals);
+    save_symbol_list(curr_file->filename, ENTRY, entries);
+    save_symbol_list(curr_file->filename, EXTERN, externals);
 
     return 1;
 }
