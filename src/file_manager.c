@@ -73,14 +73,14 @@ void create_file(file_struct *file, char *filename) {
     file->filename = filename;
     file->errors = malloc(sizeof(Error) * INITIAL_ERROR_SIZE);
     if (file->errors == NULL) {
-        /*error - failed allocate memory for errors array */
+        handle_dynamic_alloc_error();
     }
     file->errors_size = INITIAL_ERROR_SIZE;
     file->errors_count = 0;
 }
 
 
-int add_error_to_file(file_struct *file, int error_id, int error_line, STAGE_ERROR stage_error) {
+void add_error_to_file(file_struct *file, int error_id, int error_line, STAGE_ERROR stage_error) {
     int i;
 
     i = file->errors_count;
@@ -94,8 +94,6 @@ int add_error_to_file(file_struct *file, int error_id, int error_line, STAGE_ERR
     file->errors[i].stage_error = stage_error;
 
     file->errors_count++;
-
-    return 1;
 }
 
 void enlarge_errors_arr(file_struct *file) {
@@ -106,7 +104,7 @@ void enlarge_errors_arr(file_struct *file) {
 
     temp_errors = realloc(file->errors, sizeof(Error) * new_size);
     if (temp_errors == NULL) {
-        /*error - failed to allocate memory */
+        handle_dynamic_alloc_error();
     }
 
     file->errors = temp_errors;

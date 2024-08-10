@@ -55,7 +55,7 @@ typedef struct file_struct {
 
 void create_file(file_struct *file, char *filename);
 
-int add_error_to_file(file_struct *file, int error_id, int error_line, STAGE_ERROR stage_error);
+void add_error_to_file(file_struct *file, int error_id, int error_line, STAGE_ERROR stage_error);
 
 void enlarge_errors_arr(file_struct *file);
 
