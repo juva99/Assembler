@@ -38,6 +38,7 @@ int free_symbol_list(SymbolList *list) {
     while (list->head != NULL) {
         current = list->head;
         list->head = list->head->next;
+        free(current->label);
         free(current);
     }
     free(list);
