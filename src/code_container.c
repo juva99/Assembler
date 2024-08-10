@@ -146,9 +146,9 @@ int save_object_file(char *filename, code_cont *code, code_cont *data, int ic, i
     full_filename = add_file_extension(filename, FINAL_FILE_EXTENSION);
     ob_file = fopen(full_filename, "w");
     if (ob_file == NULL) {
-        /* error */
+        /* error - file opening failed */
         free(full_filename);
-        return 0;
+        return ERROR_ID_1;
     }
     fprintf(ob_file, "%d %d\n", ic, dc);
     for (i = 0; i < ic; ++i) {

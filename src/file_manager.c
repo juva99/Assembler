@@ -7,7 +7,7 @@ char *error_desc[] = {
 
     /* externals errors */
     /* 1 */
-    "New file opening failed",
+    "File opening failed",
     /* 2 */
     "Dynamic memory allocation failed",
     /* 3 */
