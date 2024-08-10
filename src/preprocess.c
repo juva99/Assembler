@@ -12,6 +12,7 @@ int preprocess(file_struct *curr_file) {
     /* open file */
     preprocessed_filename = add_file_extension(curr_file->filename, PREPROCESSED_FILE_TYPE);
     file = fopen(preprocessed_filename, "r");
+    free(preprocessed_filename);
     if (file == NULL) {
         fprintf(stderr, "Error opening file: %s\n", curr_file->filename);
         ret_code = 0;
@@ -29,6 +30,8 @@ int preprocess(file_struct *curr_file) {
 
     /* read lines */
     proccessed_file = fopen(processed_filename, "w");
+    free(processed_filename);
+
     if (proccessed_file == NULL) {
         fprintf(stderr, "Error opening final file for writing\n");
         free_table(macros);
