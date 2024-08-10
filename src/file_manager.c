@@ -1,6 +1,5 @@
 #include "../include/file_manager.h"
-
-#include <consts.h>
+#include "../include/consts.h"
 
 char *error_desc[] = {
     /* 0  - no error*/
