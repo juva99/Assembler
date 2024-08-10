@@ -94,6 +94,10 @@ int first_stage_process(file_struct *curr_file) {
     }
     fclose(file);
     if (errors > 0) {
+        free_container(code, ic);
+        free_container(data, dc);
+        free_symtable(sym_table);
+        free_symbol_list(entries_list);
         return 0;
     }
     update_data_symbols(sym_table, ic + IC_OFFSET);
