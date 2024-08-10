@@ -30,15 +30,15 @@ typedef struct code_cont {
 #include "../include/command.h"
 #include "../include/symbol_table.h"
 
-int write_data(code_cont **container, unsigned short data, int *counter);
+void write_data(code_cont **container, unsigned short data, int *counter);
 
-int write_data_label(code_cont **container, unsigned short data, int *counter, char *label);
+void write_data_label(code_cont **container, unsigned short data, int *counter, char *label);
 
-int add_data(code_cont **data, unsigned short val, int *dc);
+void add_data(code_cont **data, unsigned short val, int *dc);
 
-int expend_memory(code_cont **container, int counter);
+void expend_memory(code_cont **container, int counter);
 
-int add_command(code_cont **code, cmd_struct *cmd, int *ic);
+void add_command(code_cont **code, cmd_struct *cmd, int *ic);
 
 unsigned short create_method_line(cmd_struct *cmd, int method, char *value, int is_src);
 

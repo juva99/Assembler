@@ -1,48 +1,44 @@
 #include "../include/code_container.h"
 
-/*error mapping needed*/
-int write_data(code_cont **container, unsigned short data, int *counter) {
+#include <file.h>
+
+void write_data(code_cont **container, unsigned short data, int *counter) {
     int success;
-    if (!expend_memory(container, *counter)) {
-        /* expend error */
-        return 0;
-    }
+
+    expend_memory(container, *counter);
     (*container + *counter)->bin_rep = data;
     (*counter)++;
-    return 1;
 }
 
-int add_data(code_cont **data, unsigned short val, int *dc) {
-    return write_data(data, val, dc);
+void add_data(code_cont **data, unsigned short val, int *dc) {
+    write_data(data, val, dc);
 }
 
-int write_data_label(code_cont **container, unsigned short data, int *counter, char *label) {
-    if (!write_data(container, data, counter))
-        return 0;
-    (*container + *counter - 1)->label = strduplic(label);
-    return 1;
+void write_data_label(code_cont **container, unsigned short data, int *counter, char *label) {
+    write_data(container, data, counter)
+            (*container + *counter - 1)->label = strduplic(label);
 }
 
-
-int expend_memory(code_cont **container, int counter) {
+void expend_memory(code_cont **container, int counter) {
     code_cont *temp;
 
     temp = realloc(*container, (counter + 1) * sizeof(code_cont));
     if (temp == NULL) {
-        /*error*/
-        return 0;
+        handle_dynamic_alloc_error();
     }
     *container = temp;
-    return 1;
 }
 
 code_cont *create_container() {
     code_cont *temp;
     temp = malloc(sizeof(code_cont));
+    if (temp == NULL) {
+        handle_dynamic_alloc_error();
+    }
     return temp;
 }
 
-int add_command(code_cont **code, cmd_struct *cmd, int *ic) {
+void add_command(code_cont **code, cmd_struct *cmd, int *ic) {
     unsigned short command = 0;
     unsigned short src_command = 0;
     unsigned short dst_command = 0;
@@ -62,33 +58,25 @@ int add_command(code_cont **code, cmd_struct *cmd, int *ic) {
     /* turn ABSOLUTE flag */
     command |= 1U << ABSOLUTE;
     /* write command */
-    if (!write_data(code, command, ic))
-        return 0;
+    write_data(code, command, ic);
+
     /* if both methods reg merge them */
     if (src_command && dst_command && cmd->length == 2) {
-        return write_data(code, src_command | dst_command, ic);
+        write_data(code, src_command | dst_command, ic);
+        return;
     }
     /* handle source command */
     if (src_command) {
-        if (!write_data(code, src_command, ic)) {
-            return 0;
-        }
+        write_data(code, src_command, ic);
     } else if (cmd->src_method == 1) {
-        if (!write_data_label(code, src_command, ic, cmd->src)) {
-            return 0;
-        }
+        write_data_label(code, src_command, ic, cmd->src);
     }
     /* handle dest command */
     if (dst_command) {
-        if (!write_data(code, dst_command, ic)) {
-            return 0;
-        }
+        write_data(code, dst_command, ic);
     } else if (cmd->dst_method == 1) {
-        if (!write_data_label(code, dst_command, ic, cmd->dst)) {
-            return 0;
-        }
+        write_data_label(code, dst_command, ic, cmd->dst);
     }
-    return 1;
 }
 
 unsigned short create_method_line(cmd_struct *cmd, int method, char *value, int is_src) {
@@ -124,7 +112,7 @@ unsigned short create_method_line(cmd_struct *cmd, int method, char *value, int 
             break;
         }
         default: {
-            /* invalid method */
+            /* unreachable code */
             break;
         }
     }
@@ -141,7 +129,7 @@ int update_line(code_cont *code, Symbol *symbol) {
     else if (strcmp(symbol->instr_type, ".external") == 0)
         line_are = EXTERNAL;
     else {
-        /* error */
+        /* unreachable code */
         return 0;
     }
 
