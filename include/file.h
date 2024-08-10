@@ -17,7 +17,11 @@ void create_file(file_struct *file, char *filename);
 
 int add_error_to_file(file_struct *file, int error_id, int error_line, STAGE_ERROR stage_error);
 
-void enlarge_errors(file_struct *file);
+void enlarge_errors_arr(file_struct *file);
+
+void print_errors(file_struct *file);
+
+void handle_dynamic_alloc_error();
 
 
 #endif //OPENU_PROJECT_FILE_H

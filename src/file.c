@@ -1,5 +1,7 @@
 #include "../include/file.h"
 
+#include <consts.h>
+
 char *error_desc[] = {
     /* 0  - no error*/
     "",
@@ -82,16 +84,10 @@ void create_file(file_struct *file, char *filename) {
 int add_error_to_file(file_struct *file, int error_id, int error_line, STAGE_ERROR stage_error) {
     int i;
 
-    if (error_id == 2) {
-        fprintf(stderr, "Error %s occurred at line %d\n in %s stage", error_desc[error_id], error_line,
-                stage_name[stage_error]);
-        exit(2);
-    }
-
     i = file->errors_count;
 
     if (file->errors_count == file->errors_size) {
-        enlarge_errors(file);
+        enlarge_errors_arr(file);
     }
 
     file->errors[i].error_id = error_id;
@@ -103,7 +99,7 @@ int add_error_to_file(file_struct *file, int error_id, int error_line, STAGE_ERR
     return 1;
 }
 
-void enlarge_errors(file_struct *file) {
+void enlarge_errors_arr(file_struct *file) {
     int new_size;
     Error *temp_errors;
 
@@ -128,7 +124,12 @@ void print_errors(file_struct *file) {
         error_line = file->errors[i].error_line;
         stage_id = file->errors[i].stage_error;
 
-        fprintf(stderr, "Error %s occurred at line %d\n in %s stage", error_desc[error_id], error_line,
+        fprintf(stderr, "Error: %s occurred at line %d\n in %s stage", error_desc[error_id], error_line,
                 stage_name[stage_id]);
     }
+}
+
+void handle_dynamic_alloc_error() {
+    fprintf(stderr, "Error: %s\n", error_desc[ERROR_ID_2]);
+    exit(2);
 }
