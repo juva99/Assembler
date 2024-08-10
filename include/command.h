@@ -23,6 +23,8 @@ typedef struct opcode {
     int add_methods_dst[MAX_ADDRESS_METHODS]; /* valid address methods for dst */
 } opcode;
 
+void free_command(cmd_struct *cmd);
+
 cmd_struct *build_command(char *line);
 
 int check_command_args(cmd_struct *cmd);
