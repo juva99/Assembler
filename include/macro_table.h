@@ -2,6 +2,7 @@
 #define OPENU_PROJECT_MACRO_TABLE_H
 
 #include "../include/utils.h"
+#include "../include/file_manager.h"
 
 #define INITIAL_SIZE 10
 #define LOAD_FACTOR 0.75

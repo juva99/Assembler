@@ -74,7 +74,8 @@ int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros) 
         mac_name = first_token;
         mac_content = search(macros, mac_name);
         if (mac_content == NULL) {
-            fprintf(stderr, "Error: Macro %s not declared\n", mac_name);
+            /* error - macro is not declared */
+            /* add error to file */
             return 0;
         }
         fprintf(final_file, "%s", mac_content);
@@ -86,6 +87,7 @@ int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros) 
 
 /* handle macro declaration */
 int handle_macro(char *line, FILE *file, MacroTable *macros) {
+    int error_id;
     size_t len;
     size_t total_length = 0;
     size_t buffer_size;
@@ -128,7 +130,10 @@ int handle_macro(char *line, FILE *file, MacroTable *macros) {
         strcat(mac_content, line);
         total_length += len;
     }
-    insert(macros, mac_name, mac_content);
+    error_id = insert(macros, mac_name, mac_content);
+    if(error_id != 0 ) {
+        /*add error to file */
+    }
     free(mac_content);
 
     return 1;
