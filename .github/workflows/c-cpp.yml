@@ -1,6 +1,7 @@
 name: C/C++ CI
 
 on:
+  workflow_dispatch:
   push:
     branches: [ "main" ]
   pull_request:
@@ -18,7 +19,11 @@ jobs:
     - name: apt install dependency
       run: |
         sudo apt-get -y install valgrind
-    - name: make test
+    - name: run test
+      run: |
+        make
+        ./openu_project test_files/test
+    - name: memory leak test
       run: |
         make
         valgrind ./openu_project test_files/test
