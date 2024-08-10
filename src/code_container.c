@@ -183,3 +183,12 @@ unsigned int to_octal(unsigned short number) {
 
     return octal;
 }
+
+void free_container(code_cont *container, int size) {
+    int i;
+    for (i = 0; i < size; ++i) {
+        if ((container + i)->label != NULL)
+            free((container + i)->label);
+    }
+    free(container);
+}
