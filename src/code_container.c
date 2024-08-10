@@ -1,6 +1,6 @@
 #include "../include/code_container.h"
 
-#include <file.h>
+#include "../include/file_manager.h"
 
 void write_data(code_cont **container, unsigned short data, int *counter) {
     int success;
@@ -16,8 +16,8 @@ void add_data(code_cont **data, unsigned short val, int *dc) {
 }
 
 void write_data_label(code_cont **container, unsigned short data, int *counter, char *label) {
-    write_data(container, data, counter)
-            (*container + *counter - 1)->label = strduplic(label);
+    write_data(container, data, counter);
+    (*container + *counter - 1)->label = strduplic(label);
 }
 
 void expend_memory(code_cont **container, int counter) {

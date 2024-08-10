@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "../include/preprocess.h"
 #include "../include/first_stage.h"
-#include "../include/file.h"
+#include "../include/file_manager.h"
 
 int main(int argc, char *argv[]) {
     int i, num_files = 0;
