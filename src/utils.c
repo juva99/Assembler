@@ -325,6 +325,10 @@ char *strduplic(const char *s) {
 
 char *add_file_extension(char *filename, char *extension) {
     char *dup_filename = strduplic(filename);
+    dup_filename = (char *) realloc(dup_filename, strlen(dup_filename) + MAX_EXTENSION_LENGTH);
+    if (dup_filename == NULL) {
+        exit(1);
+    }
     strcat(dup_filename, extension);
     return dup_filename;
 }
