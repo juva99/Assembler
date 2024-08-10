@@ -30,7 +30,8 @@ int first_stage_process(file_struct *curr_file) {
     file = fopen(processed_filename, "r");
     free(processed_filename);
     if (file == NULL) {
-        // change fake_line to actual line number
+        /*    */
+        /* change fake_line to actual line number*/
         add_error_to_file(curr_file, ERROR_ID_1, fake_line, FIRST_STAGE);
         return 0;
     }

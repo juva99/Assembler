@@ -3,8 +3,6 @@
 #include "../include/file_manager.h"
 
 void write_data(code_cont **container, unsigned short data, int *counter) {
-    int success;
-
     expend_memory(container, *counter);
     (*container + *counter)->bin_rep = data;
     (*container + *counter)->label = NULL;
