@@ -2,12 +2,12 @@
 
 
 int write_data(code_cont **container, unsigned short data, int *counter) {
-    int success;
     if (!expend_memory(container, *counter)) {
         /* expend error */
         return 0;
     }
     (*container + *counter)->bin_rep = data;
+    (*container + *counter)->label = NULL;
     (*counter)++;
     return 1;
 }
@@ -160,6 +160,8 @@ int save_object_file(char *filename, code_cont *code, code_cont *data, int ic, i
     ob_file = fopen(full_filename, "w");
     if (ob_file == NULL) {
         /* error */
+        free(full_filename);
+        return 0;
     }
     fprintf(ob_file, "%d %d\n", ic, dc);
     for (i = 0; i < ic; ++i) {
@@ -168,6 +170,9 @@ int save_object_file(char *filename, code_cont *code, code_cont *data, int ic, i
     for (i = ic; i < ic + dc; ++i) {
         fprintf(ob_file, "%04d %05u\n", i + IC_OFFSET, to_octal((data + i - ic)->bin_rep));
     }
+
+    fclose(ob_file);
+    free(full_filename);
     return 1;
 }
 
@@ -182,4 +187,13 @@ unsigned int to_octal(unsigned short number) {
     }
 
     return octal;
+}
+
+void free_container(code_cont *container, int size) {
+    int i;
+    for (i = 0; i < size; ++i) {
+        if ((container + i)->label != NULL)
+            free((container + i)->label);
+    }
+    free(container);
 }

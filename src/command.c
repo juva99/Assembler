@@ -2,30 +2,40 @@
 #include "../include/utils.h"
 
 opcode opcodes[] = {
-    {"mov", 2, {0, 1, 2, 3}, {1, 2, 3, -1}},
-    {"cmp", 2, {0, 1, 2, 3}, {0, 1, 2, 3}},
-    {"add", 2, {0, 1, 2, 3}, {1, 2, 3, -1}},
-    {"sub", 2, {0, 1, 2, 3}, {1, 2, 3, -1}},
-    {"lea", 2, {1, -1, -1, -1}, {1, 2, 3, -1}},
-    {"clr", 1, {-1, -1, -1, -1}, {1, 2, 3, -1}},
-    {"not", 1, {-1, -1, -1, -1}, {1, 2, 3, -1}},
-    {"inc", 1, {-1, -1, -1, -1}, {1, 2, 3, -1}},
-    {"dec", 1, {-1, -1, -1, -1}, {1, 2, 3, -1}},
-    {"jmp", 1, {-1, -1, -1, -1}, {1, 2, -1, -1}},
-    {"bne", 1, {-1, -1, -1, -1}, {1, 2, -1, -1}},
-    {"red", 1, {-1, -1, -1, -1}, {1, 2, 3, -1}},
-    {"prn", 1, {-1, -1, -1, -1}, {0, 1, 2, 3}},
-    {"jsr", 1, {-1, -1, -1, -1}, {1, 2, -1, -1}},
-    {"rts", 0, {-1, -1, -1, -1}, {-1, -1, -1, -1}},
-    {"stop", 0, {-1, -1, -1, -1}, {-1, -1, -1, -1}}
+        {"mov",  2, {0,  1,  2,  3},  {1,  2,  3,  -1}},
+        {"cmp",  2, {0,  1,  2,  3},  {0,  1,  2,  3}},
+        {"add",  2, {0,  1,  2,  3},  {1,  2,  3,  -1}},
+        {"sub",  2, {0,  1,  2,  3},  {1,  2,  3,  -1}},
+        {"lea",  2, {1,  -1, -1, -1}, {1,  2,  3,  -1}},
+        {"clr",  1, {-1, -1, -1, -1}, {1,  2,  3,  -1}},
+        {"not",  1, {-1, -1, -1, -1}, {1,  2,  3,  -1}},
+        {"inc",  1, {-1, -1, -1, -1}, {1,  2,  3,  -1}},
+        {"dec",  1, {-1, -1, -1, -1}, {1,  2,  3,  -1}},
+        {"jmp",  1, {-1, -1, -1, -1}, {1,  2,  -1, -1}},
+        {"bne",  1, {-1, -1, -1, -1}, {1,  2,  -1, -1}},
+        {"red",  1, {-1, -1, -1, -1}, {1,  2,  3,  -1}},
+        {"prn",  1, {-1, -1, -1, -1}, {0,  1,  2,  3}},
+        {"jsr",  1, {-1, -1, -1, -1}, {1,  2,  -1, -1}},
+        {"rts",  0, {-1, -1, -1, -1}, {-1, -1, -1, -1}},
+        {"stop", 0, {-1, -1, -1, -1}, {-1, -1, -1, -1}},
 };
 
 int (*check_address_functions[])(char *str) = {
-    check_address_type_0,
-    check_address_type_1,
-    check_address_type_2,
-    check_address_type_3,
+        check_address_type_0,
+        check_address_type_1,
+        check_address_type_2,
+        check_address_type_3,
 };
+
+void free_command(cmd_struct *cmd) {
+    if (cmd->label != NULL)
+        free(cmd->label);
+    if (cmd->src != NULL)
+        free(cmd->src);
+    if (cmd->dst != NULL)
+        free(cmd->dst);
+    free(cmd);
+}
 
 cmd_struct *build_command(char *line) {
     int args;
@@ -53,7 +63,7 @@ cmd_struct *build_command(char *line) {
         if (cmd->label == NULL) {
             fprintf(stderr, "Memory allocation failed\n");
             /* error */
-            free(cmd);
+            free_command(cmd);
             return NULL;
         }
         strcpy(cmd->label, sym_name);
@@ -63,7 +73,7 @@ cmd_struct *build_command(char *line) {
     /* invalid opcode */
     if (cmd->opcode < 0) {
         /* error invalid opcode */
-        free(cmd);
+        free_command(cmd);
         return NULL;
     }
 
@@ -73,7 +83,7 @@ cmd_struct *build_command(char *line) {
         case 0: {
             if (strcmp(line, "") != 0) {
                 /* error command extra text */
-                free(cmd);
+                free_command(cmd);
                 return NULL;
             }
             cmd->length = 1;
@@ -83,20 +93,20 @@ cmd_struct *build_command(char *line) {
             extract_next(line, arg, ' ');
             if (strcmp(line, "") != 0) {
                 /* error command extra text */
-                free(cmd);
+                free_command(cmd);
                 return NULL;
             }
             if (!dup_argument(&(cmd->dst), arg)) {
                 fprintf(stderr, "Memory allocation failed\n");
                 /* error */
-                free(cmd);
+                free_command(cmd);
                 return NULL;
             }
             cmd->length = 2;
             cmd->dst_method = get_dst_add_method(cmd->opcode, cmd->dst);
             if (cmd->dst_method < 0) {
                 /* error dst not valid */
-                free(cmd);
+                free_command(cmd);
                 return NULL;
             }
             return cmd;
@@ -106,26 +116,26 @@ cmd_struct *build_command(char *line) {
             if (!dup_argument(&(cmd->src), arg)) {
                 fprintf(stderr, "Memory allocation failed\n");
                 /* error */
-                free(cmd);
+                free_command(cmd);
                 return NULL;
             }
             extract_next(line, arg, ' ');
             if (strcmp(line, "") != 0) {
                 /* error command extra text */
-                free(cmd);
+                free_command(cmd);
                 return NULL;
             }
             if (!dup_argument(&(cmd->dst), arg)) {
                 fprintf(stderr, "Memory allocation failed\n");
                 /* error */
-                free(cmd);
+                free_command(cmd);
                 return NULL;
             }
             cmd->src_method = get_src_add_method(cmd->opcode, cmd->src);
             cmd->dst_method = get_dst_add_method(cmd->opcode, cmd->dst);
             if (cmd->src_method < 0 || cmd->dst_method < 0) {
                 /* error src or dst method not legal */
-                free(cmd);
+                free_command(cmd);
                 return NULL;
             }
             cmd->length = 3;
@@ -138,7 +148,7 @@ cmd_struct *build_command(char *line) {
         }
         default: {
             /* error invalid args count */
-            free(cmd);
+            free_command(cmd);
             return NULL;
         }
     }
@@ -165,7 +175,6 @@ int what_opcode(char *token) {
         if (strcmp(token, opcodes[i].name) == 0)
             return i; /* returns the index in instructions array */
     }
-
     return -1; /* returns -1 if token isn't instruction */
 }
 

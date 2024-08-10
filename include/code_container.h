@@ -50,4 +50,6 @@ int save_object_file(char *filename, code_cont *code, code_cont *data, int ic, i
 
 unsigned int to_octal(unsigned short number);
 
-#endif //CODE_CONTAINER_H
+void free_container(code_cont *container, int size);
+
+#endif

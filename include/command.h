@@ -23,6 +23,8 @@ typedef struct opcode {
     int add_methods_dst[MAX_ADDRESS_METHODS]; /* valid address methods for dst */
 } opcode;
 
+void free_command(cmd_struct *cmd);
+
 cmd_struct *build_command(char *line);
 
 int check_command_args(cmd_struct *cmd);
@@ -46,4 +48,4 @@ int get_src_add_method(int opcode, char *src);
 int get_dst_add_method(int opcode, char *dst);
 
 
-#endif //OPENU_PROJECT_COMMAND_H
+#endif

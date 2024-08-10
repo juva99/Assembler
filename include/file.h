@@ -15,4 +15,7 @@ typedef struct file_struct {
 
 void create_file(file_struct *file, char *filename);
 
-#endif //OPENU_PROJECT_FILE_H
+void free_files(file_struct *files, int num_files);
+
+
+#endif

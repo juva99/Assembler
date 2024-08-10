@@ -28,4 +28,4 @@ int validate_entries(SymTable *sym_table, SymbolList *entries);
 
 int save_symbol_list(char *filename, ListType list_type, SymbolList *list);
 
-#endif //SPECIAL_SYMBOL_LIST_H
+#endif
