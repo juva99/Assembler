@@ -55,10 +55,12 @@ void free_symtable(SymTable *table) {
 
 int enlarge_table(SymTable *table) {
     int old_size, i;
+    unsigned int index;
+    Symbol **new_table;
 
     old_size = table->size;
     table->size *= 2;
-    Symbol **new_table = (Symbol **) calloc(table->size, sizeof(Symbol *));
+    new_table = (Symbol **) calloc(table->size, sizeof(Symbol *));
     if (!new_table) {
         printf("Memory allocation falid for symbol table\n");
         return 0;
@@ -66,7 +68,7 @@ int enlarge_table(SymTable *table) {
 
     for (i = 0; i < old_size; ++i) {
         if (table->table[i]) {
-            unsigned int index = hash_sym(table->table[i]->key, table->size);
+            index = hash_sym(table->table[i]->key, table->size);
             while (new_table[index]) {
                 index = (index + 1) % table->size;
             }

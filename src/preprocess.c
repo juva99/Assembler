@@ -91,7 +91,6 @@ int handle_macro(char *line, FILE *file, MacroTable *macros) {
     size_t buffer_size;
     char mac_name[MAX_LINE_LENGTH];
     char *mac_content;
-    char extra[MAX_LINE_LENGTH];
 
     /* extracting the macro name */
     extract_next(line, mac_name, ' ');
@@ -140,29 +139,7 @@ int is_macro(char *line) {
     return starts_with(line, "macr");
 }
 
-int extract_file_name(char filename[], char **preprocessed) {
-    char *dot;
-    int filename_len;
-
-    filename_len = strlen(filename);
-    *preprocessed = (char *) malloc(filename_len + 1);
-    if (*preprocessed == NULL) {
-        printf("Memory allocation failed");
-        return 0;
-    }
-
-    strcpy(*preprocessed, filename);
-    dot = strrchr(*preprocessed, '.');
-    if (dot != NULL)
-        *dot = '\0';
-    strcat(*preprocessed, PREPROCESSED_FILE_TYPE);
-
-    return 1;
-}
-
 int is_macro_name_valid(char *mac_name) {
-    int i;
-
     if (mac_name == NULL) {
         printf("Invalid macro declaration");
         return 0;

@@ -2,7 +2,6 @@
 
 
 int write_data(code_cont **container, unsigned short data, int *counter) {
-    int success;
     if (!expend_memory(container, *counter)) {
         /* expend error */
         return 0;

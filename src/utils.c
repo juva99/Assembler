@@ -97,7 +97,6 @@ int what_regs(char *token) {
 }
 
 DataType data_instruction(char *line) {
-    int i;
     char token[MAX_LINE_LENGTH];
     char original_line[MAX_LINE_LENGTH];
 
@@ -120,7 +119,6 @@ DataType data_instruction(char *line) {
 }
 
 int is_extern(char *line) {
-    int i;
     char token[MAX_LINE_LENGTH];
     char original_line[MAX_LINE_LENGTH];
 
@@ -140,7 +138,6 @@ int is_extern(char *line) {
 }
 
 int is_entry(char *line) {
-    int i;
     char token[MAX_LINE_LENGTH];
     char original_line[MAX_LINE_LENGTH];
 
@@ -226,7 +223,7 @@ int extract_opcode(char *line) {
 
 
 int encode_numeric_data(char *line, code_cont **data, int *dc) {
-    int i, count, is_negative, num;
+    int i, count, num;
     unsigned short val;
     char curr_token[MAX_LINE_LENGTH];
 
@@ -242,7 +239,7 @@ int encode_numeric_data(char *line, code_cont **data, int *dc) {
             i = 1;
         }
         /* valid number */
-        for (i; i < strlen(curr_token); i++) {
+        for (; i < strlen(curr_token); i++) {
             if (!isdigit(curr_token[i])) {
                 /*error - not num*/
                 return 0;
@@ -309,7 +306,6 @@ int encode_data(char *line, DataType data_type, code_cont **data, int *dc) {
 
 
 unsigned short conv_to_ushort(int dec_num) {
-    unsigned short bin = 0;
     /* return ushort value of dec_num as 15bit */
     return (dec_num & ~(1U << MAX_BIN_LENGTH));
 }

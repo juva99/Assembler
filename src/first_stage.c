@@ -1,11 +1,12 @@
 #include "../include/first_stage.h"
 
 int first_stage_process(file_struct *curr_file) {
-    int ic, dc, symbol, data_size, instr_len, opcode, errors;
+    int ic, dc, symbol, data_size, errors;
     char line[MAX_LINE_LENGTH + 1];
     DataType data_type;
     char sym_name[MAX_LABEL_LENGTH + 1];
     char *processed_filename;
+    FILE *file;
 
     code_cont *data, *code;
     cmd_struct *command;
@@ -19,7 +20,6 @@ int first_stage_process(file_struct *curr_file) {
     code = create_container();
     entries_list = create_symbol_list();
 
-    FILE *file;
     processed_filename = add_file_extension(curr_file->filename, PROCESSED_FILE_TYPE);
     file = fopen(processed_filename, "r");
     free(processed_filename);
