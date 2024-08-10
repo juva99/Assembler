@@ -22,8 +22,9 @@ int first_stage_process(file_struct *curr_file) {
     FILE *file;
     processed_filename = add_file_extension(curr_file->filename, PROCESSED_FILE_TYPE);
     file = fopen(processed_filename, "r");
+    free(processed_filename);
     if (file == NULL) {
-        fprintf(stderr, "Error opening file: %s\n", processed_filename);
+        fprintf(stderr, "Error opening file: %s\n", curr_file->filename);
         return 0;
     }
 
@@ -89,8 +90,9 @@ int first_stage_process(file_struct *curr_file) {
             }
         }
         add_command(&code, command, &ic);
+        free_command(command);
     }
-
+    fclose(file);
     if (errors > 0) {
         return 0;
     }
