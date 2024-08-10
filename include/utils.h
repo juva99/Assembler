@@ -39,7 +39,6 @@ int check_symbol_name(char *first_token);
 
 int extract_opcode(char *line);
 
-
 int encode_string(char *line, code_cont **data, int *dc);
 
 int encode_data(char *line, DataType data_type, code_cont **data, int *dc);

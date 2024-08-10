@@ -6,14 +6,13 @@
 
 typedef enum STAGE_ERROR {
     UNASSIGNED,
-    PRE,
-    FIRST,
-    SECOND
+    PRE_STAGE,
+    FIRST_STAGE,
+    SECOND_STAGE
 } STAGE_ERROR;
 
 typedef struct Error {
     int error_id;
-    char *error_desc;
     int error_line;
     STAGE_ERROR stage_error;
 } Error;
