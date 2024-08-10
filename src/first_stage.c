@@ -85,7 +85,8 @@ int first_stage_process(file_struct *curr_file) {
 
         curr_error_id = build_command(line, &command);
         if (curr_error_id != ERROR_ID_0) {
-            // change fake_line to actual line number
+            /*     */
+            /* change fake_line to actual line number */
             add_error_to_file(curr_file, curr_error_id, fake_line, FIRST_STAGE);
             continue;
         }
