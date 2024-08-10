@@ -16,4 +16,4 @@ int
 second_stage_process(file_struct *curr_file, code_cont *data, code_cont *code, SymTable *sym_table, SymbolList *entries,
                      int ic, int dc);
 
-#endif //SECOND_STAGE_H
+#endif

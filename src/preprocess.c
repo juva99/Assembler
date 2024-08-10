@@ -12,6 +12,7 @@ int preprocess(file_struct *curr_file) {
     /* open file */
     preprocessed_filename = add_file_extension(curr_file->filename, PREPROCESSED_FILE_TYPE);
     file = fopen(preprocessed_filename, "r");
+    free(preprocessed_filename);
     if (file == NULL) {
         fprintf(stderr, "Error opening file: %s\n", curr_file->filename);
         ret_code = 0;
@@ -29,6 +30,8 @@ int preprocess(file_struct *curr_file) {
 
     /* read lines */
     proccessed_file = fopen(processed_filename, "w");
+    free(processed_filename);
+
     if (proccessed_file == NULL) {
         fprintf(stderr, "Error opening final file for writing\n");
         free_table(macros);
@@ -88,7 +91,6 @@ int handle_macro(char *line, FILE *file, MacroTable *macros) {
     size_t buffer_size;
     char mac_name[MAX_LINE_LENGTH];
     char *mac_content;
-    char extra[MAX_LINE_LENGTH];
 
     /* extracting the macro name */
     extract_next(line, mac_name, ' ');
@@ -137,29 +139,7 @@ int is_macro(char *line) {
     return starts_with(line, "macr");
 }
 
-int extract_file_name(char filename[], char **preprocessed) {
-    char *dot;
-    int filename_len;
-
-    filename_len = strlen(filename);
-    *preprocessed = (char *) malloc(filename_len + 1);
-    if (*preprocessed == NULL) {
-        printf("Memory allocation failed");
-        return 0;
-    }
-
-    strcpy(*preprocessed, filename);
-    dot = strrchr(*preprocessed, '.');
-    if (dot != NULL)
-        *dot = '\0';
-    strcat(*preprocessed, PREPROCESSED_FILE_TYPE);
-
-    return 1;
-}
-
 int is_macro_name_valid(char *mac_name) {
-    int i;
-
     if (mac_name == NULL) {
         printf("Invalid macro declaration");
         return 0;

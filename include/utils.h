@@ -51,5 +51,5 @@ char *strduplic(const char *s);
 
 char *add_file_extension(char *filename, char *extension);
 
-#endif //OPENU_PROJECT_UTILS_H
+#endif
 

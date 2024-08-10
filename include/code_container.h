@@ -46,4 +46,10 @@ code_cont *create_container();
 
 int update_line(code_cont *code, Symbol *symbol);
 
-#endif //CODE_CONTAINER_H
+int save_object_file(char *filename, code_cont *code, code_cont *data, int ic, int dc);
+
+unsigned int to_octal(unsigned short number);
+
+void free_container(code_cont *container, int size);
+
+#endif

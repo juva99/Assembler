@@ -20,7 +20,7 @@ opcode opcodes[] = {
     {"prn", 1, {-1, -1, -1, -1}, {0, 1, 2, 3}},
     {"jsr", 1, {-1, -1, -1, -1}, {1, 2, -1, -1}},
     {"rts", 0, {-1, -1, -1, -1}, {-1, -1, -1, -1}},
-    {"stop", 0, {-1, -1, -1, -1}, {-1, -1, -1, -1}}
+    {"stop", 0, {-1, -1, -1, -1}, {-1, -1, -1, -1}},
 };
 
 int (*check_address_functions[])(char *str) = {
@@ -29,6 +29,16 @@ int (*check_address_functions[])(char *str) = {
     check_address_type_2,
     check_address_type_3,
 };
+
+void free_command(cmd_struct *cmd) {
+    if (cmd->label != NULL)
+        free(cmd->label);
+    if (cmd->src != NULL)
+        free(cmd->src);
+    if (cmd->dst != NULL)
+        free(cmd->dst);
+    free(cmd);
+}
 
 int build_command(char *line, cmd_struct **command) {
     int args;
@@ -61,7 +71,7 @@ int build_command(char *line, cmd_struct **command) {
 
     if (cmd->opcode < 0) {
         /* error - invalid opcode */
-        free(cmd);
+        free_command(cmd);
         return ERROR_ID_21;
     }
 
@@ -71,7 +81,7 @@ int build_command(char *line, cmd_struct **command) {
         case 0: {
             if (strcmp(line, "") != 0) {
                 /* error -  command extra text */
-                free(cmd);
+                free_command(cmd);
                 return ERROR_ID_22;
             }
             cmd->length = 1;
@@ -82,7 +92,7 @@ int build_command(char *line, cmd_struct **command) {
             extract_next(line, arg, ' ');
             if (strcmp(line, "") != 0) {
                 /* error - command extra text */
-                free(cmd);
+                free_command(cmd);
                 return ERROR_ID_22;
             }
 
@@ -91,7 +101,7 @@ int build_command(char *line, cmd_struct **command) {
             cmd->dst_method = get_dst_add_method(cmd->opcode, cmd->dst);
             if (cmd->dst_method < 0) {
                 /* error - dst not valid */
-                free(cmd);
+                free_command(cmd);
                 return ERROR_ID_23;
             }
             *command = cmd;
@@ -103,7 +113,7 @@ int build_command(char *line, cmd_struct **command) {
             extract_next(line, arg, ' ');
             if (strcmp(line, "") != 0) {
                 /* error  - command extra text */
-                free(cmd);
+                free_command(cmd);
                 return ERROR_ID_22;
             }
 
@@ -113,7 +123,7 @@ int build_command(char *line, cmd_struct **command) {
             cmd->dst_method = get_dst_add_method(cmd->opcode, cmd->dst);
             if (cmd->src_method < 0 || cmd->dst_method < 0) {
                 /* error - src or dst method not legal */
-                free(cmd);
+                free_command(cmd);
                 return ERROR_ID_24;
             }
             cmd->length = 3;
@@ -127,7 +137,7 @@ int build_command(char *line, cmd_struct **command) {
         }
         default: {
             /* error - invalid args count */
-            free(cmd);
+            free_command(cmd);
             return ERROR_ID_25;
         }
     }
@@ -151,7 +161,6 @@ int what_opcode(char *token) {
         if (strcmp(token, opcodes[i].name) == 0)
             return i; /* returns the index in instructions array */
     }
-
     return -1; /* returns -1 if token isn't instruction */
 }
 

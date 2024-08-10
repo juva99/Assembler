@@ -133,3 +133,11 @@ void handle_dynamic_alloc_error() {
     fprintf(stderr, "Error: %s\n", error_desc[ERROR_ID_2]);
     exit(2);
 }
+
+void free_files(file_struct *files, int num_files) {
+    int i;
+    for (i = 0; i < num_files; ++i) {
+        free((files + i)->errors);
+    }
+    free(files);
+}

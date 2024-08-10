@@ -7,6 +7,7 @@ void write_data(code_cont **container, unsigned short data, int *counter) {
 
     expend_memory(container, *counter);
     (*container + *counter)->bin_rep = data;
+    (*container + *counter)->label = NULL;
     (*counter)++;
 }
 
@@ -116,7 +117,7 @@ unsigned short create_method_line(cmd_struct *cmd, int method, char *value, int 
             break;
         }
     }
-    return method_line;
+    return (method_line & ~(1U << MAX_BIN_LENGTH));
 }
 
 int update_line(code_cont *code, Symbol *symbol) {
@@ -138,4 +139,50 @@ int update_line(code_cont *code, Symbol *symbol) {
     new_val |= symbol->value << DATA_OFFSET;
     code->bin_rep = new_val;
     return 1;
+}
+
+int save_object_file(char *filename, code_cont *code, code_cont *data, int ic, int dc) {
+    int i;
+    char *full_filename;
+    FILE *ob_file;
+    full_filename = add_file_extension(filename, FINAL_FILE_EXTENSION);
+    ob_file = fopen(full_filename, "w");
+    if (ob_file == NULL) {
+        /* error */
+        free(full_filename);
+        return 0;
+    }
+    fprintf(ob_file, "%d %d\n", ic, dc);
+    for (i = 0; i < ic; ++i) {
+        fprintf(ob_file, "%04d %05u\n", i + IC_OFFSET, to_octal((code + i)->bin_rep));
+    }
+    for (i = ic; i < ic + dc; ++i) {
+        fprintf(ob_file, "%04d %05u\n", i + IC_OFFSET, to_octal((data + i - ic)->bin_rep));
+    }
+
+    fclose(ob_file);
+    free(full_filename);
+    return 1;
+}
+
+unsigned int to_octal(unsigned short number) {
+    unsigned int octal = 0;
+    unsigned int place_value = 1;
+
+    while (number > 0) {
+        octal += (number % 8) * place_value;
+        number /= 8;
+        place_value *= 10;
+    }
+
+    return octal;
+}
+
+void free_container(code_cont *container, int size) {
+    int i;
+    for (i = 0; i < size; ++i) {
+        if ((container + i)->label != NULL)
+            free((container + i)->label);
+    }
+    free(container);
 }

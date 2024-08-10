@@ -36,4 +36,4 @@ void update_data_symbols(SymTable *table, int ic);
 
 Symbol *get_symbol(SymTable *table, char *key);
 
-#endif //OPENU_PROJECT_SYMBOL_TABLE_H
+#endif

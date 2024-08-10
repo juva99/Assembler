@@ -1,11 +1,12 @@
 #include "../include/first_stage.h"
 
 int first_stage_process(file_struct *curr_file) {
-    int ic, dc, symbol, data_size, instr_len, opcode, errors, curr_error_id;
+    int ic, dc, symbol, data_size, errors, curr_error_id;
     char line[MAX_LINE_LENGTH + 1];
     DataType data_type;
     char sym_name[MAX_LABEL_LENGTH + 1];
     char *processed_filename;
+    FILE *file;
 
     int fake_line = 0;
 
@@ -25,14 +26,14 @@ int first_stage_process(file_struct *curr_file) {
     dc = 0;
     errors = 0;
 
-    FILE *file;
     processed_filename = add_file_extension(curr_file->filename, PROCESSED_FILE_TYPE);
     file = fopen(processed_filename, "r");
+    free(processed_filename);
     if (file == NULL) {
         // change fake_line to actual line number
-        add_error_to_file(curr_file, ERROR_ID_2, fake_line, FIRST_STAGE);
+        add_error_to_file(curr_file, ERROR_ID_1, fake_line, FIRST_STAGE);
+        return 0;
     }
-
 
     while (fgets(line, sizeof(line), file)) {
         symbol = 0;
@@ -94,9 +95,14 @@ int first_stage_process(file_struct *curr_file) {
             }
         }
         add_command(&code, command, &ic);
+        free_command(command);
     }
-
+    fclose(file);
     if (errors > 0) {
+        free_container(code, ic);
+        free_container(data, dc);
+        free_symtable(sym_table);
+        free_symbol_list(entries_list);
         return 0;
     }
     update_data_symbols(sym_table, ic + IC_OFFSET);

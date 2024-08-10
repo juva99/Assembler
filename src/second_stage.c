@@ -4,12 +4,9 @@
 int
 second_stage_process(file_struct *curr_file, code_cont *data, code_cont *code, SymTable *sym_table,
                      SymbolList *entries, int ic, int dc) {
-    int i, errors;
+    int i;
     Symbol *symbol;
     SymbolList *externals;
-
-    FILE *file;
-
     externals = create_symbol_list();
 
     if (!validate_entries(sym_table, entries)) {
@@ -40,6 +37,13 @@ second_stage_process(file_struct *curr_file, code_cont *data, code_cont *code, S
     /* save binary file */
     save_symbol_list(curr_file->filename, ENTRY, entries);
     save_symbol_list(curr_file->filename, EXTERN, externals);
+    save_object_file(curr_file->filename, code, data, ic, dc);
+    /* free memory */
+    free_container(code, ic);
+    free_container(data, dc);
+    free_symtable(sym_table);
+    free_symbol_list(entries);
+    free_symbol_list(externals);
 
     return 1;
 }

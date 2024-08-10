@@ -15,11 +15,11 @@ int starts_with(const char *str, const char *pre) {
 int is_valid_string(const char *str) {
     while (*str) {
         if (!isalpha(*str) && !isdigit(*str)) {
-            return 0; // False, the string contains invalid characters
+            return 0;
         }
         str++;
     }
-    return 1; // True, the string is valid
+    return 1;
 }
 
 int extract_next(char *src, char *next, char delimiter) {
@@ -97,7 +97,6 @@ int what_regs(char *token) {
 }
 
 DataType data_instruction(char *line) {
-    int i;
     char token[MAX_LINE_LENGTH];
     char original_line[MAX_LINE_LENGTH];
 
@@ -120,7 +119,6 @@ DataType data_instruction(char *line) {
 }
 
 int is_extern(char *line) {
-    int i;
     char token[MAX_LINE_LENGTH];
     char original_line[MAX_LINE_LENGTH];
 
@@ -140,7 +138,6 @@ int is_extern(char *line) {
 }
 
 int is_entry(char *line) {
-    int i;
     char token[MAX_LINE_LENGTH];
     char original_line[MAX_LINE_LENGTH];
 
@@ -168,7 +165,7 @@ int extract_symbol(char *line, char *sym_name, char delimeter) {
     strcpy(original_line, line);
 
     if (delimeter == ':' && strchr(line, delimeter) == NULL) {
-        return 0; // ':' not found
+        return 0;
     }
 
     extract_next(line, first_token, delimeter);
@@ -248,7 +245,7 @@ int encode_numeric_data(char *line, code_cont **data, int *dc) {
             i = 1;
         }
         /* valid number */
-        for (i; i < strlen(curr_token); i++) {
+        for (; i < strlen(curr_token); i++) {
             if (!isdigit(curr_token[i])) {
                 /*error - not num*/
                 return 0;
@@ -315,7 +312,6 @@ int encode_data(char *line, DataType data_type, code_cont **data, int *dc) {
 
 
 unsigned short conv_to_ushort(int dec_num) {
-    unsigned short bin = 0;
     /* return ushort value of dec_num as 15bit */
     return (dec_num & ~(1U << MAX_BIN_LENGTH));
 }
@@ -331,6 +327,10 @@ char *strduplic(const char *s) {
 
 char *add_file_extension(char *filename, char *extension) {
     char *dup_filename = strduplic(filename);
+    dup_filename = (char *) realloc(dup_filename, strlen(dup_filename) + MAX_EXTENSION_LENGTH);
+    if (dup_filename == NULL) {
+        exit(1);
+    }
     strcat(dup_filename, extension);
     return dup_filename;
 }

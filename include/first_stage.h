@@ -14,4 +14,4 @@
 
 int first_stage_process(file_struct *curr_file);
 
-#endif //OPENU_PROJECT_FIRST_STAGE_H
+#endif

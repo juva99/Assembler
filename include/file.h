@@ -23,5 +23,7 @@ void print_errors(file_struct *file);
 
 void handle_dynamic_alloc_error();
 
+void free_files(file_struct *files, int num_files);
 
-#endif //OPENU_PROJECT_FILE_H
+#endif
+

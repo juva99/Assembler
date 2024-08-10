@@ -27,4 +27,4 @@ char *search(MacroTable *table, const char *key);
 
 int is_member(MacroTable *table, const char *key);
 
-#endif //OPENU_PROJECT_MACRO_TABLE_H
+#endif

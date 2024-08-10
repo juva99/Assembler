@@ -60,13 +60,17 @@ void free_table(MacroTable *table) {
 }
 
 void resize_table(MacroTable *table) {
-    int old_size = table->size;
+    int old_size, i;
+    unsigned int index;
+    Macro **new_table;
+
+    old_size = table->size;
     table->size *= 2;
-    Macro **new_table = (Macro **) calloc(table->size, sizeof(Macro *));
-    int i;
+    new_table = (Macro **) calloc(table->size, sizeof(Macro *));
+
     for (i = 0; i < old_size; ++i) {
         if (table->table[i]) {
-            unsigned int index = hash(table->table[i]->key, table->size);
+            index = hash(table->table[i]->key, table->size);
             while (new_table[index]) {
                 index = (index + 1) % table->size;
             }
@@ -78,11 +82,13 @@ void resize_table(MacroTable *table) {
 }
 
 int insert(MacroTable *table, const char *key, const char *value) {
+    unsigned int index;
+
     if ((float) table->count / table->size > LOAD_FACTOR) {
         resize_table(table);
     }
 
-    unsigned int index = hash(key, table->size);
+    index = hash(key, table->size);
 
     while (table->table[index]) {
         if (strcmp(table->table[index]->key, key) == 0) {
