@@ -45,7 +45,7 @@ int main() {
 
     free_table(table);
 
-    cmd = build_command(bla);
+    build_command(bla, &cmd);
     printf("%s\n", cmd->label);
     printf("%s\n", cmd->src);
     printf("%s\n", cmd->dst);

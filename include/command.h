@@ -23,11 +23,11 @@ typedef struct opcode {
     int add_methods_dst[MAX_ADDRESS_METHODS]; /* valid address methods for dst */
 } opcode;
 
-cmd_struct *build_command(char *line);
+int build_command(char *line, cmd_struct **command);
 
 int check_command_args(cmd_struct *cmd);
 
-int dup_argument(char **dest, char *str);
+void dup_argument(char **dest, char *str);
 
 int what_opcode(char *token);
 

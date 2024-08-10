@@ -1,11 +1,13 @@
 #include "../include/first_stage.h"
 
 int first_stage_process(file_struct *curr_file) {
-    int ic, dc, symbol, data_size, instr_len, opcode, errors;
+    int ic, dc, symbol, data_size, instr_len, opcode, errors, curr_error_id;
     char line[MAX_LINE_LENGTH + 1];
     DataType data_type;
     char sym_name[MAX_LABEL_LENGTH + 1];
     char *processed_filename;
+
+    int fake_line = 0;
 
     code_cont *data, *code;
     cmd_struct *command;
@@ -19,17 +21,19 @@ int first_stage_process(file_struct *curr_file) {
     code = create_container();
     entries_list = create_symbol_list();
 
+    ic = 0;
+    dc = 0;
+    errors = 0;
+
     FILE *file;
     processed_filename = add_file_extension(curr_file->filename, PROCESSED_FILE_TYPE);
     file = fopen(processed_filename, "r");
     if (file == NULL) {
-        fprintf(stderr, "Error opening file: %s\n", processed_filename);
-        return 0;
+        // change fake_line to actual line number
+        add_error_to_file(curr_file, ERROR_ID_2, fake_line, FIRST_STAGE);
     }
 
-    ic = 0;
-    dc = 0;
-    errors = 0;
+
     while (fgets(line, sizeof(line), file)) {
         symbol = 0;
         sym_name[0] = '\0';
@@ -76,10 +80,11 @@ int first_stage_process(file_struct *curr_file) {
         }
 
         /* construct the instruction and return the length of it */
-        command = build_command(line);
-        if (command == NULL) {
-            /* error */
-            errors++;
+
+        curr_error_id = build_command(line, &command);
+        if (curr_error_id != ERROR_ID_0) {
+            // change fake_line to actual line number
+            add_error_to_file(curr_file, curr_error_id, fake_line, FIRST_STAGE);
             continue;
         }
         if (symbol) {
