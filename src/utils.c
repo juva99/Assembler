@@ -233,11 +233,11 @@ int encode_numeric_data(char *line, code_cont **data, int *dc) {
         if (*curr_token == '\0') {
             if (count == 0) {
                 /* error - no numeric values */
-            }
-            else {
+                return ERROR_ID_16;
+            } else {
                 /*error - line finished with ',' */
+                return ERROR_ID_17;
             }
-            return 0;
         }
         i = 0;
         if (*curr_token == '-') {
@@ -248,7 +248,7 @@ int encode_numeric_data(char *line, code_cont **data, int *dc) {
         for (; i < strlen(curr_token); i++) {
             if (!isdigit(curr_token[i])) {
                 /*error - not num*/
-                return 0;
+                return ERROR_ID_18;
             }
         }
         num = atoi(curr_token);
@@ -258,7 +258,7 @@ int encode_numeric_data(char *line, code_cont **data, int *dc) {
         count++;
     }
 
-    return count;
+    return ERROR_ID_0;
 }
 
 int encode_string(char *line, code_cont **data, int *dc) {
@@ -271,7 +271,7 @@ int encode_string(char *line, code_cont **data, int *dc) {
     extract_next(line, curr_token, '\"');
     if (*curr_token != '\0') {
         /* error - extra text before first " */
-        /* return */
+        return ERROR_ID_15;
     }
 
     extract_next(line, curr_token, '\"');
@@ -285,29 +285,27 @@ int encode_string(char *line, code_cont **data, int *dc) {
     add_data(data, 0, dc);
     count++;
 
-    return count;
+    return ERROR_ID_0;
 }
 
-/* need to add line location in file for error description */
 int encode_data(char *line, DataType data_type, code_cont **data, int *dc) {
-    int count;
+    int error_id;
 
     /* data type is .data */
     switch (data_type) {
         case DATA: {
-            count = encode_numeric_data(line, data, dc);
+            error_id = encode_numeric_data(line, data, dc);
             break;
         }
         case STRING: {
-            count = encode_string(line, data, dc);
+            error_id = encode_string(line, data, dc);
             break;
         }
         default: {
-            /* error */
-            count = 0;
+            /* unreachable code */
         }
     }
-    return count;
+    return error_id;
 }
 
 
@@ -329,7 +327,7 @@ char *add_file_extension(char *filename, char *extension) {
     char *dup_filename = strduplic(filename);
     dup_filename = (char *) realloc(dup_filename, strlen(dup_filename) + MAX_EXTENSION_LENGTH);
     if (dup_filename == NULL) {
-        exit(1);
+        handle_dynamic_alloc_error();
     }
     strcat(dup_filename, extension);
     return dup_filename;

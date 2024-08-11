@@ -1,7 +1,7 @@
 #include "../include/first_stage.h"
 
 int first_stage_process(file_struct *curr_file) {
-    int ic, dc, symbol, data_size, errors, curr_error_id;
+    int ic, dc, symbol, data_encode_error_id, errors, curr_error_id;
     char line[MAX_LINE_LENGTH + 1];
     DataType data_type;
     char sym_name[MAX_LABEL_LENGTH + 1];
@@ -54,9 +54,9 @@ int first_stage_process(file_struct *curr_file) {
                 }
             }
             /* encode data to memory return size and increase DC #7 */
-            data_size = encode_data(line, data_type, &data, &dc);
-            if (!data_size) {
-                /* error */
+            data_encode_error_id = encode_data(line, data_type, &data, &dc);
+            if (data_encode_error_id != ERROR_ID_0) {
+                /* add error to file errors */
             }
             continue;
         }
