@@ -252,6 +252,8 @@ int encode_numeric_data(char *line, code_cont **data, int *dc) {
             }
         }
         num = atoi(curr_token);
+        if (num < MIN_DATA_NUM_VALUE || num > MAX_DATA_NUM_VALUE)
+            return ERROR_ID_30;
         val = conv_to_ushort(num);
         add_data(data, val, dc);
 
