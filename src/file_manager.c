@@ -59,7 +59,7 @@ char *error_desc[] = {
     /* 25 */
     "Command - invalid arguments count",
     /* 26 */
-    "Label name is used more than once",
+    "Symbol Table - Label name is used more than once",
 };
 
 char *stage_name[] = {

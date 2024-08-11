@@ -5,6 +5,9 @@
 #define INITIAL_SIZE 10
 #define LOAD_FACTOR 0.75
 
+#include "../include/utils.h"
+#include "../include/file_manager.h"
+
 typedef struct Symbol {
     char *key;
     char *instr_type;
@@ -17,8 +20,6 @@ typedef struct {
     int count;
 } SymTable;
 
-#include "../include/utils.h"
-
 
 SymTable *create_symtable();
 
@@ -26,7 +27,7 @@ void free_symbol(Symbol *symbol);
 
 void free_symtable(SymTable *table);
 
-int enlarge_table(SymTable *table);
+void enlarge_table(SymTable *table);
 
 int insert_symbol_table(SymTable *table, char *key, char *type, int value);
 
