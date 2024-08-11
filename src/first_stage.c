@@ -74,7 +74,7 @@ int first_stage_process(file_struct *curr_file) {
 
         if (is_entry(line)) {
             if (extract_symbol(line, sym_name, ' ')) {
-                add_symbol(entries_list, sym_name, ic + IC_OFFSET);
+                add_symbol(entries_list, sym_name, n_line);
             }
             continue;
         }
