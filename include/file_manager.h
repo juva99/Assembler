@@ -20,33 +20,33 @@ typedef struct Error {
 } Error;
 
 typedef enum ERROR_IDS {
-    ERROR_ID_0,
-    ERROR_ID_1,
-    ERROR_ID_2,
-    ERROR_ID_3,
-    ERROR_ID_4,
+    ERROR_ID_0 = 0,
+    ERROR_ID_1 = 1,
+    ERROR_ID_2 = 2,
+    ERROR_ID_3 = 3,
+    ERROR_ID_4 = 4,
 
-    ERROR_ID_9,
+    ERROR_ID_9 = 9,
 
-    ERROR_ID_11,
-    ERROR_ID_12,
-    ERROR_ID_13,
-    ERROR_ID_14,
-    ERROR_ID_15,
-    ERROR_ID_16,
-    ERROR_ID_17,
-    ERROR_ID_18,
-    ERROR_ID_19,
-    ERROR_ID_20,
-    ERROR_ID_21,
-    ERROR_ID_22,
-    ERROR_ID_23,
-    ERROR_ID_24,
-    ERROR_ID_25,
-    ERROR_ID_26,
-    ERROR_ID_27,
-    ERROR_ID_28,
-    ERROR_ID_29
+    ERROR_ID_11 = 11,
+    ERROR_ID_12 = 12,
+    ERROR_ID_13 = 13,
+    ERROR_ID_14 = 14,
+    ERROR_ID_15 = 15,
+    ERROR_ID_16 = 16,
+    ERROR_ID_17 = 17,
+    ERROR_ID_18 = 18,
+    ERROR_ID_19 = 19,
+    ERROR_ID_20 = 20,
+    ERROR_ID_21 = 21,
+    ERROR_ID_22 = 22,
+    ERROR_ID_23 = 23,
+    ERROR_ID_24 = 24,
+    ERROR_ID_25 = 25,
+    ERROR_ID_26 = 26,
+    ERROR_ID_27 = 27,
+    ERROR_ID_28 = 28,
+    ERROR_ID_29 = 29
 } ERROR_IDS;
 
 typedef struct file_struct {
