@@ -23,7 +23,7 @@ char *error_desc[] = {
     /* 8 */
     "",
     /* 9 */
-    "",
+    "Errors were found in first stage",
     /* 10 */
     "",
 

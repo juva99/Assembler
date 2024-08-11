@@ -25,9 +25,9 @@ typedef enum ERROR_IDS {
     ERROR_ID_2,
     ERROR_ID_3,
     ERROR_ID_4,
-    ERROR_ID_5,
-    ERROR_ID_6,
-    ERROR_ID_7,
+
+    ERROR_ID_9,
+
     ERROR_ID_11,
     ERROR_ID_12,
     ERROR_ID_13,

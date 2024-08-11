@@ -8,6 +8,7 @@ int first_stage_process(file_struct *curr_file) {
     char *processed_filename;
     FILE *file;
 
+    /* temp */
     int fake_line = 0;
 
     code_cont *data, *code;
@@ -30,8 +31,6 @@ int first_stage_process(file_struct *curr_file) {
     file = fopen(processed_filename, "r");
     free(processed_filename);
     if (file == NULL) {
-        /*    */
-        /* change fake_line to actual line number*/
         add_error_to_file(curr_file, ERROR_ID_1, fake_line, FIRST_STAGE);
         return 0;
     }
@@ -48,23 +47,26 @@ int first_stage_process(file_struct *curr_file) {
         if (data_type != NOT_DATA) {
             if (symbol) {
                 /* insert to data table #6 */
-                if (!insert_symbol_table(sym_table, sym_name, ".data", dc)) {
-                    /* error */
+                curr_error_id = insert_symbol_table(sym_table, sym_name, ".data", dc);
+                if (curr_error_id != ERROR_ID_0) {
+                    add_error_to_file(curr_file, curr_error_id, fake_line, FIRST_STAGE);
                     errors++;
                 }
             }
             /* encode data to memory return size and increase DC #7 */
-            data_encode_error_id = encode_data(line, data_type, &data, &dc);
-            if (data_encode_error_id != ERROR_ID_0) {
-                /* add error to file errors */
+            curr_error_id = encode_data(line, data_type, &data, &dc);
+            if (curr_error_id != ERROR_ID_0) {
+                add_error_to_file(curr_file, curr_error_id, fake_line, FIRST_STAGE);
+                errors++;
             }
             continue;
         }
         /* #8 */
         if (is_extern(line)) {
             if (extract_symbol(line, sym_name, ' ')) {
-                if (!insert_symbol_table(sym_table, sym_name, ".external", 0)) {
-                    /* error */
+                curr_error_id = insert_symbol_table(sym_table, sym_name, ".external", 0);
+                if (curr_error_id != ERROR_ID_0) {
+                    add_error_to_file(curr_file, curr_error_id, fake_line, FIRST_STAGE);
                     errors++;
                 }
             }
@@ -82,14 +84,13 @@ int first_stage_process(file_struct *curr_file) {
 
         curr_error_id = build_command(line, &command);
         if (curr_error_id != ERROR_ID_0) {
-            /*     */
-            /* change fake_line to actual line number */
             add_error_to_file(curr_file, curr_error_id, fake_line, FIRST_STAGE);
             continue;
         }
         if (symbol) {
-            if (!insert_symbol_table(sym_table, sym_name, ".code", ic + IC_OFFSET)) {
-                /* error */
+            curr_error_id = insert_symbol_table(sym_table, sym_name, ".code", ic + IC_OFFSET);
+            if (curr_error_id != ERROR_ID_0) {
+                add_error_to_file(curr_file, curr_error_id, fake_line, FIRST_STAGE);
                 errors++;
             }
         }
@@ -102,7 +103,7 @@ int first_stage_process(file_struct *curr_file) {
         free_container(data, dc);
         free_symtable(sym_table);
         free_symbol_list(entries_list);
-        return 0;
+        return ERROR_ID_9;
     }
     update_data_symbols(sym_table, ic + IC_OFFSET);
     return second_stage_process(curr_file, data, code, sym_table, entries_list, ic, dc);
