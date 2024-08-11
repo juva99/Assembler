@@ -37,7 +37,7 @@ void free_entry(Macro *entry) {
 MacroTable *create_table() {
     MacroTable *table = (MacroTable *) malloc(sizeof(MacroTable));
     if (!table) {
-        return NULL;
+        handle_dynamic_alloc_error();
     }
     table->size = INITIAL_SIZE;
     table->count = 0;
@@ -114,8 +114,6 @@ char *search(MacroTable *table, const char *key) {
         }
         index = (index + 1) % table->size;
     }
-    /*         */
-    /* conflicts with value return */
     return NULL;
 }
 
