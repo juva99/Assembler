@@ -51,5 +51,7 @@ char *strduplic(const char *s);
 
 char *add_file_extension(char *filename, char *extension);
 
+int read_num_arg(char *arg);
+
 #endif
 

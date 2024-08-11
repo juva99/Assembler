@@ -334,3 +334,14 @@ char *add_file_extension(char *filename, char *extension) {
     strcat(dup_filename, extension);
     return dup_filename;
 }
+
+int read_num_arg(char *arg) {
+    int is_negative, num;
+    arg++;
+    if (*arg == '-') {
+        is_negative = -1;
+        arg++;
+    }
+    num = (atoi(arg) * is_negative);
+    return num;
+}
