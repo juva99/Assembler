@@ -1,15 +1,12 @@
 #include "../include/first_stage.h"
 
 int first_stage_process(file_struct *curr_file) {
-    int ic, dc, symbol, data_encode_error_id, errors, curr_error_id;
+    int ic, dc, symbol, errors, curr_error_id, n_line;
     char line[MAX_LINE_LENGTH + 1];
     DataType data_type;
     char sym_name[MAX_LABEL_LENGTH + 1];
     char *processed_filename;
     FILE *file;
-
-    /* temp */
-    int fake_line = 0;
 
     code_cont *data, *code;
     cmd_struct *command;
@@ -26,16 +23,18 @@ int first_stage_process(file_struct *curr_file) {
     ic = 0;
     dc = 0;
     errors = 0;
+    n_line = 0;
 
     processed_filename = add_file_extension(curr_file->filename, PROCESSED_FILE_TYPE);
     file = fopen(processed_filename, "r");
     free(processed_filename);
     if (file == NULL) {
-        add_error_to_file(curr_file, ERROR_ID_1, fake_line, FIRST_STAGE);
+        add_error_to_file(curr_file, ERROR_ID_1, n_line, FIRST_STAGE);
         return 0;
     }
 
     while (fgets(line, sizeof(line), file)) {
+        n_line++;
         symbol = 0;
         sym_name[0] = '\0';
         /* check if line has a symbol #3 */
@@ -49,14 +48,14 @@ int first_stage_process(file_struct *curr_file) {
                 /* insert to data table #6 */
                 curr_error_id = insert_symbol_table(sym_table, sym_name, ".data", dc);
                 if (curr_error_id != ERROR_ID_0) {
-                    add_error_to_file(curr_file, curr_error_id, fake_line, FIRST_STAGE);
+                    add_error_to_file(curr_file, curr_error_id, n_line, FIRST_STAGE);
                     errors++;
                 }
             }
             /* encode data to memory return size and increase DC #7 */
             curr_error_id = encode_data(line, data_type, &data, &dc);
             if (curr_error_id != ERROR_ID_0) {
-                add_error_to_file(curr_file, curr_error_id, fake_line, FIRST_STAGE);
+                add_error_to_file(curr_file, curr_error_id, n_line, FIRST_STAGE);
                 errors++;
             }
             continue;
@@ -66,7 +65,7 @@ int first_stage_process(file_struct *curr_file) {
             if (extract_symbol(line, sym_name, ' ')) {
                 curr_error_id = insert_symbol_table(sym_table, sym_name, ".external", 0);
                 if (curr_error_id != ERROR_ID_0) {
-                    add_error_to_file(curr_file, curr_error_id, fake_line, FIRST_STAGE);
+                    add_error_to_file(curr_file, curr_error_id, n_line, FIRST_STAGE);
                     errors++;
                 }
             }
@@ -84,13 +83,13 @@ int first_stage_process(file_struct *curr_file) {
 
         curr_error_id = build_command(line, &command);
         if (curr_error_id != ERROR_ID_0) {
-            add_error_to_file(curr_file, curr_error_id, fake_line, FIRST_STAGE);
+            add_error_to_file(curr_file, curr_error_id, n_line, FIRST_STAGE);
             continue;
         }
         if (symbol) {
             curr_error_id = insert_symbol_table(sym_table, sym_name, ".code", ic + IC_OFFSET);
             if (curr_error_id != ERROR_ID_0) {
-                add_error_to_file(curr_file, curr_error_id, fake_line, FIRST_STAGE);
+                add_error_to_file(curr_file, curr_error_id, n_line, FIRST_STAGE);
                 errors++;
             }
         }
