@@ -118,7 +118,7 @@ unsigned short create_method_line(cmd_struct *cmd, int method, char *value, int 
     return (method_line & ~(1U << MAX_BIN_LENGTH));
 }
 
-int update_line(code_cont *code, Symbol *symbol) {
+void update_line(code_cont *code, Symbol *symbol) {
     ARE line_are;
     unsigned short new_val = 0;
 
@@ -129,14 +129,13 @@ int update_line(code_cont *code, Symbol *symbol) {
         line_are = EXTERNAL;
     else {
         /* unreachable code */
-        return 0;
+        return;
     }
 
     /* creating new line */
     new_val |= 1U << line_are;
     new_val |= symbol->value << DATA_OFFSET;
     code->bin_rep = new_val;
-    return 1;
 }
 
 int save_object_file(char *filename, code_cont *code, code_cont *data, int ic, int dc) {

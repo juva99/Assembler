@@ -44,7 +44,7 @@ unsigned short create_method_line(cmd_struct *cmd, int method, char *value, int 
 
 code_cont *create_container();
 
-int update_line(code_cont *code, Symbol *symbol);
+void update_line(code_cont *code, Symbol *symbol);
 
 int save_object_file(char *filename, code_cont *code, code_cont *data, int ic, int dc);
 
