@@ -9,15 +9,13 @@ int preprocess(file_struct *curr_file) {
     char *processed_filename;
     FILE *file, *proccessed_file;
 
-    /* temp */
-    int fake_line;
 
     /* open file */
     preprocessed_filename = add_file_extension(curr_file->filename, PREPROCESSED_FILE_TYPE);
     file = fopen(preprocessed_filename, "r");
     free(preprocessed_filename);
     if (file == NULL) {
-        add_error_to_file(curr_file, ERROR_ID_1, fake_line, PRE_STAGE);
+        add_error_to_file(curr_file, ERROR_ID_1, n_line, PRE_STAGE);
         return ERROR_ID_1;
     }
 
@@ -31,7 +29,7 @@ int preprocess(file_struct *curr_file) {
     free(processed_filename);
 
     if (proccessed_file == NULL) {
-        add_error_to_file(curr_file, ERROR_ID_4, fake_line, PRE_STAGE);
+        add_error_to_file(curr_file, ERROR_ID_4, n_line, PRE_STAGE);
         return ERROR_ID_4;
     }
 
@@ -41,7 +39,7 @@ int preprocess(file_struct *curr_file) {
         if (strcmp(line, "\n") != 0) {
             error_id = process_line(line, file, proccessed_file, macros);
             if (error_id != ERROR_ID_0) {
-                add_error_to_file(curr_file, error_id, fake_line, PRE_STAGE);
+                add_error_to_file(curr_file, error_id, n_line, PRE_STAGE);
                 break;
             }
         }
