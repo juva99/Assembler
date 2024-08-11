@@ -9,8 +9,8 @@ second_stage_process(file_struct *curr_file, code_cont *data, code_cont *code, S
     SymbolList *externals;
     externals = create_symbol_list();
 
-    if (!validate_entries(sym_table, entries)) {
-        /* error */
+    if (validate_entries(sym_table, entries) != ERROR_ID_0) {
+        /* add error to file errors */
     }
 
     for (i = 0; i < ic; ++i) {

@@ -45,9 +45,9 @@ char *error_desc[] = {
     /* 18 */
     "Data - numeric declaraion error - non-numeric value entered ", /*encode numeric data*/
     /* 19 */
-    "Unvalid data type ", /*encode_data - maybe the error can be removed*/
+    "Unvalid data type", /*encode_data - maybe the error can be removed*/
     /* 20 */
-    "Entry label was never initialized", /*validate_entries*/
+    "Entry label was never initialized", /*validate_entries, check if the error description is good */
     /* 21 */
     "Command - Invalid opcode", /*build_command */
     /* 22 */
