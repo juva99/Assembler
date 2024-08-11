@@ -125,7 +125,7 @@ void enlarge_errors_arr(file_struct *file) {
 void print_errors(file_struct *file) {
     int i;
 
-    for (i = 0; i <= file->errors_count; i++) {
+    for (i = 0; i < file->errors_count; i++) {
         int error_id, error_line, stage_id;
 
         error_id = file->errors[i].error_id;
