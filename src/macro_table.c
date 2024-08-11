@@ -1,5 +1,6 @@
 #include "../include/macro_table.h"
 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,7 +19,7 @@ unsigned int hash(const char *key, int size) {
 Macro *create_entry(const char *key, const char *value) {
     Macro *entry = (Macro *) malloc(sizeof(Macro));
     if (!entry) {
-        return NULL;
+        handle_dynamic_alloc_error();
     }
     entry->key = strduplic(key);
     entry->value = strduplic(value);
@@ -36,14 +37,13 @@ void free_entry(Macro *entry) {
 MacroTable *create_table() {
     MacroTable *table = (MacroTable *) malloc(sizeof(MacroTable));
     if (!table) {
-        return NULL;
+        handle_dynamic_alloc_error();
     }
     table->size = INITIAL_SIZE;
     table->count = 0;
     table->table = (Macro **) calloc(table->size, sizeof(Macro *));
     if (!table->table) {
-        free(table);
-        return NULL;
+        handle_dynamic_alloc_error();
     }
     return table;
 }
@@ -67,6 +67,8 @@ void resize_table(MacroTable *table) {
     old_size = table->size;
     table->size *= 2;
     new_table = (Macro **) calloc(table->size, sizeof(Macro *));
+    if (!new_table)
+        handle_dynamic_alloc_error();
 
     for (i = 0; i < old_size; ++i) {
         if (table->table[i]) {
@@ -92,19 +94,16 @@ int insert(MacroTable *table, const char *key, const char *value) {
 
     while (table->table[index]) {
         if (strcmp(table->table[index]->key, key) == 0) {
-            /* return 0 if key already exists*/
-            return 0;
+            /* error - key already exists*/
+            return ERROR_ID_14;
         }
         index = (index + 1) % table->size;
     }
 
     table->table[index] = create_entry(key, value);
-    if (!table->table[index]) {
-        /* return 0 if memory alloc failed */
-        return 0;
-    }
     table->count++;
-    return 1;
+
+    return ERROR_ID_0;
 }
 
 char *search(MacroTable *table, const char *key) {

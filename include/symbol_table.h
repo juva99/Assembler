@@ -18,6 +18,7 @@ typedef struct {
 } SymTable;
 
 #include "../include/utils.h"
+#include "../include/file_manager.h"
 
 
 SymTable *create_symtable();
@@ -26,7 +27,7 @@ void free_symbol(Symbol *symbol);
 
 void free_symtable(SymTable *table);
 
-int enlarge_table(SymTable *table);
+void enlarge_table(SymTable *table);
 
 int insert_symbol_table(SymTable *table, char *key, char *type, int value);
 

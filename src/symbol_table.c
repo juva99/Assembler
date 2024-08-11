@@ -20,17 +20,14 @@ SymTable *create_symtable() {
 
     table = (SymTable *) malloc(sizeof(SymTable));
     if (!table) {
-        printf("Memory allocation failed for symbol table\n");
-        return NULL;
+        handle_dynamic_alloc_error();
     }
 
     table->size = INITIAL_SIZE;
     table->count = 0;
     table->table = (Symbol **) calloc(table->size, sizeof(Symbol *));
     if (!table->table) {
-        printf("Memory allocation failed for symbol table\n");
-        free(table);
-        return NULL;
+        handle_dynamic_alloc_error();
     }
     return table;
 }
@@ -53,7 +50,7 @@ void free_symtable(SymTable *table) {
     free(table);
 }
 
-int enlarge_table(SymTable *table) {
+void enlarge_table(SymTable *table) {
     int old_size, i;
     unsigned int index;
     Symbol **new_table;
@@ -62,8 +59,7 @@ int enlarge_table(SymTable *table) {
     table->size *= 2;
     new_table = (Symbol **) calloc(table->size, sizeof(Symbol *));
     if (!new_table) {
-        printf("Memory allocation falid for symbol table\n");
-        return 0;
+        handle_dynamic_alloc_error();
     }
 
     for (i = 0; i < old_size; ++i) {
@@ -78,7 +74,6 @@ int enlarge_table(SymTable *table) {
 
     free(table->table);
     table->table = new_table;
-    return 1;
 }
 
 
@@ -92,8 +87,8 @@ int insert_symbol_table(SymTable *table, char *key, char *type, int value) {
     i = hash_sym(key, table->size);
     while (table->table[i]) {
         if (strcmp(table->table[i]->key, key) == 0) {
-            /* If the key already exists - return 0 */
-            return 0;
+            /* error -  symbol already exists */
+            return ERROR_ID_26;
         }
         /* Move to the next slot */
         i = (i + 1) % table->size;
@@ -101,8 +96,7 @@ int insert_symbol_table(SymTable *table, char *key, char *type, int value) {
 
     newSymbol = (Symbol *) malloc(sizeof(Symbol));
     if (!newSymbol) {
-        printf("Memory allocation failed");
-        return 0;
+        handle_dynamic_alloc_error();
     }
     newSymbol->key = strduplic(key);
     newSymbol->instr_type = strduplic(type);
@@ -110,7 +104,7 @@ int insert_symbol_table(SymTable *table, char *key, char *type, int value) {
     table->table[i] = newSymbol;
     table->count++;
 
-    return 1;
+    return ERROR_ID_0;
 }
 
 int find_sym_value(SymTable *table, char *key) {

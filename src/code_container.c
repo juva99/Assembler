@@ -1,48 +1,43 @@
 #include "../include/code_container.h"
 
+#include "../include/file_manager.h"
 
-int write_data(code_cont **container, unsigned short data, int *counter) {
-    if (!expend_memory(container, *counter)) {
-        /* expend error */
-        return 0;
-    }
+void write_data(code_cont **container, unsigned short data, int *counter) {
+    expend_memory(container, *counter);
     (*container + *counter)->bin_rep = data;
     (*container + *counter)->label = NULL;
     (*counter)++;
-    return 1;
 }
 
-int add_data(code_cont **data, unsigned short val, int *dc) {
-    return write_data(data, val, dc);
+void add_data(code_cont **data, unsigned short val, int *dc) {
+    write_data(data, val, dc);
 }
 
-int write_data_label(code_cont **container, unsigned short data, int *counter, char *label) {
-    if (!write_data(container, data, counter))
-        return 0;
+void write_data_label(code_cont **container, unsigned short data, int *counter, char *label) {
+    write_data(container, data, counter);
     (*container + *counter - 1)->label = strduplic(label);
-    return 1;
 }
 
-
-int expend_memory(code_cont **container, int counter) {
+void expend_memory(code_cont **container, int counter) {
     code_cont *temp;
 
     temp = realloc(*container, (counter + 1) * sizeof(code_cont));
     if (temp == NULL) {
-        /*error*/
-        return 0;
+        handle_dynamic_alloc_error();
     }
     *container = temp;
-    return 1;
 }
 
 code_cont *create_container() {
     code_cont *temp;
     temp = malloc(sizeof(code_cont));
+    if (temp == NULL) {
+        handle_dynamic_alloc_error();
+    }
     return temp;
 }
 
-int add_command(code_cont **code, cmd_struct *cmd, int *ic) {
+void add_command(code_cont **code, cmd_struct *cmd, int *ic) {
     unsigned short command = 0;
     unsigned short src_command = 0;
     unsigned short dst_command = 0;
@@ -62,33 +57,25 @@ int add_command(code_cont **code, cmd_struct *cmd, int *ic) {
     /* turn ABSOLUTE flag */
     command |= 1U << ABSOLUTE;
     /* write command */
-    if (!write_data(code, command, ic))
-        return 0;
+    write_data(code, command, ic);
+
     /* if both methods reg merge them */
     if (src_command && dst_command && cmd->length == 2) {
-        return write_data(code, src_command | dst_command, ic);
+        write_data(code, src_command | dst_command, ic);
+        return;
     }
     /* handle source command */
     if (src_command) {
-        if (!write_data(code, src_command, ic)) {
-            return 0;
-        }
+        write_data(code, src_command, ic);
     } else if (cmd->src_method == 1) {
-        if (!write_data_label(code, src_command, ic, cmd->src)) {
-            return 0;
-        }
+        write_data_label(code, src_command, ic, cmd->src);
     }
     /* handle dest command */
     if (dst_command) {
-        if (!write_data(code, dst_command, ic)) {
-            return 0;
-        }
+        write_data(code, dst_command, ic);
     } else if (cmd->dst_method == 1) {
-        if (!write_data_label(code, dst_command, ic, cmd->dst)) {
-            return 0;
-        }
+        write_data_label(code, dst_command, ic, cmd->dst);
     }
-    return 1;
 }
 
 unsigned short create_method_line(cmd_struct *cmd, int method, char *value, int is_src) {
@@ -124,14 +111,14 @@ unsigned short create_method_line(cmd_struct *cmd, int method, char *value, int 
             break;
         }
         default: {
-            /* invalid method */
+            /* unreachable code */
             break;
         }
     }
     return (method_line & ~(1U << MAX_BIN_LENGTH));
 }
 
-int update_line(code_cont *code, Symbol *symbol) {
+void update_line(code_cont *code, Symbol *symbol) {
     ARE line_are;
     unsigned short new_val = 0;
 
@@ -141,15 +128,14 @@ int update_line(code_cont *code, Symbol *symbol) {
     else if (strcmp(symbol->instr_type, ".external") == 0)
         line_are = EXTERNAL;
     else {
-        /* error */
-        return 0;
+        /* unreachable code */
+        return;
     }
 
     /* creating new line */
     new_val |= 1U << line_are;
     new_val |= symbol->value << DATA_OFFSET;
     code->bin_rep = new_val;
-    return 1;
 }
 
 int save_object_file(char *filename, code_cont *code, code_cont *data, int ic, int dc) {
@@ -159,9 +145,9 @@ int save_object_file(char *filename, code_cont *code, code_cont *data, int ic, i
     full_filename = add_file_extension(filename, FINAL_FILE_EXTENSION);
     ob_file = fopen(full_filename, "w");
     if (ob_file == NULL) {
-        /* error */
+        /* error - file opening failed */
         free(full_filename);
-        return 0;
+        return ERROR_ID_1;
     }
     fprintf(ob_file, "%d %d\n", ic, dc);
     for (i = 0; i < ic; ++i) {

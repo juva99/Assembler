@@ -6,7 +6,7 @@
 #include <string.h>
 #include "../include/macro_table.h"
 #include "../include/utils.h"
-#include "../include/file.h"
+#include "../include/file_manager.h"
 
 
 int preprocess(file_struct *curr_file);

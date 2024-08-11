@@ -9,7 +9,7 @@
 #include "../include/symbol_list.h"
 #include "../include/command.h"
 #include "../include/second_stage.h"
-#include "../include/file.h"
+#include "../include/file_manager.h"
 
 
 int first_stage_process(file_struct *curr_file);

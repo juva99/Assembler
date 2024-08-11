@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "../include/preprocess.h"
 #include "../include/first_stage.h"
-#include "../include/file.h"
+#include "../include/file_manager.h"
 
 int main(int argc, char *argv[]) {
     int i, num_files = 0;
@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
         first_stage_process((files + i));
     }
     for (i = 0; i < num_files; ++i) {
-        printf("%d\n", (files + i)->error_count);
+        printf("%d\n", (files + i)->errors_count);
     }
     free_files(files, num_files);
     printf("done\n");

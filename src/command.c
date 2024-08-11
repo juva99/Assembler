@@ -1,30 +1,33 @@
 #include "../include/command.h"
+
+#include "../include/file_manager.h"
+
 #include "../include/utils.h"
 
 opcode opcodes[] = {
-        {"mov",  2, {0,  1,  2,  3},  {1,  2,  3,  -1}},
-        {"cmp",  2, {0,  1,  2,  3},  {0,  1,  2,  3}},
-        {"add",  2, {0,  1,  2,  3},  {1,  2,  3,  -1}},
-        {"sub",  2, {0,  1,  2,  3},  {1,  2,  3,  -1}},
-        {"lea",  2, {1,  -1, -1, -1}, {1,  2,  3,  -1}},
-        {"clr",  1, {-1, -1, -1, -1}, {1,  2,  3,  -1}},
-        {"not",  1, {-1, -1, -1, -1}, {1,  2,  3,  -1}},
-        {"inc",  1, {-1, -1, -1, -1}, {1,  2,  3,  -1}},
-        {"dec",  1, {-1, -1, -1, -1}, {1,  2,  3,  -1}},
-        {"jmp",  1, {-1, -1, -1, -1}, {1,  2,  -1, -1}},
-        {"bne",  1, {-1, -1, -1, -1}, {1,  2,  -1, -1}},
-        {"red",  1, {-1, -1, -1, -1}, {1,  2,  3,  -1}},
-        {"prn",  1, {-1, -1, -1, -1}, {0,  1,  2,  3}},
-        {"jsr",  1, {-1, -1, -1, -1}, {1,  2,  -1, -1}},
-        {"rts",  0, {-1, -1, -1, -1}, {-1, -1, -1, -1}},
-        {"stop", 0, {-1, -1, -1, -1}, {-1, -1, -1, -1}},
+    {"mov", 2, {0, 1, 2, 3}, {1, 2, 3, -1}},
+    {"cmp", 2, {0, 1, 2, 3}, {0, 1, 2, 3}},
+    {"add", 2, {0, 1, 2, 3}, {1, 2, 3, -1}},
+    {"sub", 2, {0, 1, 2, 3}, {1, 2, 3, -1}},
+    {"lea", 2, {1, -1, -1, -1}, {1, 2, 3, -1}},
+    {"clr", 1, {-1, -1, -1, -1}, {1, 2, 3, -1}},
+    {"not", 1, {-1, -1, -1, -1}, {1, 2, 3, -1}},
+    {"inc", 1, {-1, -1, -1, -1}, {1, 2, 3, -1}},
+    {"dec", 1, {-1, -1, -1, -1}, {1, 2, 3, -1}},
+    {"jmp", 1, {-1, -1, -1, -1}, {1, 2, -1, -1}},
+    {"bne", 1, {-1, -1, -1, -1}, {1, 2, -1, -1}},
+    {"red", 1, {-1, -1, -1, -1}, {1, 2, 3, -1}},
+    {"prn", 1, {-1, -1, -1, -1}, {0, 1, 2, 3}},
+    {"jsr", 1, {-1, -1, -1, -1}, {1, 2, -1, -1}},
+    {"rts", 0, {-1, -1, -1, -1}, {-1, -1, -1, -1}},
+    {"stop", 0, {-1, -1, -1, -1}, {-1, -1, -1, -1}},
 };
 
 int (*check_address_functions[])(char *str) = {
-        check_address_type_0,
-        check_address_type_1,
-        check_address_type_2,
-        check_address_type_3,
+    check_address_type_0,
+    check_address_type_1,
+    check_address_type_2,
+    check_address_type_3,
 };
 
 void free_command(cmd_struct *cmd) {
@@ -37,16 +40,14 @@ void free_command(cmd_struct *cmd) {
     free(cmd);
 }
 
-cmd_struct *build_command(char *line) {
+int build_command(char *line, cmd_struct **command) {
     int args;
     char sym_name[MAX_LABEL_LENGTH + 1];
     char arg[MAX_LABEL_LENGTH + 1];
     cmd_struct *cmd = malloc(sizeof(cmd_struct));
 
     if (cmd == NULL) {
-        fprintf(stderr, "Memory allocation failed\n");
-        /* error */
-        return NULL;
+        handle_dynamic_alloc_error();
     }
     /* init command */
     cmd->label = NULL;
@@ -61,20 +62,17 @@ cmd_struct *build_command(char *line) {
     if (extract_symbol(line, sym_name, ':')) {
         cmd->label = malloc(strlen(sym_name) + 1);
         if (cmd->label == NULL) {
-            fprintf(stderr, "Memory allocation failed\n");
-            /* error */
-            free_command(cmd);
-            return NULL;
+            handle_dynamic_alloc_error();
         }
         strcpy(cmd->label, sym_name);
     }
     /* get command opcode */
     cmd->opcode = extract_opcode(line);
-    /* invalid opcode */
+
     if (cmd->opcode < 0) {
-        /* error invalid opcode */
+        /* error - invalid opcode */
         free_command(cmd);
-        return NULL;
+        return ERROR_ID_21;
     }
 
     /* parse arguments */
@@ -82,61 +80,51 @@ cmd_struct *build_command(char *line) {
     switch (args) {
         case 0: {
             if (strcmp(line, "") != 0) {
-                /* error command extra text */
+                /* error -  command extra text */
                 free_command(cmd);
-                return NULL;
+                return ERROR_ID_22;
             }
             cmd->length = 1;
-            return cmd;
+            *command = cmd;
+            return ERROR_ID_0;
         }
         case 1: {
             extract_next(line, arg, ' ');
             if (strcmp(line, "") != 0) {
-                /* error command extra text */
+                /* error - command extra text */
                 free_command(cmd);
-                return NULL;
+                return ERROR_ID_22;
             }
-            if (!dup_argument(&(cmd->dst), arg)) {
-                fprintf(stderr, "Memory allocation failed\n");
-                /* error */
-                free_command(cmd);
-                return NULL;
-            }
+
+            dup_argument(&(cmd->dst), arg);
             cmd->length = 2;
             cmd->dst_method = get_dst_add_method(cmd->opcode, cmd->dst);
             if (cmd->dst_method < 0) {
-                /* error dst not valid */
+                /* error - dst not valid */
                 free_command(cmd);
-                return NULL;
+                return ERROR_ID_23;
             }
-            return cmd;
+            *command = cmd;
+            return ERROR_ID_0;
         }
         case 2: {
             extract_next(line, arg, ',');
-            if (!dup_argument(&(cmd->src), arg)) {
-                fprintf(stderr, "Memory allocation failed\n");
-                /* error */
-                free_command(cmd);
-                return NULL;
-            }
+            dup_argument(&(cmd->src), arg);
             extract_next(line, arg, ' ');
             if (strcmp(line, "") != 0) {
-                /* error command extra text */
+                /* error  - command extra text */
                 free_command(cmd);
-                return NULL;
+                return ERROR_ID_22;
             }
-            if (!dup_argument(&(cmd->dst), arg)) {
-                fprintf(stderr, "Memory allocation failed\n");
-                /* error */
-                free_command(cmd);
-                return NULL;
-            }
+
+            dup_argument(&(cmd->dst), arg);
+
             cmd->src_method = get_src_add_method(cmd->opcode, cmd->src);
             cmd->dst_method = get_dst_add_method(cmd->opcode, cmd->dst);
             if (cmd->src_method < 0 || cmd->dst_method < 0) {
-                /* error src or dst method not legal */
+                /* error - src or dst method not legal */
                 free_command(cmd);
-                return NULL;
+                return ERROR_ID_24;
             }
             cmd->length = 3;
             /* check if both of the methods are registers to calc command length */
@@ -144,25 +132,23 @@ cmd_struct *build_command(char *line) {
                 (cmd->dst_method == 3 || cmd->dst_method == 2)) {
                 cmd->length = 2;
             }
-            return cmd;
+            *command = cmd;
+            return ERROR_ID_0;
         }
         default: {
-            /* error invalid args count */
+            /* error - invalid args count */
             free_command(cmd);
-            return NULL;
+            return ERROR_ID_25;
         }
     }
 }
 
-int dup_argument(char **dest, char *str) {
+void dup_argument(char **dest, char *str) {
     *(dest) = malloc(strlen(str) + 1);
     if (*(dest) == NULL) {
-        fprintf(stderr, "Memory allocation failed\n");
-        /* error */
-        return 0;
+        handle_dynamic_alloc_error();
     }
     strcpy(*(dest), str);
-    return 1;
 }
 
 int what_opcode(char *token) {

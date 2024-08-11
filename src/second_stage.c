@@ -1,16 +1,19 @@
 #include "../include/second_stage.h"
 
 
-int
-second_stage_process(file_struct *curr_file, code_cont *data, code_cont *code, SymTable *sym_table,
-                     SymbolList *entries, int ic, int dc) {
-    int i;
+int second_stage_process(file_struct *curr_file, code_cont *data, code_cont *code, SymTable *sym_table,
+                         SymbolList *entries, int ic, int dc) {
+    int i, error_id;
     Symbol *symbol;
     SymbolList *externals;
     externals = create_symbol_list();
 
-    if (!validate_entries(sym_table, entries)) {
-        /* error */
+    /* temp */
+    int fake_line = 0;
+
+    error_id = validate_entries(sym_table, entries);
+    if (error_id != ERROR_ID_0) {
+        add_error_to_file(curr_file, error_id, fake_line, SECOND_STAGE);
     }
 
     for (i = 0; i < ic; ++i) {
@@ -18,16 +21,14 @@ second_stage_process(file_struct *curr_file, code_cont *data, code_cont *code, S
             if ((code + i)->label != NULL && find_sym_value(sym_table, (code + i)->label) != -1) {
                 /* update line based on stored symbol */
                 symbol = get_symbol(sym_table, (code + i)->label);
-                if (!update_line((code + i), symbol)) {
-                    /* error */
-                    continue;
-                }
+                update_line((code + i), symbol);
+
                 /* if symbol is external add it to ext list */
                 if (strcmp(symbol->instr_type, ".external") == 0) {
                     add_symbol(externals, symbol->key, i + IC_OFFSET);
                 }
             } else {
-                /*error*/
+                /* unreachable code */
                 continue;
             }
         }

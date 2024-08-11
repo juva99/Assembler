@@ -1,20 +1,21 @@
 #include "../include/symbol_list.h"
 
+#include "../include/file_manager.h"
+
 SymbolList *create_symbol_list() {
     SymbolList *list = (SymbolList *) malloc(sizeof(SymbolList));
     if (!list) {
-        return NULL;
+        handle_dynamic_alloc_error();
     }
     list->head = NULL;
     list->count = 0;
     return list;
 }
 
-int add_symbol(SymbolList *list, char *label, int value) {
+void add_symbol(SymbolList *list, char *label, int value) {
     Node *node = (Node *) malloc(sizeof(Node));
     if (!node) {
-        /* error */
-        return 0;
+        handle_dynamic_alloc_error();
     }
     /* set new node values */
     node->label = strduplic(label);
@@ -24,12 +25,11 @@ int add_symbol(SymbolList *list, char *label, int value) {
     /* place node in list */
     if (list->head == NULL) {
         list->head = node;
-        return 1;
+        return;
     }
     node->next = list->head;
     list->head = node;
     list->count++;
-    return 1;
 }
 
 int free_symbol_list(SymbolList *list) {
@@ -51,7 +51,6 @@ void print_symbol_list(SymbolList *list) {
     current_node = list->head;
     while (current_node != NULL) {
         printf("%s: %d \n", current_node->label, current_node->value);
-
         current_node = current_node->next;
     }
 }
@@ -66,16 +65,17 @@ int validate_entries(SymTable *sym_table, SymbolList *entries) {
         entry_value = find_sym_value(sym_table, curr_node->label);
         if (entry_value == -1) {
             /* error - entry without definition */
-            return -1;
+            return ERROR_ID_20;
         }
         curr_node->value = entry_value;
-
         curr_node = curr_node->next;
     }
 
-    return 1;
+    return ERROR_ID_0;
 }
 
+
+/* use the func that links filename to extensions */
 int save_symbol_list(char *filename, ListType list_type, SymbolList *list) {
     char *full_filename;
     FILE *list_file;
@@ -89,31 +89,31 @@ int save_symbol_list(char *filename, ListType list_type, SymbolList *list) {
         case ENTRY: {
             full_filename = (char *) malloc(strlen(filename) + ENTERIES_FILE_EXTENSION_LEN + 1);
             if (full_filename == NULL) {
-                /* error */
+                handle_dynamic_alloc_error();
             }
 
             sprintf(full_filename, "%s%s", filename, ENTERIES_FILE_EXTENSION);
             list_file = fopen(full_filename, "w");
             if (list_file == NULL) {
-                /* error */
+                handle_dynamic_alloc_error();
             }
             break;
         }
         case EXTERN: {
             full_filename = (char *) malloc(strlen(filename) + EXTERNS_FILE_EXTENSION_LEN + 1);
             if (full_filename == NULL) {
-                /* error */
+                handle_dynamic_alloc_error();
             }
 
             sprintf(full_filename, "%s%s", filename, EXTERNS_FILE_EXTENSION);
             list_file = fopen(full_filename, "w");
             if (list_file == NULL) {
-                /* error */
+                handle_dynamic_alloc_error();
             }
             break;
         }
         default: {
-            /* error */
+            /* unreachable code */
             return 0;
         }
     }
@@ -123,7 +123,6 @@ int save_symbol_list(char *filename, ListType list_type, SymbolList *list) {
     while (curr_node != NULL) {
         /*add entry name and ic to file .ent */
         fprintf(list_file, "%s %d\n", curr_node->label, curr_node->value);
-
         curr_node = curr_node->next;
     }
 

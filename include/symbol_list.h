@@ -18,7 +18,7 @@ typedef struct {
 
 SymbolList *create_symbol_list();
 
-int add_symbol(SymbolList *list, char *label, int value);
+void add_symbol(SymbolList *list, char *label, int value);
 
 int free_symbol_list(SymbolList *list);
 
