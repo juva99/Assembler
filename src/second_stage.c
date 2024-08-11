@@ -8,13 +8,8 @@ int second_stage_process(file_struct *curr_file, code_cont *data, code_cont *cod
     SymbolList *externals;
     externals = create_symbol_list();
 
-    /* temp */
-    int fake_line = 0;
 
-    error_id = validate_entries(sym_table, entries);
-    if (error_id != ERROR_ID_0) {
-        add_error_to_file(curr_file, error_id, fake_line, SECOND_STAGE);
-    }
+    validate_entries(curr_file, sym_table, entries);
 
     for (i = 0; i < ic; ++i) {
         if ((code + i)->bin_rep == 0) {
@@ -33,7 +28,6 @@ int second_stage_process(file_struct *curr_file, code_cont *data, code_cont *cod
             }
         }
     }
-    /* merge code and data */
 
     /* save binary file */
     save_symbol_list(curr_file->filename, ENTRY, entries);

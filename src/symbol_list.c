@@ -1,5 +1,4 @@
 #include "../include/symbol_list.h"
-
 #include "../include/file_manager.h"
 
 SymbolList *create_symbol_list() {
@@ -55,7 +54,7 @@ void print_symbol_list(SymbolList *list) {
     }
 }
 
-int validate_entries(SymTable *sym_table, SymbolList *entries) {
+void validate_entries(file_struct *curr_file, SymTable *sym_table, SymbolList *entries) {
     int entry_value;
     Node *curr_node;
 
@@ -65,13 +64,11 @@ int validate_entries(SymTable *sym_table, SymbolList *entries) {
         entry_value = find_sym_value(sym_table, curr_node->label);
         if (entry_value == -1) {
             /* error - entry without definition */
-            return ERROR_ID_20;
+            add_error_to_file(curr_file, ERROR_ID_20, curr_node->value, SECOND_STAGE);
         }
         curr_node->value = entry_value;
         curr_node = curr_node->next;
     }
-
-    return ERROR_ID_0;
 }
 
 

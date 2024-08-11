@@ -24,7 +24,7 @@ int free_symbol_list(SymbolList *list);
 
 void print_symbol_list(SymbolList *list);
 
-int validate_entries(SymTable *sym_table, SymbolList *entries);
+void validate_entries(file_struct *curr_file, SymTable *sym_table, SymbolList *entries);
 
 int save_symbol_list(char *filename, ListType list_type, SymbolList *list);
 
