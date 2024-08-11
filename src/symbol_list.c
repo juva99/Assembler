@@ -1,6 +1,6 @@
 #include "../include/symbol_list.h"
 
-#include <file_manager.h>
+#include "../include/file_manager.h"
 
 SymbolList *create_symbol_list() {
     SymbolList *list = (SymbolList *) malloc(sizeof(SymbolList));
