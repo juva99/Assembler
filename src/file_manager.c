@@ -13,7 +13,7 @@ char *error_desc[] = {
     /* 3 */
     "Creating macro table failed",
     /* 4 */
-    "Opening final file for writing failed",
+    "Opening processed file for writing failed",
     /* 5 */
     "",
     /* 6 */
@@ -29,7 +29,7 @@ char *error_desc[] = {
 
     /*internals errors*/
     /* 11 */
-    "Macro is not declared",
+    "Trying to initailize macro, but it is not declared",
     /* 12 */
     "Macro name is invalid",
     /* 13 */
@@ -60,6 +60,13 @@ char *error_desc[] = {
     "Command - invalid arguments count",
     /* 26 */
     "Symbol Table - Label name is used more than once",
+    /* 27 */
+    "Macro declaration error - Macro declaration without macro name",
+    /* 28 */
+    "Macro declaration error - Macro name cant be instruction, opcode or register name",
+    /* 29 */
+    "Macro declaration error - Macro name cannot be 'macr' ",
+
 };
 
 char *stage_name[] = {

@@ -43,7 +43,10 @@ typedef enum ERROR_IDS {
     ERROR_ID_23,
     ERROR_ID_24,
     ERROR_ID_25,
-    ERROR_ID_26
+    ERROR_ID_26,
+    ERROR_ID_27,
+    ERROR_ID_28,
+    ERROR_ID_29
 } ERROR_IDS;
 
 typedef struct file_struct {

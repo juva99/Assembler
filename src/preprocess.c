@@ -3,29 +3,27 @@
 /* preprocess function */
 int preprocess(file_struct *curr_file) {
     MacroTable *macros;
-    int ret_code = 1, n_line = 0;
+    int n_line = 0, error_id;
     char line[MAX_LINE_LENGTH + 1];
     char *preprocessed_filename;
     char *processed_filename;
     FILE *file, *proccessed_file;
+
+    /* temp */
+    int fake_line;
 
     /* open file */
     preprocessed_filename = add_file_extension(curr_file->filename, PREPROCESSED_FILE_TYPE);
     file = fopen(preprocessed_filename, "r");
     free(preprocessed_filename);
     if (file == NULL) {
-        fprintf(stderr, "Error opening file: %s\n", curr_file->filename);
-        ret_code = 0;
-        return ret_code;
+        add_error_to_file(curr_file, ERROR_ID_1, fake_line, PRE_STAGE);
+        return ERROR_ID_1;
     }
 
     /* initialize macro table */
     macros = create_table();
-    if (macros == NULL) {
-        fprintf(stderr, "Error creating macro table\n");
-        fclose(file);
-        return 0;
-    }
+
     processed_filename = add_file_extension(curr_file->filename, PROCESSED_FILE_TYPE);
 
     /* read lines */
@@ -33,18 +31,17 @@ int preprocess(file_struct *curr_file) {
     free(processed_filename);
 
     if (proccessed_file == NULL) {
-        fprintf(stderr, "Error opening final file for writing\n");
-        free_table(macros);
-        fclose(file);
-        return 0;
+        add_error_to_file(curr_file, ERROR_ID_4, fake_line, PRE_STAGE);
+        return ERROR_ID_4;
     }
 
     while (fgets(line, sizeof(line), file)) {
         n_line++;
         /* preprocess line if not empty */
         if (strcmp(line, "\n") != 0) {
-            if (!process_line(line, file, proccessed_file, macros)) {
-                ret_code = 0;
+            error_id = process_line(line, file, proccessed_file, macros);
+            if (error_id != ERROR_ID_0) {
+                add_error_to_file(curr_file, error_id, fake_line, PRE_STAGE);
                 break;
             }
         }
@@ -53,11 +50,12 @@ int preprocess(file_struct *curr_file) {
     free_table(macros);
     fclose(file);
     fclose(proccessed_file);
-    return ret_code;
+    return ERROR_ID_0;
 }
 
 /* process line and write to new preprocessed file */
 int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros) {
+    int error_id;
     char *mac_name;
     char *mac_content;
     char orig_line[MAX_LINE_LENGTH + 1];
@@ -67,22 +65,22 @@ int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros) 
     extract_next(line, first_token, ' ');
 
     if (is_macro(first_token)) {
-        if (!handle_macro(line, file, macros)) {
-            return 0;
+        error_id = handle_macro(line, file, macros);
+        if (error_id != ERROR_ID_0) {
+            return error_id;
         }
     } else if (is_member(macros, first_token)) {
         mac_name = first_token;
         mac_content = search(macros, mac_name);
         if (mac_content == NULL) {
-            /* error - macro is not declared */
-            /* add error to file */
-            return 0;
+            /* error - Trying to initailize macro, but it is not declared */
+            return ERROR_ID_11;
         }
         fprintf(final_file, "%s", mac_content);
     } else {
         fprintf(final_file, "%s", orig_line);
     }
-    return 1;
+    return ERROR_ID_0;
 }
 
 /* handle macro declaration */
@@ -96,24 +94,21 @@ int handle_macro(char *line, FILE *file, MacroTable *macros) {
 
     /* extracting the macro name */
     extract_next(line, mac_name, ' ');
-    if (!is_macro_name_valid(mac_name)) {
-        printf("Macro name is invalid\n");
-        printf("File is terminated\n");
-        return 0;
+    error_id = is_macro_name_valid(mac_name);
+    if (error_id != ERROR_ID_0) {
+        return error_id;
     }
 
     /* checks if rest is empty */
     if (strlen(line) != 0) {
-        printf("Extraneous text after end of macro declaration\n");
-        printf("File is terminated\n");
-        return 0;
+        /* error - Extraneous text after end of declaration */
+        return ERROR_ID_13;
     }
 
     buffer_size = MAX_LINE_LENGTH * sizeof(char) * 10;
     mac_content = malloc(buffer_size);
     if (mac_content == NULL) {
-        fprintf(stderr, "Memory allocation failed\n");
-        exit(1);
+        handle_dynamic_alloc_error();
     }
     mac_content[0] = '\0';
 
@@ -123,20 +118,19 @@ int handle_macro(char *line, FILE *file, MacroTable *macros) {
             buffer_size *= 2;
             mac_content = (char *) realloc(mac_content, buffer_size);
             if (mac_content == NULL) {
-                fprintf(stderr, "Memory reallocation failed\n");
-                exit(1);
+                handle_dynamic_alloc_error();
             }
         }
         strcat(mac_content, line);
         total_length += len;
     }
     error_id = insert(macros, mac_name, mac_content);
-    if(error_id != 0 ) {
-        /*add error to file */
+    if (error_id != 0) {
+        return error_id;
     }
     free(mac_content);
 
-    return 1;
+    return ERROR_ID_0;
 }
 
 /* check if line is macro declaration */
@@ -146,17 +140,19 @@ int is_macro(char *line) {
 
 int is_macro_name_valid(char *mac_name) {
     if (mac_name == NULL) {
-        printf("Invalid macro declaration");
-        return 0;
+        /* error - macro declaration without macro name */
+        return ERROR_ID_27;
     }
 
     if (what_instrct(mac_name) >= 0 || what_opcode(mac_name) >= 0 || what_regs(mac_name) >= 0)
-        return 0;
+        /* error - Macro name cant be instruction, opcode or register name */
+        return ERROR_ID_28;
 
     if (strcmp(mac_name, "macr") == 0)
-        return 0;
+        /* error - Macro name cannot be 'macr' */
+        return ERROR_ID_29;
 
-    return 1;
+    return ERROR_ID_0;
 }
 
 
