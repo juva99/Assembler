@@ -33,6 +33,8 @@ int is_extern(char *line);
 
 int is_entry(char *line);
 
+int is_endmacr(char *line);
+
 int extract_symbol(char *line, char *sym_name, char delimeter);
 
 int check_symbol_name(char *first_token);
