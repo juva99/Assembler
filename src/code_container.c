@@ -79,7 +79,7 @@ void add_command(code_cont **code, cmd_struct *cmd, int *ic) {
 }
 
 unsigned short create_method_line(cmd_struct *cmd, int method, char *value, int is_src) {
-    int reg_num, offset;
+    int reg_num, offset, num;
     unsigned short method_line = 0;
     int is_negative = 1;
 
@@ -87,12 +87,8 @@ unsigned short create_method_line(cmd_struct *cmd, int method, char *value, int 
     switch (method) {
         case 0: {
             method_line = 1U << ABSOLUTE;
-            value++;
-            if (*value == '-') {
-                is_negative = -1;
-                value++;
-            }
-            method_line |= ((atoi(value) * is_negative) << DATA_OFFSET);
+            num = read_num_arg(value);
+            method_line |= (num << DATA_OFFSET);
             break;
         }
         case 1: {

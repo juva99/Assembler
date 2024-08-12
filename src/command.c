@@ -41,7 +41,7 @@ void free_command(cmd_struct *cmd) {
 }
 
 int build_command(char *line, cmd_struct **command) {
-    int args;
+    int args, num;
     char sym_name[MAX_LABEL_LENGTH + 1];
     char arg[MAX_LABEL_LENGTH + 1];
     cmd_struct *cmd = malloc(sizeof(cmd_struct));
@@ -86,7 +86,7 @@ int build_command(char *line, cmd_struct **command) {
             }
             cmd->length = 1;
             *command = cmd;
-            return ERROR_ID_0;
+            break;
         }
         case 1: {
             extract_next(line, arg, ' ');
@@ -105,7 +105,7 @@ int build_command(char *line, cmd_struct **command) {
                 return ERROR_ID_23;
             }
             *command = cmd;
-            return ERROR_ID_0;
+            break;
         }
         case 2: {
             extract_next(line, arg, ',');
@@ -133,7 +133,7 @@ int build_command(char *line, cmd_struct **command) {
                 cmd->length = 2;
             }
             *command = cmd;
-            return ERROR_ID_0;
+            break;
         }
         default: {
             /* error - invalid args count */
@@ -141,6 +141,21 @@ int build_command(char *line, cmd_struct **command) {
             return ERROR_ID_25;
         }
     }
+    if (cmd->dst_method == 0) {
+        num = read_num_arg(cmd->dst);
+        if (num < MIN_COMMAND_NUM_VALUE || num > MAX_COMMAND_NUM_VALUE) {
+            free_command(cmd);
+            return ERROR_ID_31;
+        }
+    }
+    if (cmd->src_method == 0) {
+        num = read_num_arg(cmd->src);
+        if (num < MIN_COMMAND_NUM_VALUE || num > MAX_COMMAND_NUM_VALUE) {
+            free_command(cmd);
+            return ERROR_ID_31;
+        }
+    }
+    return ERROR_ID_0;
 }
 
 void dup_argument(char **dest, char *str) {

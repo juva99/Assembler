@@ -252,6 +252,8 @@ int encode_numeric_data(char *line, code_cont **data, int *dc) {
             }
         }
         num = atoi(curr_token);
+        if (num < MIN_DATA_NUM_VALUE || num > MAX_DATA_NUM_VALUE)
+            return ERROR_ID_30;
         val = conv_to_ushort(num);
         add_data(data, val, dc);
 
@@ -331,4 +333,15 @@ char *add_file_extension(char *filename, char *extension) {
     }
     strcat(dup_filename, extension);
     return dup_filename;
+}
+
+int read_num_arg(char *arg) {
+    int is_negative, num;
+    arg++;
+    if (*arg == '-') {
+        is_negative = -1;
+        arg++;
+    }
+    num = (atoi(arg) * is_negative);
+    return num;
 }
