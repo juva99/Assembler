@@ -62,6 +62,11 @@ int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros) 
     strcpy(orig_line, line);
     extract_next(line, first_token, ' ');
 
+    /*check if line is a comment line */
+    if (*first_token == ';') {
+        return ERROR_ID_0;
+    }
+
     if (is_macro(first_token)) {
         error_id = handle_macro(line, file, macros);
         if (error_id != ERROR_ID_0) {
