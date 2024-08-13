@@ -171,12 +171,15 @@ int is_endmacr(char *line) {
         return 0;
     }
 
-    extract_next(line, token, ' ');
-    if (strlen(token) != 0) {
+    while (isspace(*line)) {
+        line++;
+    }
+
+    if (strlen(line) != 0) {
         /*error - extra text after 'endmacr' */
         return ERROR_ID_34;
     }
-
+    
     return 1;
 }
 
