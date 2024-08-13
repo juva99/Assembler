@@ -71,6 +71,10 @@ char *error_desc[] = {
     /* 31 */
     "Command - numeric value out of bound ",
 
+
+    /* 34 */
+    "Macro declaration error - Extraneous text after 'endmacr'",
+
 };
 
 char *stage_name[] = {

@@ -110,7 +110,16 @@ int handle_macro(char *line, FILE *file, MacroTable *macros) {
     }
     mac_content[0] = '\0';
 
-    while (fgets(line, MAX_LINE_LENGTH + 1, file) != NULL && !is_endmacr(line)) {
+    while (fgets(line, MAX_LINE_LENGTH + 1, file) != NULL) {
+        if (is_endmacr(line) == ERROR_ID_34) {
+            /*error - extra text after 'endmacr' */
+            return ERROR_ID_34;
+        }
+        if (is_endmacr(line)) {
+            /* line is a valid macro end statement*/
+            break;
+        }
+
         len = strlen(line);
         if (total_length + len + 1 >= buffer_size) {
             buffer_size *= 2;

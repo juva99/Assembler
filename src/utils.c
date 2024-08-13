@@ -166,11 +166,17 @@ int is_endmacr(char *line) {
     if (strlen(token) == 0)
         return 0;
 
-    /* if line does not start with .entry */
-    if (!starts_with(token, "endmacr")) {
+    if (strcmp(token, "endmacr") != 0) {
         strcpy(line, original_line);
         return 0;
     }
+
+    extract_next(line, token, ' ');
+    if (strlen(token) != 0) {
+        /*error - extra text after 'endmacr' */
+        return ERROR_ID_34;
+    }
+
     return 1;
 }
 
