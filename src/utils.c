@@ -128,7 +128,7 @@ int is_extern(char *line) {
     if (strlen(token) == 0)
         return 0;
 
-    /* if line doesnt start with .extern */
+    /* if line does not start with .extern */
     if (!starts_with(token, ".extern")) {
         strcpy(line, original_line);
         return 0;
@@ -356,6 +356,7 @@ char *add_file_extension(char *filename, char *extension) {
 int read_num_arg(char *arg) {
     int is_negative, num;
     arg++;
+    is_negative = 1;
     if (*arg == '-') {
         is_negative = -1;
         arg++;

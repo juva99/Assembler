@@ -2,9 +2,9 @@
 
 int first_stage_process(file_struct *curr_file) {
     int ic, dc, symbol, errors, curr_error_id, n_line;
-    char line[MAX_LINE_LENGTH + 1];
+    char line[MAX_LINE_LENGTH];
     DataType data_type;
-    char sym_name[MAX_LABEL_LENGTH + 1];
+    char sym_name[MAX_LABEL_LENGTH];
     char *processed_filename;
     FILE *file;
 
@@ -33,7 +33,7 @@ int first_stage_process(file_struct *curr_file) {
         return 0;
     }
 
-    while (fgets(line, sizeof(line), file)) {
+    while (fgets(line, MAX_LINE_LENGTH, file)) {
         n_line++;
         symbol = 0;
         sym_name[0] = '\0';
@@ -97,7 +97,10 @@ int first_stage_process(file_struct *curr_file) {
         free_command(command);
     }
     fclose(file);
-    if (errors > 0) {
+    if (ic + dc + IC_OFFSET > MAX_FILE_SIZE) {
+        add_error_to_file(curr_file, ERROR_ID_32, 0, FIRST_STAGE);
+    }
+    if (curr_file->errors_count > 0) {
         free_container(code, ic);
         free_container(data, dc);
         free_symtable(sym_table);
