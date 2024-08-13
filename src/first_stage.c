@@ -53,7 +53,7 @@ int first_stage_process(file_struct *curr_file) {
                 }
             }
             /* encode data to memory return size and increase DC #7 */
-            curr_error_id = encode_data(line, data_type, &data, &dc);
+            curr_error_id = encode_data(line, data_type, &data, &dc, n_line);
             if (curr_error_id != ERROR_ID_0) {
                 add_error_to_file(curr_file, curr_error_id, n_line, FIRST_STAGE);
                 errors++;
@@ -93,7 +93,7 @@ int first_stage_process(file_struct *curr_file) {
                 errors++;
             }
         }
-        add_command(&code, command, &ic);
+        add_command(&code, command, &ic, n_line);
         free_command(command);
     }
     fclose(file);

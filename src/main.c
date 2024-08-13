@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
         first_stage_process((files + i));
     }
     for (i = 0; i < num_files; ++i) {
-        printf("%d\n", (files + i)->errors_count);
+        print_errors(files + i);
     }
     free_files(files, num_files);
     printf("done\n");

@@ -52,7 +52,7 @@ int main() {
     printf("%d\n", cmd->src_method);
     printf("%d\n", cmd->dst_method);
     printf("%d\n", cmd->length);
-    add_command(&code, cmd, &ic);
+    add_command(&code, cmd, &ic, -1);
     printBinary(code->bin_rep);
     printBinary((code + 1)->bin_rep);
     printf("%s\n", (code + 1)->label);
