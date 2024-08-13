@@ -338,6 +338,7 @@ char *add_file_extension(char *filename, char *extension) {
 int read_num_arg(char *arg) {
     int is_negative, num;
     arg++;
+    is_negative = 1;
     if (*arg == '-') {
         is_negative = -1;
         arg++;
