@@ -13,14 +13,19 @@ int second_stage_process(file_struct *curr_file, code_cont *data, code_cont *cod
 
     for (i = 0; i < ic; ++i) {
         if ((code + i)->bin_rep == 0) {
-            if ((code + i)->label != NULL && find_sym_value(sym_table, (code + i)->label) != -1) {
-                /* update line based on stored symbol */
-                symbol = get_symbol(sym_table, (code + i)->label);
-                update_line((code + i), symbol);
+            if ((code + i)->label != NULL) {
+                if (find_sym_value(sym_table, (code + i)->label) != -1) {
+                    /* update line based on stored symbol */
+                    symbol = get_symbol(sym_table, (code + i)->label);
+                    update_line((code + i), symbol);
 
-                /* if symbol is external add it to ext list */
-                if (strcmp(symbol->instr_type, ".external") == 0) {
-                    add_symbol(externals, symbol->key, i + IC_OFFSET);
+                    /* if symbol is external add it to ext list */
+                    if (strcmp(symbol->instr_type, ".external") == 0) {
+                        add_symbol(externals, symbol->key, i + IC_OFFSET);
+                    }
+                } else {
+                    /* error - Symbol is not defined */
+                    add_error_to_file(curr_file, ERROR_ID_32, (code + i)->code_line, SECOND_STAGE);
                 }
             } else {
                 /* unreachable code */

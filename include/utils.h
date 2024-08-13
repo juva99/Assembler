@@ -41,11 +41,11 @@ int check_symbol_name(char *first_token);
 
 int extract_opcode(char *line);
 
-int encode_string(char *line, code_cont **data, int *dc);
+int encode_string(char *line, code_cont **data, int *dc, int n_line);
 
-int encode_data(char *line, DataType data_type, code_cont **data, int *dc);
+int encode_data(char *line, DataType data_type, code_cont **data, int *dc, int n_line);
 
-int encode_numeric_data(char *line, code_cont **data, int *dc);
+int encode_numeric_data(char *line, code_cont **data, int *dc, int n_line);
 
 unsigned short conv_to_ushort(int dec_num);
 

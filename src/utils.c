@@ -240,7 +240,7 @@ int extract_opcode(char *line) {
 }
 
 
-int encode_numeric_data(char *line, code_cont **data, int *dc) {
+int encode_numeric_data(char *line, code_cont **data, int *dc, int n_line) {
     int i, count, num;
     unsigned short val;
     char curr_token[MAX_LINE_LENGTH];
@@ -273,7 +273,7 @@ int encode_numeric_data(char *line, code_cont **data, int *dc) {
         if (num < MIN_DATA_NUM_VALUE || num > MAX_DATA_NUM_VALUE)
             return ERROR_ID_30;
         val = conv_to_ushort(num);
-        add_data(data, val, dc);
+        add_data(data, val, dc, n_line);
 
         count++;
     }
@@ -281,7 +281,7 @@ int encode_numeric_data(char *line, code_cont **data, int *dc) {
     return ERROR_ID_0;
 }
 
-int encode_string(char *line, code_cont **data, int *dc) {
+int encode_string(char *line, code_cont **data, int *dc, int n_line) {
     int count;
     unsigned short val;
     char curr_token[MAX_LINE_LENGTH];
@@ -297,28 +297,28 @@ int encode_string(char *line, code_cont **data, int *dc) {
     extract_next(line, curr_token, '\"');
     while (curr_token[count] != '\0') {
         val = conv_to_ushort((int) curr_token[count]);
-        add_data(data, val, dc);
+        add_data(data, val, dc, n_line);
 
         count++;
     }
     /*null-terminator*/
-    add_data(data, 0, dc);
+    add_data(data, 0, dc, n_line);
     count++;
 
     return ERROR_ID_0;
 }
 
-int encode_data(char *line, DataType data_type, code_cont **data, int *dc) {
+int encode_data(char *line, DataType data_type, code_cont **data, int *dc, int n_line) {
     int error_id;
 
     /* data type is .data */
     switch (data_type) {
         case DATA: {
-            error_id = encode_numeric_data(line, data, dc);
+            error_id = encode_numeric_data(line, data, dc, n_line);
             break;
         }
         case STRING: {
-            error_id = encode_string(line, data, dc);
+            error_id = encode_string(line, data, dc, n_line);
             break;
         }
         default: {
