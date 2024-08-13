@@ -2,19 +2,20 @@
 
 #include "../include/file_manager.h"
 
-void write_data(code_cont **container, unsigned short data, int *counter) {
+void write_data(code_cont **container, unsigned short data, int *counter, int n_line) {
     expend_memory(container, *counter);
     (*container + *counter)->bin_rep = data;
+    (*container + *counter)->code_line = n_line;
     (*container + *counter)->label = NULL;
     (*counter)++;
 }
 
-void add_data(code_cont **data, unsigned short val, int *dc) {
-    write_data(data, val, dc);
+void add_data(code_cont **data, unsigned short val, int *dc, int n_line) {
+    write_data(data, val, dc, n_line);
 }
 
-void write_data_label(code_cont **container, unsigned short data, int *counter, char *label) {
-    write_data(container, data, counter);
+void write_data_label(code_cont **container, unsigned short data, int *counter, char *label, int n_line) {
+    write_data(container, data, counter, n_line);
     (*container + *counter - 1)->label = strduplic(label);
 }
 
@@ -37,7 +38,7 @@ code_cont *create_container() {
     return temp;
 }
 
-void add_command(code_cont **code, cmd_struct *cmd, int *ic) {
+void add_command(code_cont **code, cmd_struct *cmd, int *ic, int n_line) {
     unsigned short command = 0;
     unsigned short src_command = 0;
     unsigned short dst_command = 0;
@@ -57,24 +58,24 @@ void add_command(code_cont **code, cmd_struct *cmd, int *ic) {
     /* turn ABSOLUTE flag */
     command |= 1U << ABSOLUTE;
     /* write command */
-    write_data(code, command, ic);
+    write_data(code, command, ic, n_line);
 
     /* if both methods reg merge them */
     if (src_command && dst_command && cmd->length == 2) {
-        write_data(code, src_command | dst_command, ic);
+        write_data(code, src_command | dst_command, ic, n_line);
         return;
     }
     /* handle source command */
     if (src_command) {
-        write_data(code, src_command, ic);
+        write_data(code, src_command, ic, n_line);
     } else if (cmd->src_method == 1) {
-        write_data_label(code, src_command, ic, cmd->src);
+        write_data_label(code, src_command, ic, cmd->src, n_line);
     }
     /* handle dest command */
     if (dst_command) {
-        write_data(code, dst_command, ic);
+        write_data(code, dst_command, ic, n_line);
     } else if (cmd->dst_method == 1) {
-        write_data_label(code, dst_command, ic, cmd->dst);
+        write_data_label(code, dst_command, ic, cmd->dst, n_line);
     }
 }
 
