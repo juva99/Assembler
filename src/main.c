@@ -20,8 +20,7 @@ int main(int argc, char *argv[]) {
     }
 
     for (i = 0; i < num_files; ++i) {
-        if ((files + i)->errors_count == 0)
-            first_stage_process((files + i));
+        first_stage_process((files + i));
     }
     for (i = 0; i < num_files; ++i) {
         print_errors(files + i);
