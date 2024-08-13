@@ -59,13 +59,13 @@ int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros) 
     char orig_line[MAX_LINE_LENGTH + 1];
     char first_token[MAX_LINE_LENGTH];
 
-    strcpy(orig_line, line);
-    extract_next(line, first_token, ' ');
-
     /*check if line is a comment line */
-    if (*first_token == ';') {
+    if (is_comment(line)) {
         return ERROR_ID_0;
     }
+
+    strcpy(orig_line, line);
+    extract_next(line, first_token, ' ');
 
     if (is_macro(first_token)) {
         error_id = handle_macro(line, file, macros);
@@ -116,6 +116,11 @@ int handle_macro(char *line, FILE *file, MacroTable *macros) {
     mac_content[0] = '\0';
 
     while (fgets(line, sizeof(line), file) != NULL && !starts_with(line, "endmacr")) {
+        /* check if line is a comment line */
+        if (is_comment(line)) {
+            continue;
+        }
+
         len = strlen(line);
         if (total_length + len + 1 >= buffer_size) {
             buffer_size *= 2;

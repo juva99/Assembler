@@ -156,6 +156,24 @@ int is_entry(char *line) {
     return 1;
 }
 
+int is_comment(char *line) {
+    char token[MAX_LINE_LENGTH];
+    char original_line[MAX_LINE_LENGTH];
+
+    strcpy(original_line, line);
+    extract_next(line, token, ' ');
+
+    if (strlen(token) == 0)
+        return 0;
+
+    if (*token == ';') {
+        return 1;
+    }
+
+    strcpy(line, original_line);
+    return 0;
+}
+
 int extract_symbol(char *line, char *sym_name, char delimeter) {
     int ret_code;
     char first_token[MAX_LINE_LENGTH] = "";
