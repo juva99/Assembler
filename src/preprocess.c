@@ -4,7 +4,7 @@
 int preprocess(file_struct *curr_file) {
     MacroTable *macros;
     int n_line = 0, error_id;
-    char line[MAX_LINE_LENGTH + 1];
+    char line[MAX_LINE_LENGTH];
     char *preprocessed_filename;
     char *processed_filename;
     FILE *file, *proccessed_file;
@@ -56,7 +56,7 @@ int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros) 
     int error_id;
     char *mac_name;
     char *mac_content;
-    char orig_line[MAX_LINE_LENGTH + 1];
+    char orig_line[MAX_LINE_LENGTH];
     char first_token[MAX_LINE_LENGTH];
 
     strcpy(orig_line, line);
@@ -103,7 +103,7 @@ int handle_macro(char *line, FILE *file, MacroTable *macros) {
         return ERROR_ID_13;
     }
 
-    buffer_size = MAX_LINE_LENGTH * sizeof(char) * 10;
+    buffer_size = MAX_LINE_LENGTH * sizeof(char) * INITIAL_MACRO_BUFFER;
     mac_content = malloc(buffer_size);
     if (mac_content == NULL) {
         handle_dynamic_alloc_error();

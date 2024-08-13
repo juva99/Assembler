@@ -2,9 +2,9 @@
 
 int first_stage_process(file_struct *curr_file) {
     int ic, dc, symbol, errors, curr_error_id, n_line;
-    char line[MAX_LINE_LENGTH + 1];
+    char line[MAX_LINE_LENGTH];
     DataType data_type;
-    char sym_name[MAX_LABEL_LENGTH + 1];
+    char sym_name[MAX_LABEL_LENGTH];
     char *processed_filename;
     FILE *file;
 
