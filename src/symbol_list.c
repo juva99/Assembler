@@ -114,7 +114,7 @@ int save_symbol_list(char *filename, ListType list_type, SymbolList *list) {
 
     while (curr_node != NULL) {
         /*add entry name and ic to file .ent */
-        fprintf(list_file, "%s %d\n", curr_node->label, curr_node->value);
+        fprintf(list_file, "%-*s %04d\n", list->max_len, curr_node->label, curr_node->value);
         curr_node = curr_node->next;
     }
 
