@@ -8,10 +8,12 @@ SymbolList *create_symbol_list() {
     }
     list->head = NULL;
     list->count = 0;
+    list->max_len = 0;
     return list;
 }
 
 void add_symbol(SymbolList *list, char *label, int value) {
+    int new_label_len;
     Node *node = (Node *) malloc(sizeof(Node));
     if (!node) {
         handle_dynamic_alloc_error();
@@ -20,6 +22,12 @@ void add_symbol(SymbolList *list, char *label, int value) {
     node->label = strduplic(label);
     node->value = value;
     node->next = NULL;
+
+    /* update max length */
+    new_label_len = (int) strlen(label);
+    if (new_label_len > list->max_len) {
+        list->max_len = new_label_len;
+    }
 
     /* place node in list */
     if (list->head == NULL) {
