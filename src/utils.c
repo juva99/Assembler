@@ -23,12 +23,16 @@ int is_valid_string(const char *str) {
 }
 
 int extract_next(char *src, char *next, char delimiter) {
+    return extract_next_full(src, next, delimiter, 1);
+}
+
+int extract_next_full(char *src, char *next, char delimiter, int remove_spaces) {
     char *ptr = src;
     char *rest_start;
     int found = 0;
 
     /* Skip leading spaces */
-    while (isspace((unsigned char) *ptr)) {
+    while (remove_spaces && isspace((unsigned char) *ptr)) {
         ptr++;
     }
 
@@ -48,7 +52,7 @@ int extract_next(char *src, char *next, char delimiter) {
     *next = '\0';
 
     /* Skip spaces after the first word */
-    while (isspace((unsigned char) *ptr)) {
+    while (remove_spaces && isspace((unsigned char) *ptr)) {
         ptr++;
     }
 
