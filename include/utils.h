@@ -21,6 +21,8 @@ typedef enum {
 
 int extract_next(char *src, char *next, char delimiter);
 
+int is_valid_string(const char *str);
+
 int starts_with(const char *str, const char *pre);
 
 int what_instrct(char *token);
