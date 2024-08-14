@@ -72,6 +72,8 @@ char *error_desc[] = {
         "Command - numeric value out of bound ",
         /* 32 */
         "Data - Binary file size exceeds maximum value ",
+        /* 33 */
+        "Command - Symbol used is not defined ",
 
 };
 
