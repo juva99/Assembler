@@ -84,29 +84,11 @@ int save_symbol_list(char *filename, ListType list_type, SymbolList *list) {
 
     switch (list_type) {
         case ENTRY: {
-            full_filename = (char *) malloc(strlen(filename) + ENTERIES_FILE_EXTENSION_LEN + 1);
-            if (full_filename == NULL) {
-                handle_dynamic_alloc_error();
-            }
-
-            sprintf(full_filename, "%s%s", filename, ENTERIES_FILE_EXTENSION);
-            list_file = fopen(full_filename, "w");
-            if (list_file == NULL) {
-                handle_dynamic_alloc_error();
-            }
+            full_filename = add_file_extension(filename, ENTERIES_FILE_EXTENSION);
             break;
         }
         case EXTERN: {
-            full_filename = (char *) malloc(strlen(filename) + EXTERNS_FILE_EXTENSION_LEN + 1);
-            if (full_filename == NULL) {
-                handle_dynamic_alloc_error();
-            }
-
-            sprintf(full_filename, "%s%s", filename, EXTERNS_FILE_EXTENSION);
-            list_file = fopen(full_filename, "w");
-            if (list_file == NULL) {
-                handle_dynamic_alloc_error();
-            }
+            full_filename = add_file_extension(filename, EXTERNS_FILE_EXTENSION);
             break;
         }
         default: {
@@ -114,6 +96,11 @@ int save_symbol_list(char *filename, ListType list_type, SymbolList *list) {
             return 0;
         }
     }
+    list_file = fopen(full_filename, "w");
+    if (list_file == NULL) {
+        handle_dynamic_alloc_error();
+    }
+
 
     curr_node = list->head;
 
