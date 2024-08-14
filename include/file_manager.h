@@ -5,6 +5,8 @@
 
 #include <malloc.h>
 #include <stdio.h>
+#include "../include/consts.h"
+#include "../include/utils.h"
 
 typedef enum STAGE_ERROR {
     UNASSIGNED,
