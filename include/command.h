@@ -27,8 +27,6 @@ void free_command(cmd_struct *cmd);
 
 int build_command(char *line, cmd_struct **command);
 
-int check_command_args(cmd_struct *cmd);
-
 void dup_argument(char **dest, char *str);
 
 int what_opcode(char *token);

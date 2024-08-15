@@ -18,9 +18,16 @@ typedef struct {
     int count;
 } MacroTable;
 
+
+unsigned int hash(const char *key, int size);
+
 MacroTable *create_table();
 
+void free_entry(Macro *entry);
+
 void free_table(MacroTable *table);
+
+void resize_table(MacroTable *table);
 
 int insert(MacroTable *table, const char *key, const char *value);
 
