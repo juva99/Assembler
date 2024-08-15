@@ -14,6 +14,7 @@ typedef struct Node {
 typedef struct {
     Node *head;
     int count;
+    int max_len;
 } SymbolList;
 
 SymbolList *create_symbol_list();
