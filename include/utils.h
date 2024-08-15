@@ -18,6 +18,7 @@ typedef enum {
     EXTERN
 } ListType;
 
+int extract_next_full(char *src, char *next, char delimiter, int remove_spaces);
 
 int extract_next(char *src, char *next, char delimiter);
 
