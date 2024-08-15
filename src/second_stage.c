@@ -25,7 +25,7 @@ int second_stage_process(file_struct *curr_file, code_cont *data, code_cont *cod
                     }
                 } else {
                     /* error - Symbol is not defined */
-                    add_error_to_file(curr_file, ERROR_ID_32, (code + i)->code_line, SECOND_STAGE);
+                    add_error_to_file(curr_file, ERROR_ID_33, (code + i)->code_line, SECOND_STAGE);
                 }
             } else {
                 /* unreachable code */
