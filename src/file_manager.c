@@ -1,5 +1,4 @@
 #include "../include/file_manager.h"
-#include "../include/consts.h"
 
 char *error_desc[] = {
         /* 0  - no error*/
@@ -74,7 +73,6 @@ char *error_desc[] = {
         "Data - Binary file size exceeds maximum value",
         /* 33 */
         "Command - Symbol used is not defined",
-
 };
 
 char *stage_name[] = {
@@ -128,6 +126,11 @@ void enlarge_errors_arr(file_struct *file) {
 
 void print_errors(file_struct *file) {
     int i;
+    char *relevant_file;
+    if (file->errors_count == 0) {
+        fprintf(stdout, "File %s passed\n", file->filename);
+        return;
+    }
 
     fprintf(stderr, "List of errors in file \'%s\':\n", file->filename);
     for (i = 0; i < file->errors_count; i++) {
@@ -136,8 +139,23 @@ void print_errors(file_struct *file) {
         error_id = file->errors[i].error_id;
         error_line = file->errors[i].error_line;
         stage_id = file->errors[i].stage_error;
+        switch (file->errors[i].stage_error) {
+            case PRE_STAGE: {
+                relevant_file = add_file_extension(file->filename, PREPROCESSED_FILE_TYPE);
+                break;
+            }
+            case FIRST_STAGE:
+            case SECOND_STAGE: {
+                relevant_file = add_file_extension(file->filename, PROCESSED_FILE_TYPE);
+                break;
+            }
+            default: {
+                relevant_file = strduplic(file->filename);
+            }
+        }
 
-        fprintf(stderr, "Error: %s, occurred at line %d\n in %s stage. \n", error_desc[error_id], error_line,
+        fprintf(stderr, "\tError: %s, occurred in %s:%d in %s stage.\n", error_desc[error_id], relevant_file,
+                error_line,
                 stage_name[stage_id]);
     }
     fprintf(stderr, "Overall %d errors.\n\n", file->errors_count);
