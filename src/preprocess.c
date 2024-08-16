@@ -4,7 +4,7 @@
 int preprocess(file_struct *curr_file) {
     MacroTable *macros;
     int n_line = 0, error_id;
-    char line[MAX_LINE_LENGTH + 1];
+    char line[MAX_LINE_LENGTH];
     char *preprocessed_filename;
     char *processed_filename;
     FILE *file, *proccessed_file;
@@ -56,8 +56,13 @@ int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros) 
     int error_id;
     char *mac_name;
     char *mac_content;
-    char orig_line[MAX_LINE_LENGTH + 1];
+    char orig_line[MAX_LINE_LENGTH];
     char first_token[MAX_LINE_LENGTH];
+
+    /*check if line is a comment line */
+    if (is_comment(line)) {
+        return ERROR_ID_0;
+    }
 
     strcpy(orig_line, line);
     extract_next(line, first_token, ' ');
@@ -103,14 +108,17 @@ int handle_macro(char *line, FILE *file, MacroTable *macros) {
         return ERROR_ID_13;
     }
 
-    buffer_size = MAX_LINE_LENGTH * sizeof(char) * 10;
+    buffer_size = MAX_LINE_LENGTH * sizeof(char) * INITIAL_MACRO_BUFFER;
     mac_content = malloc(buffer_size);
     if (mac_content == NULL) {
         handle_dynamic_alloc_error();
     }
     mac_content[0] = '\0';
 
-    while (fgets(line, MAX_LINE_LENGTH + 1, file) != NULL) {
+    while (fgets(line, MAX_LINE_LENGTH, file) != NULL) {
+        /* check if line is a comment line */
+        if (is_comment(line)) {
+            continue;
         ret_code = is_endmacr(line);
         if (ret_code == ERROR_ID_34) {
             /*error - extra text after 'endmacr' */

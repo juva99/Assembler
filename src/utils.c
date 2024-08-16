@@ -23,12 +23,16 @@ int is_valid_string(const char *str) {
 }
 
 int extract_next(char *src, char *next, char delimiter) {
+    return extract_next_full(src, next, delimiter, 1);
+}
+
+int extract_next_full(char *src, char *next, char delimiter, int remove_spaces) {
     char *ptr = src;
     char *rest_start;
     int found = 0;
 
     /* Skip leading spaces */
-    while (isspace((unsigned char) *ptr)) {
+    while (remove_spaces && isspace((unsigned char) *ptr)) {
         ptr++;
     }
 
@@ -48,7 +52,7 @@ int extract_next(char *src, char *next, char delimiter) {
     *next = '\0';
 
     /* Skip spaces after the first word */
-    while (isspace((unsigned char) *ptr)) {
+    while (remove_spaces && isspace((unsigned char) *ptr)) {
         ptr++;
     }
 
@@ -128,7 +132,7 @@ int is_extern(char *line) {
     if (strlen(token) == 0)
         return 0;
 
-    /* if line doesnt start with .extern */
+    /* if line does not start with .extern */
     if (!starts_with(token, ".extern")) {
         strcpy(line, original_line);
         return 0;
@@ -154,6 +158,24 @@ int is_entry(char *line) {
     }
 
     return 1;
+}
+
+int is_comment(char *line) {
+    char token[MAX_LINE_LENGTH];
+    char original_line[MAX_LINE_LENGTH];
+
+    strcpy(original_line, line);
+    extract_next(line, token, ' ');
+
+    if (strlen(token) == 0)
+        return 0;
+
+    if (*token == ';') {
+        return 1;
+    }
+
+    strcpy(line, original_line);
+    return 0;
 }
 
 int is_endmacr(char *line) {
@@ -293,13 +315,13 @@ int encode_string(char *line, code_cont **data, int *dc, int n_line) {
 
     count = 0;
 
-    extract_next(line, curr_token, '\"');
+    extract_next_full(line, curr_token, '\"', 0);
     if (*curr_token != '\0') {
         /* error - extra text before first " */
         return ERROR_ID_15;
     }
 
-    extract_next(line, curr_token, '\"');
+    extract_next_full(line, curr_token, '\"', 0);
     while (curr_token[count] != '\0') {
         val = conv_to_ushort((int) curr_token[count]);
         add_data(data, val, dc, n_line);
@@ -361,6 +383,7 @@ char *add_file_extension(char *filename, char *extension) {
 int read_num_arg(char *arg) {
     int is_negative, num;
     arg++;
+    is_negative = 1;
     if (*arg == '-') {
         is_negative = -1;
         arg++;

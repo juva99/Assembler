@@ -146,7 +146,7 @@ int save_object_file(char *filename, code_cont *code, code_cont *data, int ic, i
         free(full_filename);
         return ERROR_ID_1;
     }
-    fprintf(ob_file, "%d %d\n", ic, dc);
+    fprintf(ob_file, "%4d %d\n", ic, dc);
     for (i = 0; i < ic; ++i) {
         fprintf(ob_file, "%04d %05u\n", i + IC_OFFSET, to_octal((code + i)->bin_rep));
     }

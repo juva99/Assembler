@@ -18,8 +18,11 @@ typedef enum {
     EXTERN
 } ListType;
 
+int extract_next_full(char *src, char *next, char delimiter, int remove_spaces);
 
 int extract_next(char *src, char *next, char delimiter);
+
+int is_valid_string(const char *str);
 
 int starts_with(const char *str, const char *pre);
 
@@ -32,6 +35,8 @@ DataType data_instruction(char *line);
 int is_extern(char *line);
 
 int is_entry(char *line);
+
+int is_comment(char *line);
 
 int is_endmacr(char *line);
 

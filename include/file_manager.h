@@ -5,6 +5,8 @@
 
 #include <malloc.h>
 #include <stdio.h>
+#include "../include/consts.h"
+#include "../include/utils.h"
 
 typedef enum STAGE_ERROR {
     UNASSIGNED,
@@ -50,7 +52,7 @@ typedef enum ERROR_IDS {
     ERROR_ID_30 = 30,
     ERROR_ID_31 = 31,
     ERROR_ID_32 = 32,
-
+    ERROR_ID_33 = 33,
     ERROR_ID_34 = 34
 } ERROR_IDS;
 

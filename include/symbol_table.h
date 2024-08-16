@@ -21,6 +21,8 @@ typedef struct {
 #include "../include/file_manager.h"
 
 
+unsigned int hash_sym(const char *key, int size);
+
 SymTable *create_symtable();
 
 void free_symbol(Symbol *symbol);

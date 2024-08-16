@@ -8,6 +8,7 @@
 #include "../include/utils.h"
 #include "../include/file_manager.h"
 
+#define INITIAL_MACRO_BUFFER 10
 
 int preprocess(file_struct *curr_file);
 
