@@ -73,6 +73,8 @@ char *error_desc[] = {
         "Data - Binary file size exceeds maximum value",
         /* 33 */
         "Command - Symbol used is not defined",
+    	/* 34 */
+    	"Macro declaration error - Extraneous text after 'endmacr'",
 };
 
 char *stage_name[] = {

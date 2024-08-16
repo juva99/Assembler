@@ -88,7 +88,7 @@ int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros) 
 
 /* handle macro declaration */
 int handle_macro(char *line, FILE *file, MacroTable *macros) {
-    int error_id;
+    int error_id, ret_code;
     size_t len;
     size_t total_length = 0;
     size_t buffer_size;
@@ -115,10 +115,19 @@ int handle_macro(char *line, FILE *file, MacroTable *macros) {
     }
     mac_content[0] = '\0';
 
-    while (fgets(line, sizeof(line), file) != NULL && !starts_with(line, "endmacr")) {
+    while (fgets(line, MAX_LINE_LENGTH, file) != NULL) {
         /* check if line is a comment line */
         if (is_comment(line)) {
             continue;
+        }
+        ret_code = is_endmacr(line);
+        if (ret_code == ERROR_ID_34) {
+            /*error - extra text after 'endmacr' */
+            return ERROR_ID_34;
+        }
+        if (ret_code) {
+            /* line is a valid macro end statement*/
+            break;
         }
 
         len = strlen(line);
@@ -141,6 +150,7 @@ int handle_macro(char *line, FILE *file, MacroTable *macros) {
     return ERROR_ID_0;
 }
 
+
 /* check if line is macro declaration */
 int is_macro(char *line) {
     return starts_with(line, "macr");
@@ -152,13 +162,15 @@ int is_macro_name_valid(char *mac_name) {
         return ERROR_ID_27;
     }
 
-    if (what_instrct(mac_name) >= 0 || what_opcode(mac_name) >= 0 || what_regs(mac_name) >= 0)
+    if (what_instrct(mac_name) >= 0 || what_opcode(mac_name) >= 0 || what_regs(mac_name) >= 0) {
         /* error - Macro name cant be instruction, opcode or register name */
         return ERROR_ID_28;
+    }
 
-    if (strcmp(mac_name, "macr") == 0)
+    if (strcmp(mac_name, "macr") == 0) {
         /* error - Macro name cannot be 'macr' */
         return ERROR_ID_29;
+    }
 
     return ERROR_ID_0;
 }

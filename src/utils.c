@@ -178,6 +178,29 @@ int is_comment(char *line) {
     return 0;
 }
 
+int is_endmacr(char *line) {
+    char token[MAX_LINE_LENGTH];
+    char original_line[MAX_LINE_LENGTH];
+
+    strcpy(original_line, line);
+    extract_next(line, token, ' ');
+
+    if (strlen(token) == 0)
+        return 0;
+
+    if (strcmp(token, "endmacr") != 0) {
+        strcpy(line, original_line);
+        return 0;
+    }
+
+    if (strcmp(line, "") != 0) {
+        /*error - extra text after 'endmacr' */
+        return ERROR_ID_34;
+    }
+
+    return 1;
+}
+
 int extract_symbol(char *line, char *sym_name, char delimeter) {
     int ret_code;
     char first_token[MAX_LINE_LENGTH] = "";
