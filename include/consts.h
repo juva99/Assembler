@@ -47,7 +47,7 @@
 #define PREPROCESSED_FILE_TYPE ".as"
 
 /**
- * @brief File extension for processed source files after the first stage.
+ * @brief File extension for processed source files.
  */
 #define PROCESSED_FILE_TYPE ".am"
 
