@@ -83,7 +83,7 @@ int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros) 
 
 /* handle macro declaration */
 int handle_macro(char *line, FILE *file, MacroTable *macros) {
-    int error_id;
+    int error_id, bool_val;
     size_t len;
     size_t total_length = 0;
     size_t buffer_size;
@@ -111,11 +111,12 @@ int handle_macro(char *line, FILE *file, MacroTable *macros) {
     mac_content[0] = '\0';
 
     while (fgets(line, MAX_LINE_LENGTH + 1, file) != NULL) {
-        if (is_endmacr(line) == ERROR_ID_34) {
+        bool_val = is_endmacr(line);
+        if (bool_val == ERROR_ID_34) {
             /*error - extra text after 'endmacr' */
             return ERROR_ID_34;
         }
-        if (is_endmacr(line)) {
+        if (bool_val) {
             /* line is a valid macro end statement*/
             break;
         }
