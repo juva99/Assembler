@@ -62,12 +62,13 @@ int extract_next(char *src, char *next, char delimiter);
  * This function checks each character in the given string (`str`) to determine if it is either
  * an alphabetic character (A-Z, a-z) or a numeric digit (0-9). If all characters are alphanumeric,
  * the function returns 1, indicating that the string is valid. If any character is not alphanumeric,
- * the function returns 0.
+ * or if the string is `NULL`, the function returns 0.
  *
  * @param str: The string to be validated. It should be a null-terminated C string.
- * @return Returns 1 if the string contains only alphanumeric characters, otherwise returns 0.
+ * @return Returns 1 if the string contains only alphanumeric characters and is not `NULL`,
+ * otherwise returns 0.
  *
- * @note The function does not check for NULL pointers; ensure that `str` is a valid pointer.
+ * @note The function checks for `NULL` pointers. If `str` is `NULL`, the function returns 0.
  */
 int is_valid_string(const char *str);
 
@@ -161,12 +162,12 @@ int is_comment(char *line);
 /**
  * @brief Checks if a line marks the end of a macro definition.
  *
- * This function checks if the provided line of code contains the `endmacr` keyword, indicating
+ * This function checks if the provided line of code starts with the `endmacr` keyword, indicating
  * the end of a macro definition. If the keyword is found, the function returns 1; otherwise, it returns 0.
  * Additionally, it checks for extra text after the `endmacr` keyword and returns an error code if found.
  *
  * @param line: The line of code to be checked. It should be a null-terminated C string.
- * @return Returns 1 if the line contains `endmacr` with no extra text, otherwise returns an error code or 0.
+ * @return Returns 1 if the line starts with `endmacr` with no extra text, otherwise returns an error code or 0.
  */
 int is_endmacr(char *line);
 
