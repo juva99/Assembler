@@ -7,27 +7,26 @@
 #include "../include/consts.h"
 
 typedef struct cmd_struct {
-    char *label; /* label of command */
-    int opcode; /* opcode number of command */
-    char *src; /* source address of command */
-    char *dst; /* dest address of command */
-    int src_method; /* src address method id */
-    int dst_method; /* dst address method id */
-    int length; /* command line length */
+ int opcode; /* opcode number of command */
+ char *src; /* source address of command */
+ char *dst; /* dest address of command */
+ int src_method; /* src address method id */
+ int dst_method; /* dst address method id */
+ int length; /* command line length */
 } cmd_struct;
 
 typedef struct opcode {
-    char *name; /* name of opcode */
-    int args; /* amount of args of opcode */
-    int add_methods_src[MAX_ADDRESS_METHODS]; /* valid address methods for src */
-    int add_methods_dst[MAX_ADDRESS_METHODS]; /* valid address methods for dst */
+ char *name; /* name of opcode */
+ int args; /* amount of args of opcode */
+ int add_methods_src[MAX_ADDRESS_METHODS]; /* valid address methods for src */
+ int add_methods_dst[MAX_ADDRESS_METHODS]; /* valid address methods for dst */
 } opcode;
 
 /**
  * @brief Frees the memory allocated for a command structure.
  *
  * This function releases the memory associated with a command structure, including the memory
- * allocated for the label, source, and destination addresses.
+ * allocated for the source, and destination addresses.
  *
  * @param cmd: A pointer to the command structure to be freed.
  */
@@ -36,7 +35,7 @@ void free_command(cmd_struct *cmd);
 /**
  * @brief Builds a command structure from a line of assembly code.
  *
- * This function parses a line of assembly code to construct a command structure. It extracts the label,
+ * This function parses a line of assembly code to construct a command structure. It extracts the
  * opcode, source, and destination addresses, and determines the addressing methods and command length.
  * If any errors are encountered during parsing, an appropriate error code is returned.
  *
