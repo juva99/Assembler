@@ -75,10 +75,11 @@ char *error_desc[] = {
     "Command - Symbol used is not defined",
     /* 34 */
     "Macro declaration error - Extraneous text after 'endmacr'",
-    /* 35 */
-    "Symbol name is invalid",
+
     /* 36 */
-    "Symbol name is missing"
+    "Symbol name is missing",
+    /* 37 */
+    "Symbol name is invalid"
 };
 
 char *stage_name[] = {

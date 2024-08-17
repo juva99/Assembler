@@ -42,7 +42,7 @@ int first_stage_process(file_struct *curr_file) {
                 symbol = 1;
             } else {
                 /* error - symbol name is invalid */
-                add_error_to_file(curr_file, ERROR_ID_35, n_line, FIRST_STAGE);
+                add_error_to_file(curr_file, ERROR_ID_37, n_line, FIRST_STAGE);
                 continue;
             }
         }
@@ -74,9 +74,9 @@ int first_stage_process(file_struct *curr_file) {
                     }
                     break;
                 }
-                case ERROR_ID_35: {
+                case ERROR_ID_37: {
                     /* error - symbol name is invalid  */
-                    add_error_to_file(curr_file, ERROR_ID_35, n_line, FIRST_STAGE);
+                    add_error_to_file(curr_file, ERROR_ID_37, n_line, FIRST_STAGE);
                     break;
                 }
                 case ERROR_ID_36: {
@@ -99,9 +99,9 @@ int first_stage_process(file_struct *curr_file) {
                     add_symbol(entries_list, sym_name, n_line);
                     break;
                 }
-                case ERROR_ID_35: {
+                case ERROR_ID_37: {
                     /* error - symbol name is invalid  */
-                    add_error_to_file(curr_file, ERROR_ID_35, n_line, FIRST_STAGE);
+                    add_error_to_file(curr_file, ERROR_ID_37, n_line, FIRST_STAGE);
                     break;
                 }
                 case ERROR_ID_36: {

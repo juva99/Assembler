@@ -197,7 +197,7 @@ int is_symbol_declaration(char *line);
  * @param sym_name: The buffer where the extracted symbol name will be stored.
  * @param delimeter: The character that delimits the symbol in the line.
  * @return Returns `ERROR_ID_0` if a valid symbol was extracted, `ERROR_ID_36` if the symbol name is missing,
- * and `ERROR_ID_35` if the symbol name is invalid.
+ * and `ERROR_ID_37` if the symbol name is invalid.
  */
 int extract_symbol(char *line, char *sym_name, char delimeter);
 

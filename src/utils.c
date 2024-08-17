@@ -232,7 +232,7 @@ int extract_symbol(char *line, char *sym_name, char delimeter) {
     if (!ret_code) {
         /* error - Symbol name is invalid */
         strcpy(line, original_line);
-        return ERROR_ID_35;
+        return ERROR_ID_37;
     }
 
     strcpy(sym_name, first_token);
