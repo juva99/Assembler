@@ -120,6 +120,7 @@ void handle_macro(char *line, FILE *file, MacroTable *macros, file_struct *curr_
 
     start_line = *n_line;
     while (fgets(line, MAX_LINE_LENGTH, file) != NULL) {
+        (*n_line)++;
         if (is_line_too_long(line)) {
             add_error_to_file(curr_file, ERROR_ID_35, *n_line, PRE_STAGE);
             while (strchr(line, '\n') == NULL && fgets(line, MAX_LINE_LENGTH, file) != NULL) {
