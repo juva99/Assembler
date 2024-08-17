@@ -82,8 +82,6 @@ void add_command(code_cont **code, cmd_struct *cmd, int *ic, int n_line) {
 unsigned short create_method_line(cmd_struct *cmd, int method, char *value, int is_src) {
     int reg_num, offset, num;
     unsigned short method_line = 0;
-    int is_negative = 1;
-
 
     switch (method) {
         case 0: {
