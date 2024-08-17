@@ -330,12 +330,17 @@ int encode_string(char *line, code_cont **data, int *dc, int n_line) {
 
     count = 0;
 
+    if (strchr(line, '\"') == NULL) {
+        return ERROR_ID_39;
+    }
     extract_next_full(line, curr_token, '\"', 0);
     if (*curr_token != '\0') {
         /* error - extra text before first " */
         return ERROR_ID_15;
     }
-
+    if (strchr(line, '\"') == NULL) {
+        return ERROR_ID_39;
+    }
     extract_next_full(line, curr_token, '\"', 0);
     while (curr_token[count] != '\0') {
         val = conv_to_ushort((int) curr_token[count]);
@@ -343,6 +348,12 @@ int encode_string(char *line, code_cont **data, int *dc, int n_line) {
 
         count++;
     }
+    extract_next_full(line, curr_token, '\"', 0);
+    if (*curr_token != '\0') {
+        /* error - extra text after string " */
+        return ERROR_ID_40;
+    }
+
     /*null-terminator*/
     add_data(data, 0, dc, n_line);
     count++;
@@ -411,4 +422,3 @@ int is_line_too_long(const char *line) {
     /* Get the length of the string */
     return strlen(line) > MAX_LINE_LENGTH - 2;
 }
-
