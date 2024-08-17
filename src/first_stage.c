@@ -65,6 +65,11 @@ int first_stage_process(file_struct *curr_file) {
         }
         /* #8 */
         if (is_extern(line)) {
+            if (symbol) {
+                /*error - Symbol declaration cannot contain .extern or .entry */
+                add_error_to_file(curr_file, ERROR_ID_38, n_line, FIRST_STAGE);
+                continue;
+            }
             curr_error_id = extract_symbol(line, sym_name, ' ');
             switch (curr_error_id) {
                 case ERROR_ID_0: {
@@ -93,6 +98,11 @@ int first_stage_process(file_struct *curr_file) {
         }
 
         if (is_entry(line)) {
+            if (symbol) {
+                /*error - Symbol declaration cannot contain .extern or .entry */
+                add_error_to_file(curr_file, ERROR_ID_38, n_line, FIRST_STAGE);
+                continue;
+            }
             curr_error_id = extract_symbol(line, sym_name, ' ');
             switch (curr_error_id) {
                 case ERROR_ID_0: {

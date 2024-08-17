@@ -80,7 +80,9 @@ char *error_desc[] = {
     /* 36 */
     "Symbol name is missing",
     /* 37 */
-    "Symbol name is invalid"
+    "Symbol name is invalid",
+    /* 38 */
+    "Symbol declaration cannot contain .extern or .entry"
 };
 
 char *stage_name[] = {
