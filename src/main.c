@@ -16,7 +16,7 @@
  * @return Returns 0 on successful completion, or 1 if no files are provided.
  */
 int main(int argc, char *argv[]) {
-    int i, num_files = 0;
+    int i, num_files = 0, is_error = 0;
     file_struct *files;
 
     /* Check if at least one file is provided */
@@ -48,12 +48,14 @@ int main(int argc, char *argv[]) {
     /* Print errors for each file */
     for (i = 0; i < num_files; ++i) {
         print_errors(files + i);
+        if ((files + i)->errors_count > 0) {
+            is_error = 1;
+        }
     }
 
     /* Free all allocated resources */
     free_files(files, num_files);
-    printf("done\n");
 
-    return 0;
+    return is_error;
 }
 
