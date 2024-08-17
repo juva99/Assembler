@@ -1,6 +1,6 @@
 # Compiler and flags
 CC = gcc
-CFLAGS = -Wall -ansi -pedantic -std=c90
+CFLAGS = -Wall -ansi -pedantic -std=c90 -Werror
 
 # Source files
 SRC = src/main.c \
@@ -19,7 +19,7 @@ SRC = src/main.c \
 OBJ = $(SRC:.c=.o)
 
 # Executable name
-TARGET = openu_project
+TARGET = assembler
 
 # Default target
 all: $(TARGET)
