@@ -42,7 +42,10 @@ int main(int argc, char *argv[]) {
     /* Perform the first stage of assembly for each file
        Note: The first stage also handles running the second stage. */
     for (i = 0; i < num_files; ++i) {
-        first_stage_process((files + i));
+        /* continue to first and second stage if no errors in preprocess */
+        if ((files + i)->errors_count == 0) {
+            first_stage_process((files + i));
+        }
     }
 
     /* Print errors for each file */

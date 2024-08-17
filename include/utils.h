@@ -304,5 +304,16 @@ char *add_file_extension(char *filename, char *extension);
  */
 int read_num_arg(char *arg);
 
+/**
+ * @brief Checks if a given line exceeds the maximum size expected.
+ *
+ * This function determines whether the provided string exceeds a specified maximum length.
+ * It is useful for detecting lines that are too long in contexts where length constraints are important.
+ *
+ * @param line: The string representing the line to check. It should be a null-terminated C string.
+ * @return Returns 1 if the line exceeds maximum line length defined by MAX_LINE_LENGTH, otherwise returns 0.
+ */
+int is_line_too_long(const char *line);
+
 #endif
 
