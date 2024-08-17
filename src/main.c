@@ -4,7 +4,7 @@
 #include "../include/file_manager.h"
 
 int main(int argc, char *argv[]) {
-    int i, num_files = 0;
+    int i, num_files = 0, is_error = 0;
     file_struct *files;
     if (argc < 2) {
         fprintf(stderr, "Error missing files, Usage: %s <file1> <file2> ... <fileN>\n", argv[0]);
@@ -24,10 +24,12 @@ int main(int argc, char *argv[]) {
     }
     for (i = 0; i < num_files; ++i) {
         print_errors(files + i);
+        if ((files + i)->errors_count > 0) {
+            is_error = 1;
+        }
     }
     free_files(files, num_files);
-    printf("done\n");
 
-    return 0;
+    return is_error;
 }
 
