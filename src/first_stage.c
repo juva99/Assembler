@@ -1,7 +1,7 @@
 #include "../include/first_stage.h"
 
 int first_stage_process(file_struct *curr_file) {
-    int ic, dc, symbol, errors, curr_error_id, n_line;
+    int ic, dc, symbol, curr_error_id, n_line;
     char line[MAX_LINE_LENGTH];
     DataType data_type;
     char sym_name[MAX_LABEL_LENGTH];
@@ -22,7 +22,6 @@ int first_stage_process(file_struct *curr_file) {
 
     ic = 0;
     dc = 0;
-    errors = 0;
     n_line = 0;
 
     processed_filename = add_file_extension(curr_file->filename, PROCESSED_FILE_TYPE);
@@ -44,7 +43,6 @@ int first_stage_process(file_struct *curr_file) {
             } else {
                 /* error - symbol name is invalid */
                 add_error_to_file(curr_file, ERROR_ID_35, n_line, FIRST_STAGE);
-                errors++;
                 continue;
             }
         }
@@ -56,14 +54,12 @@ int first_stage_process(file_struct *curr_file) {
                 curr_error_id = insert_symbol_table(sym_table, sym_name, ".data", dc);
                 if (curr_error_id != ERROR_ID_0) {
                     add_error_to_file(curr_file, curr_error_id, n_line, FIRST_STAGE);
-                    errors++;
                 }
             }
             /* encode data to memory return size and increase DC #7 */
             curr_error_id = encode_data(line, data_type, &data, &dc, n_line);
             if (curr_error_id != ERROR_ID_0) {
                 add_error_to_file(curr_file, curr_error_id, n_line, FIRST_STAGE);
-                errors++;
             }
             continue;
         }
@@ -75,20 +71,17 @@ int first_stage_process(file_struct *curr_file) {
                     curr_error_id = insert_symbol_table(sym_table, sym_name, ".external", 0);
                     if (curr_error_id != ERROR_ID_0) {
                         add_error_to_file(curr_file, curr_error_id, n_line, FIRST_STAGE);
-                        errors++;
                     }
                     break;
                 }
                 case ERROR_ID_35: {
                     /* error - symbol name is invalid  */
                     add_error_to_file(curr_file, ERROR_ID_35, n_line, FIRST_STAGE);
-                    errors++;
                     break;
                 }
                 case ERROR_ID_36: {
                     /* error - symbol name is missing */
                     add_error_to_file(curr_file, ERROR_ID_36, n_line, FIRST_STAGE);
-                    errors++;
                     break;
                 }
                 default: {
@@ -109,13 +102,11 @@ int first_stage_process(file_struct *curr_file) {
                 case ERROR_ID_35: {
                     /* error - symbol name is invalid  */
                     add_error_to_file(curr_file, ERROR_ID_35, n_line, FIRST_STAGE);
-                    errors++;
                     break;
                 }
                 case ERROR_ID_36: {
                     /* error - symbol name is missing */
                     add_error_to_file(curr_file, ERROR_ID_36, n_line, FIRST_STAGE);
-                    errors++;
                     break;
                 }
                 default: {
@@ -137,7 +128,6 @@ int first_stage_process(file_struct *curr_file) {
             curr_error_id = insert_symbol_table(sym_table, sym_name, ".code", ic + IC_OFFSET);
             if (curr_error_id != ERROR_ID_0) {
                 add_error_to_file(curr_file, curr_error_id, n_line, FIRST_STAGE);
-                errors++;
             }
         }
         add_command(&code, command, &ic, n_line);
