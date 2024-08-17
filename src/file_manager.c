@@ -44,7 +44,7 @@ char *error_desc[] = {
         /* 18 */
         "Data - numeric declaraion error - non-numeric value entered", /*encode numeric data*/
         /* 19 */
-        "Unvalid data type", /*encode_data - maybe the error can be removed*/
+        "Invalid data type", /*encode_data - maybe the error can be removed*/
         /* 20 */
         "Entry label was never initialized", /*validate_entries, check if the error description is good */
         /* 21 */
@@ -73,8 +73,10 @@ char *error_desc[] = {
         "Data - Binary file size exceeds maximum value",
         /* 33 */
         "Command - Symbol used is not defined",
-    	/* 34 */
-    	"Macro declaration error - Extraneous text after 'endmacr'",
+        /* 34 */
+        "Macro declaration error - Extraneous text after 'endmacr'",
+        /* 35 */
+        "Line too long",
 };
 
 char *stage_name[] = {
