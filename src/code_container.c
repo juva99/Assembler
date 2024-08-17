@@ -3,8 +3,10 @@
 #include "../include/file_manager.h"
 
 void write_data(code_cont **container, unsigned short data, int *counter, int n_line) {
+    unsigned short mask = 0;
     expend_memory(container, *counter);
-    (*container + *counter)->bin_rep = data;
+    mask = ((1 << MAX_BIN_LENGTH) - 1);
+    (*container + *counter)->bin_rep = data & mask;
     (*container + *counter)->code_line = n_line;
     (*container + *counter)->label = NULL;
     (*counter)++;
