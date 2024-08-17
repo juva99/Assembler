@@ -73,8 +73,8 @@ char *error_desc[] = {
         "Data - Binary file size exceeds maximum value",
         /* 33 */
         "Command - Symbol used is not defined",
-    	/* 34 */
-    	"Macro declaration error - Extraneous text after 'endmacr'",
+        /* 34 */
+        "Macro declaration error - Extraneous text after 'endmacr'",
 };
 
 char *stage_name[] = {
@@ -159,6 +159,9 @@ void print_errors(file_struct *file) {
         fprintf(stderr, "\tError: %s, occurred in %s:%d in %s stage.\n", error_desc[error_id], relevant_file,
                 error_line,
                 stage_name[stage_id]);
+    }
+    if (relevant_file != NULL) {
+        free(relevant_file);
     }
     fprintf(stderr, "Overall %d errors.\n\n", file->errors_count);
 }
