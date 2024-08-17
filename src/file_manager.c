@@ -162,6 +162,9 @@ void print_errors(file_struct *file) {
                 error_line,
                 stage_name[stage_id]);
     }
+    if (relevant_file != NULL) {
+        free(relevant_file);
+    }
     fprintf(stderr, "Overall %d errors.\n\n", file->errors_count);
 }
 
