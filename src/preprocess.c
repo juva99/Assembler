@@ -36,8 +36,14 @@ int preprocess(file_struct *curr_file) {
     while (fgets(line, sizeof(line), file)) {
         n_line++;
         /* preprocess line if not empty */
+        if (is_line_too_long(line)) {
+            add_error_to_file(curr_file, ERROR_ID_35, n_line, PRE_STAGE);
+            while (strchr(line, '\n') == NULL && fgets(line, MAX_LINE_LENGTH, file) != NULL) {
+            }
+        }
+
         if (strcmp(line, "\n") != 0) {
-            error_id = process_line(line, file, proccessed_file, macros);
+            error_id = process_line(line, file, proccessed_file, macros, curr_file, &n_line);
             if (error_id != ERROR_ID_0) {
                 add_error_to_file(curr_file, error_id, n_line, PRE_STAGE);
                 break;
@@ -52,8 +58,7 @@ int preprocess(file_struct *curr_file) {
 }
 
 /* process line and write to new preprocessed file */
-int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros) {
-    int error_id;
+int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros, file_struct *curr_file, int *n_line) {
     char *mac_name;
     char *mac_content;
     char orig_line[MAX_LINE_LENGTH];
@@ -68,10 +73,8 @@ int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros) 
     extract_next(line, first_token, ' ');
 
     if (is_macro(first_token)) {
-        error_id = handle_macro(line, file, macros);
-        if (error_id != ERROR_ID_0) {
-            return error_id;
-        }
+        handle_macro(line, file, macros, curr_file, n_line);
+        return ERROR_ID_0;
     } else if (is_member(macros, first_token)) {
         mac_name = first_token;
         mac_content = search(macros, mac_name);
@@ -87,8 +90,8 @@ int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros) 
 }
 
 /* handle macro declaration */
-int handle_macro(char *line, FILE *file, MacroTable *macros) {
-    int error_id, ret_code;
+void handle_macro(char *line, FILE *file, MacroTable *macros, file_struct *curr_file, int *n_line) {
+    int error_id, ret_code, start_line;
     size_t len;
     size_t total_length = 0;
     size_t buffer_size;
@@ -99,13 +102,13 @@ int handle_macro(char *line, FILE *file, MacroTable *macros) {
     extract_next(line, mac_name, ' ');
     error_id = is_macro_name_valid(mac_name);
     if (error_id != ERROR_ID_0) {
-        return error_id;
+        add_error_to_file(curr_file, error_id, *n_line, PRE_STAGE);
     }
 
     /* checks if rest is empty */
     if (strlen(line) != 0) {
         /* error - Extraneous text after end of declaration */
-        return ERROR_ID_13;
+        add_error_to_file(curr_file, ERROR_ID_13, *n_line, PRE_STAGE);
     }
 
     buffer_size = MAX_LINE_LENGTH * sizeof(char) * INITIAL_MACRO_BUFFER;
@@ -115,7 +118,14 @@ int handle_macro(char *line, FILE *file, MacroTable *macros) {
     }
     mac_content[0] = '\0';
 
+    start_line = *n_line;
     while (fgets(line, MAX_LINE_LENGTH, file) != NULL) {
+        (*n_line)++;
+        if (is_line_too_long(line)) {
+            add_error_to_file(curr_file, ERROR_ID_35, *n_line, PRE_STAGE);
+            while (strchr(line, '\n') == NULL && fgets(line, MAX_LINE_LENGTH, file) != NULL) {
+            }
+        }
         /* check if line is a comment line */
         if (is_comment(line)) {
             continue;
@@ -123,7 +133,9 @@ int handle_macro(char *line, FILE *file, MacroTable *macros) {
         ret_code = is_endmacr(line);
         if (ret_code == ERROR_ID_34) {
             /*error - extra text after 'endmacr' */
-            return ERROR_ID_34;
+            free(mac_content);
+            add_error_to_file(curr_file, ERROR_ID_34, *n_line, PRE_STAGE);
+            return;
         }
         if (ret_code) {
             /* line is a valid macro end statement*/
@@ -143,11 +155,9 @@ int handle_macro(char *line, FILE *file, MacroTable *macros) {
     }
     error_id = insert(macros, mac_name, mac_content);
     if (error_id != 0) {
-        return error_id;
+        add_error_to_file(curr_file, error_id, start_line, PRE_STAGE);
     }
     free(mac_content);
-
-    return ERROR_ID_0;
 }
 
 

@@ -406,3 +406,9 @@ int read_num_arg(char *arg) {
     num = (atoi(arg) * is_negative);
     return num;
 }
+
+int is_line_too_long(const char *line) {
+    /* Get the length of the string */
+    return strlen(line) > MAX_LINE_LENGTH - 2;
+}
+
