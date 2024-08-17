@@ -40,7 +40,6 @@ void free_command(cmd_struct *cmd) {
 
 int build_command(char *line, cmd_struct **command) {
     int args, num;
-    char sym_name[MAX_LABEL_LENGTH + 1];
     char arg[MAX_LABEL_LENGTH + 1];
     cmd_struct *cmd = malloc(sizeof(cmd_struct));
 
