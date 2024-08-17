@@ -13,6 +13,9 @@ int starts_with(const char *str, const char *pre) {
 }
 
 int is_valid_string(const char *str) {
+    if (str == NULL) {
+        return 0;
+    }
     while (*str) {
         if (!isalpha(*str) && !isdigit(*str)) {
             return 0;
