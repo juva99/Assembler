@@ -98,13 +98,13 @@ void handle_macro(char *line, FILE *file, MacroTable *macros, file_struct *curr_
     extract_next(line, mac_name, ' ');
     error_id = is_macro_name_valid(mac_name);
     if (error_id != ERROR_ID_0) {
-        return error_id;
+        add_error_to_file(curr_file, error_id, *n_line, PRE_STAGE);
     }
 
     /* checks if rest is empty */
     if (strlen(line) != 0) {
         /* error - Extraneous text after end of declaration */
-        return ERROR_ID_13;
+        add_error_to_file(curr_file, ERROR_ID_13, *n_line, PRE_STAGE);
     }
 
     buffer_size = MAX_LINE_LENGTH * sizeof(char) * INITIAL_MACRO_BUFFER;
@@ -114,6 +114,7 @@ void handle_macro(char *line, FILE *file, MacroTable *macros, file_struct *curr_
     }
     mac_content[0] = '\0';
 
+    start_line = *n_line;
     while (fgets(line, MAX_LINE_LENGTH, file) != NULL) {
         /* check if line is a comment line */
         if (is_comment(line)) {
@@ -122,7 +123,9 @@ void handle_macro(char *line, FILE *file, MacroTable *macros, file_struct *curr_
         ret_code = is_endmacr(line);
         if (ret_code == ERROR_ID_34) {
             /*error - extra text after 'endmacr' */
-            return ERROR_ID_34;
+            free(mac_content);
+            add_error_to_file(curr_file, ERROR_ID_34, *n_line, PRE_STAGE);
+            return;
         }
         if (ret_code) {
             /* line is a valid macro end statement*/
@@ -142,11 +145,9 @@ void handle_macro(char *line, FILE *file, MacroTable *macros, file_struct *curr_
     }
     error_id = insert(macros, mac_name, mac_content);
     if (error_id != 0) {
-        return error_id;
+        add_error_to_file(curr_file, error_id, start_line, PRE_STAGE);
     }
     free(mac_content);
-
-    return ERROR_ID_0;
 }
 
 
