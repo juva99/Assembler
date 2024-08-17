@@ -171,20 +171,33 @@ int is_comment(char *line);
  */
 int is_endmacr(char *line);
 
+/**
+ * @brief Checks if a line contains a symbol declaration.
+ *
+ * This function checks whether the provided line contains a symbol declaration.
+ * A symbol declaration is identified by the presence of a colon (':') character
+ * within the line. If the colon is found, the function returns 1, indicating that
+ * the line contains a symbol declaration. Otherwise, it returns 0.
+ *
+ * @param line: The line of code to be checked. It should be a null-terminated C string.
+ * @return Returns 1 if the line contains a symbol declaration, otherwise returns 0.
+ */
 int is_symbol_declaration(char *line);
 
 /**
  * @brief Extracts a symbol name from a line based on a delimiter.
  *
  * This function extracts a symbol name from the beginning of a line up to a specified delimiter.
- * It checks the validity of the symbol name according to assembly language rules, including length
- * and character content. If the symbol is valid, it is stored in `sym_name` and the function returns 1.
- * If the symbol is invalid or the delimiter is not found, the function returns 0.
+ * It first extracts the symbol, then checks its validity according to assembly language rules,
+ * including length and character content. If the symbol is valid, it is stored in `sym_name`
+ * and the function returns `ERROR_ID_0`. If the symbol is invalid or missing, the function restores
+ * the original line and returns an appropriate error code.
  *
  * @param line: The line of code containing the symbol. It should be a null-terminated C string.
  * @param sym_name: The buffer where the extracted symbol name will be stored.
  * @param delimeter: The character that delimits the symbol in the line.
- * @return Returns 1 if a valid symbol was extracted, otherwise returns 0.
+ * @return Returns `ERROR_ID_0` if a valid symbol was extracted, `ERROR_ID_36` if the symbol name is missing,
+ * and `ERROR_ID_35` if the symbol name is invalid.
  */
 int extract_symbol(char *line, char *sym_name, char delimeter);
 
