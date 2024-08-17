@@ -37,7 +37,7 @@ int preprocess(file_struct *curr_file) {
         n_line++;
         /* preprocess line if not empty */
         if (strcmp(line, "\n") != 0) {
-            error_id = process_line(line, file, proccessed_file, macros);
+            error_id = process_line(line, file, proccessed_file, macros, curr_file, &n_line);
             if (error_id != ERROR_ID_0) {
                 add_error_to_file(curr_file, error_id, n_line, PRE_STAGE);
                 break;
@@ -52,8 +52,7 @@ int preprocess(file_struct *curr_file) {
 }
 
 /* process line and write to new preprocessed file */
-int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros) {
-    int error_id;
+int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros, file_struct *curr_file, int *n_line) {
     char *mac_name;
     char *mac_content;
     char orig_line[MAX_LINE_LENGTH];
@@ -87,8 +86,8 @@ int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros) 
 }
 
 /* handle macro declaration */
-int handle_macro(char *line, FILE *file, MacroTable *macros) {
-    int error_id, ret_code;
+void handle_macro(char *line, FILE *file, MacroTable *macros, file_struct *curr_file, int *n_line) {
+    int error_id, ret_code, start_line;
     size_t len;
     size_t total_length = 0;
     size_t buffer_size;

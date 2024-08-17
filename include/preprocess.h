@@ -35,7 +35,7 @@ int preprocess(file_struct *curr_file);
  * @param macros: A pointer to the macro table used to store and retrieve macro definitions.
  * @return Returns 0 if the line is processed successfully, or an error code if an issue occurs.
  */
-int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros);
+int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros, file_struct *curr_file, int *n_line);
 
 /**
  * @brief Checks if a line contains a macro declaration.
@@ -59,7 +59,7 @@ int is_macro(char *line);
  * @param macros: A pointer to the macro table used to store the macro definition.
  * @return Returns 0 if the macro is processed successfully, or an error code if an issue occurs.
  */
-int handle_macro(char *line, FILE *file, MacroTable *macros);
+void handle_macro(char *line, FILE *file, MacroTable *macros, file_struct *curr_file, int *n_line);
 
 /**
  * @brief Validates the name of a macro.
