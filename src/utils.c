@@ -204,6 +204,13 @@ int is_endmacr(char *line) {
     return 1;
 }
 
+int is_symbol_declaration(char *line) {
+    if (strchr(line, ':') == NULL) {
+        return 0;
+    }
+    return 1;
+}
+
 int extract_symbol(char *line, char *sym_name, char delimeter) {
     int ret_code;
     char first_token[MAX_LINE_LENGTH] = "";
@@ -212,24 +219,29 @@ int extract_symbol(char *line, char *sym_name, char delimeter) {
     ret_code = 1;
     strcpy(original_line, line);
 
-    if (delimeter == ':' && strchr(line, delimeter) == NULL) {
-        return 0;
+    extract_next(line, first_token, delimeter);
+
+    if (strcmp(first_token, "") == 0) {
+        /* error - Symbol name is missing */
+        strcpy(line, original_line);
+        return ERROR_ID_36;
     }
 
-    extract_next(line, first_token, delimeter);
     ret_code = check_symbol_name(first_token);
 
     if (!ret_code) {
+        /* error - Symbol name is invalid */
         strcpy(line, original_line);
-        return ret_code;
+        return ERROR_ID_35;
     }
 
     strcpy(sym_name, first_token);
-    return 1;
+    return ERROR_ID_0;
 }
 
 int check_symbol_name(char *first_token) {
-    int ret_code = 1; /* token is bigger than size of label or empty -  its invalid */
+    int ret_code = 1;
+    /* token is bigger than size of label or empty -  its invalid */
     if (strlen(first_token) > (MAX_LABEL_LENGTH + 1) || strlen(first_token) == 0) {
         ret_code = 0;
     }

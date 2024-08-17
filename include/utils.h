@@ -171,6 +171,8 @@ int is_comment(char *line);
  */
 int is_endmacr(char *line);
 
+int is_symbol_declaration(char *line);
+
 /**
  * @brief Extracts a symbol name from a line based on a delimiter.
  *

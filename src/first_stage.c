@@ -38,8 +38,15 @@ int first_stage_process(file_struct *curr_file) {
         symbol = 0;
         sym_name[0] = '\0';
         /* check if line has a symbol #3 */
-        if (extract_symbol(line, sym_name, ':')) {
-            symbol = 1;
+        if (is_symbol_declaration(line)) {
+            if (extract_symbol(line, sym_name, ':') == ERROR_ID_0) {
+                symbol = 1;
+            } else {
+                /* error - symbol name is invalid */
+                add_error_to_file(curr_file, ERROR_ID_35, n_line, FIRST_STAGE);
+                errors++;
+                continue;
+            }
         }
         /* check if line is a data storing instruction #5 */
         data_type = data_instruction(line);
@@ -62,19 +69,59 @@ int first_stage_process(file_struct *curr_file) {
         }
         /* #8 */
         if (is_extern(line)) {
-            if (extract_symbol(line, sym_name, ' ')) {
-                curr_error_id = insert_symbol_table(sym_table, sym_name, ".external", 0);
-                if (curr_error_id != ERROR_ID_0) {
-                    add_error_to_file(curr_file, curr_error_id, n_line, FIRST_STAGE);
+            curr_error_id = extract_symbol(line, sym_name, ' ');
+            switch (curr_error_id) {
+                case ERROR_ID_0: {
+                    curr_error_id = insert_symbol_table(sym_table, sym_name, ".external", 0);
+                    if (curr_error_id != ERROR_ID_0) {
+                        add_error_to_file(curr_file, curr_error_id, n_line, FIRST_STAGE);
+                        errors++;
+                    }
+                    break;
+                }
+                case ERROR_ID_35: {
+                    /* error - symbol name is invalid  */
+                    add_error_to_file(curr_file, ERROR_ID_35, n_line, FIRST_STAGE);
                     errors++;
+                    break;
+                }
+                case ERROR_ID_36: {
+                    /* error - symbol name is missing */
+                    add_error_to_file(curr_file, ERROR_ID_36, n_line, FIRST_STAGE);
+                    errors++;
+                    break;
+                }
+                default: {
+                    /*unreachable code */
+                    return 0;
                 }
             }
             continue;
         }
 
         if (is_entry(line)) {
-            if (extract_symbol(line, sym_name, ' ')) {
-                add_symbol(entries_list, sym_name, n_line);
+            curr_error_id = extract_symbol(line, sym_name, ' ');
+            switch (curr_error_id) {
+                case ERROR_ID_0: {
+                    add_symbol(entries_list, sym_name, n_line);
+                    break;
+                }
+                case ERROR_ID_35: {
+                    /* error - symbol name is invalid  */
+                    add_error_to_file(curr_file, ERROR_ID_35, n_line, FIRST_STAGE);
+                    errors++;
+                    break;
+                }
+                case ERROR_ID_36: {
+                    /* error - symbol name is missing */
+                    add_error_to_file(curr_file, ERROR_ID_36, n_line, FIRST_STAGE);
+                    errors++;
+                    break;
+                }
+                default: {
+                    /*unreachable code */
+                    return 0;
+                }
             }
             continue;
         }
@@ -96,7 +143,9 @@ int first_stage_process(file_struct *curr_file) {
         add_command(&code, command, &ic, n_line);
         free_command(command);
     }
+
     fclose(file);
+
     if (ic + dc + IC_OFFSET > MAX_FILE_SIZE) {
         add_error_to_file(curr_file, ERROR_ID_32, 0, FIRST_STAGE);
     }
@@ -108,5 +157,6 @@ int first_stage_process(file_struct *curr_file) {
         return ERROR_ID_9;
     }
     update_data_symbols(sym_table, ic + IC_OFFSET);
+
     return second_stage_process(curr_file, data, code, sym_table, entries_list, ic, dc);
 }

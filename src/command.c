@@ -31,8 +31,6 @@ int (*check_address_functions[])(char *str) = {
 };
 
 void free_command(cmd_struct *cmd) {
-    if (cmd->label != NULL)
-        free(cmd->label);
     if (cmd->src != NULL)
         free(cmd->src);
     if (cmd->dst != NULL)
@@ -50,7 +48,6 @@ int build_command(char *line, cmd_struct **command) {
         handle_dynamic_alloc_error();
     }
     /* init command */
-    cmd->label = NULL;
     cmd->opcode = -1;
     cmd->src = NULL;
     cmd->dst = NULL;
@@ -58,14 +55,6 @@ int build_command(char *line, cmd_struct **command) {
     cmd->dst_method = -1;
     cmd->length = 0;
 
-    /* check for command label */
-    if (extract_symbol(line, sym_name, ':')) {
-        cmd->label = malloc(strlen(sym_name) + 1);
-        if (cmd->label == NULL) {
-            handle_dynamic_alloc_error();
-        }
-        strcpy(cmd->label, sym_name);
-    }
     /* get command opcode */
     cmd->opcode = extract_opcode(line);
 
