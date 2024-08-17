@@ -36,6 +36,12 @@ int preprocess(file_struct *curr_file) {
     while (fgets(line, sizeof(line), file)) {
         n_line++;
         /* preprocess line if not empty */
+        if (is_line_too_long(line)) {
+            add_error_to_file(curr_file, ERROR_ID_35, n_line, PRE_STAGE);
+            while (strchr(line, '\n') == NULL && fgets(line, MAX_LINE_LENGTH, file) != NULL) {
+            }
+        }
+
         if (strcmp(line, "\n") != 0) {
             error_id = process_line(line, file, proccessed_file, macros, curr_file, &n_line);
             if (error_id != ERROR_ID_0) {
@@ -114,6 +120,11 @@ void handle_macro(char *line, FILE *file, MacroTable *macros, file_struct *curr_
 
     start_line = *n_line;
     while (fgets(line, MAX_LINE_LENGTH, file) != NULL) {
+        if (is_line_too_long(line)) {
+            add_error_to_file(curr_file, ERROR_ID_35, *n_line, PRE_STAGE);
+            while (strchr(line, '\n') == NULL && fgets(line, MAX_LINE_LENGTH, file) != NULL) {
+            }
+        }
         /* check if line is a comment line */
         if (is_comment(line)) {
             continue;
