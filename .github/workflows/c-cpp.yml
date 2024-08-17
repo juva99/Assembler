@@ -30,4 +30,5 @@ jobs:
           --show-leak-kinds=all \
           --track-origins=yes \
           --verbose \
+          --error-exitcode=42 \
           ./assembler test_files/test
