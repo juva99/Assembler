@@ -13,17 +13,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: make
-      run: make
-    - name: apt install dependency
-      run: |
-        sudo apt-get -y install valgrind
-    - name: run test
-      run: |
-        make
-        ./openu_project test_files/test
-    - name: memory leak test
-      run: |
-        make
-        valgrind ./openu_project test_files/test
+      - uses: actions/checkout@v4
+      - name: make
+        run: make
+      - name: apt install dependency
+        run: |
+          sudo apt-get -y install valgrind
+      - name: run test
+        run: |
+          make
+          ./assembler test_files/test
+      - name: memory leak test
+        run: |
+          make
+          valgrind --leak-check=full \
+          --show-leak-kinds=all \
+          --track-origins=yes \
+          --verbose \
+          ./assembler test_files/test
