@@ -80,6 +80,18 @@ void validate_entries(file_struct *curr_file, SymTable *sym_table, SymbolList *e
     }
 }
 
+int search_list(SymbolList *list, char *symbol) {
+    Node *curr_node = list->head;
+
+    while (curr_node != NULL) {
+        if (strcmp(curr_node->label, symbol) == 0) {
+            return 1;
+        }
+        curr_node = curr_node->next;
+    }
+    return 0;
+}
+
 
 /* use the func that links filename to extensions */
 int save_symbol_list(char *filename, ListType list_type, SymbolList *list) {

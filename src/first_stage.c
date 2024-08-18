@@ -91,7 +91,9 @@ int first_stage_process(file_struct *curr_file) {
             /* extract symbol name */
             curr_error_id = extract_symbol(line, sym_name, ' ');
             if (curr_error_id == ERROR_ID_0) {
-                add_symbol(entries_list, sym_name, n_line);
+                if (!search_list(entries_list, sym_name)) {
+                    add_symbol(entries_list, sym_name, n_line);
+                }
             } else {
                 add_error_to_file(curr_file, curr_error_id, n_line, FIRST_STAGE);
             }

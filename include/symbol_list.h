@@ -75,6 +75,20 @@ void print_symbol_list(SymbolList *list);
 void validate_entries(file_struct *curr_file, SymTable *sym_table, SymbolList *entries);
 
 /**
+ * @brief Searches for a symbol in a linked list of symbols.
+ *
+ * This function searches through a linked list of symbols to determine if a given
+ * symbol exists in the list. It iterates through each node in the list, comparing
+ * the symbol in each node to the target symbol. If the symbol is found, the function
+ * returns 1. If the symbol is not found by the end of the list, the function returns 0.
+ *
+ * @param list: A pointer to the `SymbolList` structure representing the linked list of symbols.
+ * @param symbol: The symbol to search for. It should be a null-terminated C string.
+ * @return Returns 1 if the symbol is found in the list, otherwise returns 0.
+ */
+int search_list(SymbolList *list, char *symbol);
+
+/**
  * @brief Saves the contents of the symbol list to a file.
  *
  * This function saves the symbols in the list to a file with the appropriate extension based on the list type (entry or extern).
