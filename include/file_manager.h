@@ -115,8 +115,9 @@ void enlarge_errors_arr(file_struct *file);
  * of the assembly process where the error was found.
  *
  * @param file: A pointer to the file structure containing the errors to be printed.
+ * @param index: index of file.
  */
-void print_errors(file_struct *file);
+void print_errors(file_struct *file, int index);
 
 /**
  * @brief Handles dynamic memory allocation errors.

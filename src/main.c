@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
 
     /* Print errors for each file */
     for (i = 0; i < num_files; ++i) {
-        print_errors(files + i);
+        print_errors(files + i, i);
         if ((files + i)->errors_count > 0) {
             is_error = 1;
         }

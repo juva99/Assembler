@@ -144,18 +144,21 @@ void enlarge_errors_arr(file_struct *file) {
     file->errors_size *= 2;
 }
 
-void print_errors(file_struct *file) {
-    int i;
-    char *relevant_file = NULL;
+void print_errors(file_struct *file, int index) {
+    int i, error_id, error_line, stage_id;
+    char *relevant_file;
+
+    if (index == 0) {
+        printf("--------------------------------------------------------------\n");
+    }
     if (file->errors_count == 0) {
         fprintf(stdout, "File %s passed\n", file->filename);
+        printf("--------------------------------------------------------------\n");
         return;
     }
-
+    fprintf(stdout, "File %s failed at %s stage\n", file->filename, stage_name[file->errors[0].stage_error]);
     fprintf(stderr, "List of errors in file \'%s\':\n", file->filename);
     for (i = 0; i < file->errors_count; i++) {
-        int error_id, error_line, stage_id;
-
         error_id = file->errors[i].error_id;
         error_line = file->errors[i].error_line;
         stage_id = file->errors[i].stage_error;
@@ -182,6 +185,7 @@ void print_errors(file_struct *file) {
         free(relevant_file);
     }
     fprintf(stderr, "Overall %d errors.\n\n", file->errors_count);
+    printf("--------------------------------------------------------------\n");
 }
 
 void handle_dynamic_alloc_error() {
