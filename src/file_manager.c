@@ -146,7 +146,7 @@ void enlarge_errors_arr(file_struct *file) {
 
 void print_errors(file_struct *file) {
     int i;
-    char *relevant_file;
+    char *relevant_file = NULL;
     if (file->errors_count == 0) {
         fprintf(stdout, "File %s passed\n", file->filename);
         return;
