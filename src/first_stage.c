@@ -71,28 +71,11 @@ int first_stage_process(file_struct *curr_file) {
                 add_error_to_file(curr_file, ERROR_ID_38, n_line, FIRST_STAGE);
             }
             curr_error_id = extract_symbol(line, sym_name, ' ');
-            switch (curr_error_id) {
-                case ERROR_ID_0: {
-                    curr_error_id = insert_symbol_table(sym_table, sym_name, ".external", 0);
-                    if (curr_error_id != ERROR_ID_0) {
-                        add_error_to_file(curr_file, curr_error_id, n_line, FIRST_STAGE);
-                    }
-                    break;
-                }
-                case ERROR_ID_37: {
-                    /* error - symbol name is invalid  */
-                    add_error_to_file(curr_file, ERROR_ID_37, n_line, FIRST_STAGE);
-                    break;
-                }
-                case ERROR_ID_36: {
-                    /* error - symbol name is missing */
-                    add_error_to_file(curr_file, ERROR_ID_36, n_line, FIRST_STAGE);
-                    break;
-                }
-                default: {
-                    /*unreachable code */
-                    return 0;
-                }
+            if (curr_error_id == ERROR_ID_0) {
+                curr_error_id = insert_symbol_table(sym_table, sym_name, ".external", 0);
+                add_error_to_file(curr_file, curr_error_id, n_line, FIRST_STAGE);
+            } else {
+                add_error_to_file(curr_file, curr_error_id, n_line, FIRST_STAGE);
             }
             continue;
         }
@@ -103,31 +86,15 @@ int first_stage_process(file_struct *curr_file) {
                 add_error_to_file(curr_file, ERROR_ID_38, n_line, FIRST_STAGE);
             }
             curr_error_id = extract_symbol(line, sym_name, ' ');
-            switch (curr_error_id) {
-                case ERROR_ID_0: {
-                    add_symbol(entries_list, sym_name, n_line);
-                    break;
-                }
-                case ERROR_ID_37: {
-                    /* error - symbol name is invalid  */
-                    add_error_to_file(curr_file, ERROR_ID_37, n_line, FIRST_STAGE);
-                    break;
-                }
-                case ERROR_ID_36: {
-                    /* error - symbol name is missing */
-                    add_error_to_file(curr_file, ERROR_ID_36, n_line, FIRST_STAGE);
-                    break;
-                }
-                default: {
-                    /*unreachable code */
-                    return 0;
-                }
+            if (curr_error_id == ERROR_ID_0) {
+                add_symbol(entries_list, sym_name, n_line);
+            } else {
+                add_error_to_file(curr_file, curr_error_id, n_line, FIRST_STAGE);
             }
             continue;
         }
 
         /* construct the instruction and return the length of it */
-
         curr_error_id = build_command(line, &command);
         if (curr_error_id != ERROR_ID_0) {
             add_error_to_file(curr_file, curr_error_id, n_line, FIRST_STAGE);
