@@ -213,12 +213,18 @@ int is_symbol_declaration(char *line) {
 
 int extract_symbol(char *line, char *sym_name, char delimeter) {
     int ret_code;
+    char *double_dot;
     char first_token[MAX_LINE_LENGTH] = "";
     char original_line[MAX_LINE_LENGTH];
 
     ret_code = 1;
     strcpy(original_line, line);
-
+    if (delimeter == ':') {
+        double_dot = strchr(line, delimeter);
+        if (double_dot != NULL && !isspace((unsigned char) *(++double_dot))) {
+            return ERROR_ID_42;
+        }
+    }
     extract_next(line, first_token, delimeter);
 
     if (strcmp(first_token, "") == 0) {
