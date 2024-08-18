@@ -32,6 +32,7 @@ void add_symbol(SymbolList *list, char *label, int value) {
     /* place node in list */
     if (list->head == NULL) {
         list->head = node;
+        list->count++;
         return;
     }
     node->next = list->head;
