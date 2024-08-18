@@ -31,7 +31,7 @@ typedef enum {
  * @param next: The buffer where the extracted substring will be stored. It should be large enough to hold the substring.
  * @param delimiter: The character that delimits the substrings in `src`.
  * @param remove_spaces: If non-zero, leading and trailing spaces are removed from both `src` and `next`.
- * @return Returns 1 if a substring was found and extracted, otherwise returns 0.
+ * @return Returns 1 if the delimiter was found, otherwise returns 0.
  *
  * @note The function does not check for NULL pointers; ensure that `src` and `next` are valid pointers.
  * @note If the delimiter is not found, the function will extract up to the end of the string or newline.
@@ -49,7 +49,7 @@ int extract_next_full(char *src, char *next, char delimiter, int remove_spaces);
  * @param src: The source string to extract from. It should be a null-terminated C string.
  * @param next: The buffer where the extracted substring will be stored. It should be large enough to hold the substring.
  * @param delimiter: The character that delimits the substrings in `src`.
- * @return Returns 1 if a substring was found and extracted, otherwise returns 0.
+ * @return Returns 1 if the delimiter was found, otherwise returns 0.
  *
  * @note The function does not check for NULL pointers; ensure that `src` and `next` are valid pointers.
  * @note This function modifies the `src` string by shifting the remaining content to the beginning.

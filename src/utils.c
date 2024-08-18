@@ -32,7 +32,10 @@ int extract_next(char *src, char *next, char delimiter) {
 int extract_next_full(char *src, char *next, char delimiter, int remove_spaces) {
     char *ptr = src;
     char *rest_start;
-    int found = 0;
+    int del_found, found = 0;
+
+    /* check if delimiter in string */
+    del_found = strchr(src, delimiter) != NULL;
 
     /* Skip leading spaces */
     while (remove_spaces && isspace((unsigned char) *ptr)) {
@@ -71,7 +74,7 @@ int extract_next_full(char *src, char *next, char delimiter, int remove_spaces) 
     }
     /* Null-terminate the modified source string */
     *ptr = '\0';
-    return (found > 0);
+    return del_found;
 }
 
 int what_instrct(char *token) {
