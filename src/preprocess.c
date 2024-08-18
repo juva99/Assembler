@@ -184,5 +184,3 @@ int is_macro_name_valid(char *mac_name) {
 
     return ERROR_ID_0;
 }
-
-
