@@ -362,7 +362,7 @@ int encode_string(char *line, code_cont **data, int *dc, int n_line) {
 
         count++;
     }
-    extract_next_full(line, curr_token, '\"', 0);
+    extract_next_full(line, curr_token, ' ', 1);
     if (*curr_token != '\0') {
         /* error - extra text after string " */
         return ERROR_ID_40;

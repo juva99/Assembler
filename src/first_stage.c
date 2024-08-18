@@ -97,6 +97,11 @@ int first_stage_process(file_struct *curr_file) {
             }
             continue;
         }
+        /* if command is a symbol add address to symbol table */
+        if (symbol) {
+            curr_error_id = insert_symbol_table(sym_table, sym_name, ".code", ic + IC_OFFSET);
+            add_error_to_file(curr_file, curr_error_id, n_line, FIRST_STAGE);
+        }
 
         /* construct the instruction */
         curr_error_id = build_command(line, &command);
@@ -104,11 +109,7 @@ int first_stage_process(file_struct *curr_file) {
             add_error_to_file(curr_file, curr_error_id, n_line, FIRST_STAGE);
             continue;
         }
-        /* if command is a symbol add address to symbol table */
-        if (symbol) {
-            curr_error_id = insert_symbol_table(sym_table, sym_name, ".code", ic + IC_OFFSET);
-            add_error_to_file(curr_file, curr_error_id, n_line, FIRST_STAGE);
-        }
+
         /* build binary command and add to code container while increasing IC */
         add_command(&code, command, &ic, n_line);
         free_command(command);
