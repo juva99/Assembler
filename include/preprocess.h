@@ -33,7 +33,9 @@ int preprocess(file_struct *curr_file);
  * @param file: The source file being preprocessed.
  * @param final_file: The file where the preprocessed content is written.
  * @param macros: A pointer to the macro table used to store and retrieve macro definitions.
- * @return Returns 0 if the line is processed successfully, or an error code if an issue occurs.
+ * @param curr_file: A pointer to the current file structure for error reporting.
+ * @param n_line: A pointer to the current line number being processed.
+ * @return Returns `ERROR_ID_0` if the line is processed successfully, or an error code if an issue occurs.
  */
 int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros, file_struct *curr_file, int *n_line);
 
@@ -57,7 +59,8 @@ int is_macro(char *line);
  * @param line: The line containing the macro declaration. It should be a null-terminated C string.
  * @param file: The source file being preprocessed.
  * @param macros: A pointer to the macro table used to store the macro definition.
- * @return Returns 0 if the macro is processed successfully, or an error code if an issue occurs.
+ * @param curr_file: A pointer to the current file structure for error reporting.
+ * @param n_line: A pointer to the current line number being processed.
  */
 void handle_macro(char *line, FILE *file, MacroTable *macros, file_struct *curr_file, int *n_line);
 
@@ -68,7 +71,7 @@ void handle_macro(char *line, FILE *file, MacroTable *macros, file_struct *curr_
  * is not NULL, not an instruction, opcode, or register name, and is not "macr".
  *
  * @param mac_name: The macro name to be validated. It should be a null-terminated C string.
- * @return Returns 0 if the macro name is valid, or an error code if the name is invalid.
+ * @return Returns `ERROR_ID_0` if the macro name is valid, or an error code if the name is invalid.
  */
 int is_macro_name_valid(char *mac_name);
 
