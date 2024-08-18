@@ -2,21 +2,25 @@
 CC = gcc
 CFLAGS = -Wall -ansi -pedantic -std=c90 -Werror
 
+# Directories
+SRC_DIR = src
+BIN_DIR = bin
+
 # Source files
-SRC = src/main.c \
-      src/macro_table.c \
-      src/preprocess.c \
-      src/utils.c \
-      src/symbol_table.c \
-      src/code_container.c \
-      src/command.c \
-      src/second_stage.c \
-      src/symbol_list.c \
-      src/first_stage.c \
-      src/file_manager.c
+SRC = $(SRC_DIR)/main.c \
+      $(SRC_DIR)/macro_table.c \
+      $(SRC_DIR)/preprocess.c \
+      $(SRC_DIR)/utils.c \
+      $(SRC_DIR)/symbol_table.c \
+      $(SRC_DIR)/code_container.c \
+      $(SRC_DIR)/command.c \
+      $(SRC_DIR)/second_stage.c \
+      $(SRC_DIR)/symbol_list.c \
+      $(SRC_DIR)/first_stage.c \
+      $(SRC_DIR)/file_manager.c
 
 # Object files
-OBJ = $(SRC:.c=.o)
+OBJ = $(patsubst $(SRC_DIR)/%.c,$(BIN_DIR)/%.o,$(SRC))
 
 # Executable name
 TARGET = assembler
@@ -29,10 +33,13 @@ $(TARGET): $(OBJ)
 	$(CC) $(OBJ) -o $(TARGET)
 
 # Compile each source file into an object file
-%.o: %.c
+$(BIN_DIR)/%.o: $(SRC_DIR)/%.c | $(BIN_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
+
+# Ensure the bin directory exists
+$(BIN_DIR):
+	mkdir -p $(BIN_DIR)
 
 # Clean the build
 clean:
-	rm -f $(OBJ) $(TARGET)
-
+	rm -f $(BIN_DIR)/*.o $(TARGET)
