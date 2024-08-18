@@ -336,19 +336,16 @@ int encode_string(char *line, code_cont **data, int *dc, int n_line) {
     char curr_token[MAX_LINE_LENGTH];
 
     count = 0;
-
-    if (strchr(line, '\"') == NULL) {
+    if (!extract_next_full(line, curr_token, '\"', 0)) {
         return ERROR_ID_39;
     }
-    extract_next_full(line, curr_token, '\"', 0);
     if (*curr_token != '\0') {
         /* error - extra text before first " */
         return ERROR_ID_15;
     }
-    if (strchr(line, '\"') == NULL) {
+    if (!extract_next_full(line, curr_token, '\"', 0)) {
         return ERROR_ID_39;
     }
-    extract_next_full(line, curr_token, '\"', 0);
     while (curr_token[count] != '\0') {
         val = conv_to_ushort((int) curr_token[count]);
         add_data(data, val, dc, n_line);
