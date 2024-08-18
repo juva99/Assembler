@@ -27,11 +27,6 @@
 #define MAX_LABEL_LENGTH 31
 
 /**
- * @brief Maximum length of an opcode in the source code.
- */
-#define MAX_OPCODE_LENGTH 4
-
-/**
  * @brief Maximum number of addressing methods supported by the assembler.
  */
 #define MAX_ADDRESS_METHODS 4
@@ -57,19 +52,9 @@
 #define FINAL_FILE_EXTENSION ".ob"
 
 /**
- * @brief Length of the file extension for entries files.
- */
-#define ENTERIES_FILE_EXTENSION_LEN 4
-
-/**
  * @brief File extension for entries files, which list entry labels.
  */
 #define ENTERIES_FILE_EXTENSION ".ent"
-
-/**
- * @brief Length of the file extension for externals files.
- */
-#define EXTERNS_FILE_EXTENSION_LEN 4
 
 /**
  * @brief File extension for externals files, which list external symbols.
@@ -99,7 +84,7 @@
 /**
  * @brief Minimum numeric value allowed for command operands.
  */
-#define MIN_COMMAND_NUM_VALUE -2048
+#define MIN_COMMAND_NUM_VALUE (-2048)
 
 /**
  * @brief Maximum allowed size for the binary object file, in bytes.
