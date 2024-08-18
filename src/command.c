@@ -96,8 +96,11 @@ int build_command(char *line, cmd_struct **command) {
             break;
         }
         case 2: {
-            extract_next(line, arg, ',');
             dup_argument(&(cmd->src), arg);
+            if (!extract_next(line, arg, ',')) {
+                free_command(cmd);
+                return ERROR_ID_41;
+            }
             extract_next(line, arg, ' ');
             if (strcmp(line, "") != 0) {
                 /* error  - command extra text */
