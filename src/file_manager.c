@@ -50,7 +50,7 @@ char *error_desc[] = {
         /* 21 */
         "Command: Invalid opcode", /*build_command */
         /* 22 */
-        "Command: Extra text after command", /*build_command*/
+        "Command: Extra text in command", /*build_command*/
         /* 23 */
         "Command: invalid dst",
         /* 24 */
