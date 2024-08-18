@@ -297,13 +297,8 @@ int encode_numeric_data(char *line, code_cont **data, int *dc, int n_line) {
 
     while (extract_next(line, curr_token, ',')) {
         if (*curr_token == '\0') {
-            if (count == 0) {
-                /* error - no numeric values */
-                return ERROR_ID_16;
-            } else {
-                /*error - line finished with ',' */
-                return ERROR_ID_17;
-            }
+            /*error - line finished with ',' */
+            return ERROR_ID_17;
         }
         i = 0;
         if (*curr_token == '-') {
@@ -325,7 +320,10 @@ int encode_numeric_data(char *line, code_cont **data, int *dc, int n_line) {
 
         count++;
     }
-
+    if (count == 0) {
+        /* error - no numeric values */
+        return ERROR_ID_16;
+    }
     return ERROR_ID_0;
 }
 
