@@ -112,8 +112,11 @@ void create_file(file_struct *file, char *filename) {
 
 void add_error_to_file(file_struct *file, int error_id, int error_line, STAGE_ERROR stage_error) {
     int i;
-
     i = file->errors_count;
+    /* skip if error ok */
+    if (error_id == ERROR_ID_0) {
+        return;
+    }
 
     if (file->errors_count == file->errors_size) {
         enlarge_errors_arr(file);

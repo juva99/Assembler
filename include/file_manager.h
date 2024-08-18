@@ -59,7 +59,9 @@ typedef enum ERROR_IDS {
     ERROR_ID_37 = 37,
     ERROR_ID_38 = 38,
     ERROR_ID_39 = 39,
-    ERROR_ID_40 = 40
+    ERROR_ID_40 = 40,
+    ERROR_ID_41 = 41,
+    ERROR_ID_42 = 42
 } ERROR_IDS;
 
 typedef struct file_struct {
@@ -86,6 +88,7 @@ void create_file(file_struct *file, char *filename);
  * This function records an error in the file structure's error list, including the error ID, the line
  * where the error occurred, and the stage of the assembly process in which the error was found.
  * If the error array is full, it is enlarged to accommodate more errors.
+ * If error id is OK (value 0) then the function will not add the error to the file
  *
  * @param file: A pointer to the file structure where the error will be recorded.
  * @param error_id: The ID of the error being recorded.
