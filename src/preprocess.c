@@ -76,6 +76,9 @@ int process_line(char line[], FILE *file, FILE *final_file, MacroTable *macros, 
         handle_macro(line, file, macros, curr_file, n_line);
         return ERROR_ID_0;
     } else if (is_member(macros, first_token)) {
+        if (strlen(line) > 0) {
+            return ERROR_ID_43;
+        }
         mac_name = first_token;
         mac_content = search(macros, mac_name);
         if (mac_content == NULL) {
