@@ -33,6 +33,7 @@ int extract_next_full(char *src, char *next, char delimiter, int remove_spaces) 
     char *ptr = src;
     char *rest_start;
     int del_found, found = 0;
+    char *end;
 
     /* check if delimiter in string */
     del_found = strchr(src, delimiter) != NULL;
@@ -43,10 +44,11 @@ int extract_next_full(char *src, char *next, char delimiter, int remove_spaces) 
     }
 
     /* Copy characters to next until reaching delimiter or null terminator is encountered */
+    end = next;
     while (*ptr != delimiter && *ptr != '\0' && *ptr != '\n') {
         found++;
-        *next = *ptr;
-        next++;
+        *end = *ptr;
+        end++;
         ptr++;
     }
     if (*ptr == delimiter) {
@@ -54,10 +56,18 @@ int extract_next_full(char *src, char *next, char delimiter, int remove_spaces) 
             found = 1;
         ptr++;
     }
-    /* Null-terminate the next string */
-    *next = '\0';
 
-    /* Skip spaces after the first word */
+    /* Remove trailing spaces */
+    if (remove_spaces) {
+        while (end > next && isspace((unsigned char) *(end - 1))) {
+            end--;
+        }
+    }
+
+    /* Null-terminate the next string */
+    *end = '\0';
+
+    /* Skip spaces after the delimiter */
     while (remove_spaces && isspace((unsigned char) *ptr)) {
         ptr++;
     }
