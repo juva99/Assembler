@@ -298,7 +298,7 @@ int encode_numeric_data(char *line, code_cont **data, int *dc, int n_line) {
 
     count = 0;
 
-    while (extract_next(line, curr_token, ',')) {
+    while (extract_next(line, curr_token, ',') || strlen(curr_token) > 0) {
         if (*curr_token == '\0') {
             /*error - line finished with ',' */
             return ERROR_ID_17;
