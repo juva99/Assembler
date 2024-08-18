@@ -32,7 +32,10 @@ int extract_next(char *src, char *next, char delimiter) {
 int extract_next_full(char *src, char *next, char delimiter, int remove_spaces) {
     char *ptr = src;
     char *rest_start;
-    int found = 0;
+    int del_found, found = 0;
+
+    /* check if delimiter in string */
+    del_found = strchr(src, delimiter) != NULL;
 
     /* Skip leading spaces */
     while (remove_spaces && isspace((unsigned char) *ptr)) {
@@ -71,7 +74,7 @@ int extract_next_full(char *src, char *next, char delimiter, int remove_spaces) 
     }
     /* Null-terminate the modified source string */
     *ptr = '\0';
-    return (found > 0);
+    return del_found;
 }
 
 int what_instrct(char *token) {
@@ -213,12 +216,18 @@ int is_symbol_declaration(char *line) {
 
 int extract_symbol(char *line, char *sym_name, char delimeter) {
     int ret_code;
+    char *double_dot;
     char first_token[MAX_LINE_LENGTH] = "";
     char original_line[MAX_LINE_LENGTH];
 
     ret_code = 1;
     strcpy(original_line, line);
-
+    if (delimeter == ':') {
+        double_dot = strchr(line, delimeter);
+        if (double_dot != NULL && !isspace((unsigned char) *(++double_dot))) {
+            return ERROR_ID_42;
+        }
+    }
     extract_next(line, first_token, delimeter);
 
     if (strcmp(first_token, "") == 0) {
@@ -289,15 +298,10 @@ int encode_numeric_data(char *line, code_cont **data, int *dc, int n_line) {
 
     count = 0;
 
-    while (extract_next(line, curr_token, ',')) {
+    while (extract_next(line, curr_token, ',') || strlen(curr_token) > 0) {
         if (*curr_token == '\0') {
-            if (count == 0) {
-                /* error - no numeric values */
-                return ERROR_ID_16;
-            } else {
-                /*error - line finished with ',' */
-                return ERROR_ID_17;
-            }
+            /*error - line finished with ',' */
+            return ERROR_ID_17;
         }
         i = 0;
         if (*curr_token == '-') {
@@ -319,7 +323,10 @@ int encode_numeric_data(char *line, code_cont **data, int *dc, int n_line) {
 
         count++;
     }
-
+    if (count == 0) {
+        /* error - no numeric values */
+        return ERROR_ID_16;
+    }
     return ERROR_ID_0;
 }
 
@@ -329,20 +336,28 @@ int encode_string(char *line, code_cont **data, int *dc, int n_line) {
     char curr_token[MAX_LINE_LENGTH];
 
     count = 0;
-
-    extract_next_full(line, curr_token, '\"', 0);
+    if (!extract_next_full(line, curr_token, '\"', 0)) {
+        return ERROR_ID_39;
+    }
     if (*curr_token != '\0') {
         /* error - extra text before first " */
         return ERROR_ID_15;
     }
-
-    extract_next_full(line, curr_token, '\"', 0);
+    if (!extract_next_full(line, curr_token, '\"', 0)) {
+        return ERROR_ID_39;
+    }
     while (curr_token[count] != '\0') {
         val = conv_to_ushort((int) curr_token[count]);
         add_data(data, val, dc, n_line);
 
         count++;
     }
+    extract_next_full(line, curr_token, '\"', 0);
+    if (*curr_token != '\0') {
+        /* error - extra text after string " */
+        return ERROR_ID_40;
+    }
+
     /*null-terminator*/
     add_data(data, 0, dc, n_line);
     count++;
@@ -411,4 +426,3 @@ int is_line_too_long(const char *line) {
     /* Get the length of the string */
     return strlen(line) > MAX_LINE_LENGTH - 2;
 }
-

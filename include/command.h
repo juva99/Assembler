@@ -46,17 +46,6 @@ void free_command(cmd_struct *cmd);
 int build_command(char *line, cmd_struct **command);
 
 /**
- * @brief Duplicates an argument string.
- *
- * This function allocates memory for and duplicates the given string, storing the result in the destination pointer.
- * If memory allocation fails, the program handles the error appropriately.
- *
- * @param dest: A pointer to the destination pointer where the duplicated string will be stored.
- * @param str: The string to be duplicated.
- */
-void dup_argument(char **dest, char *str);
-
-/**
  * @brief Identifies the opcode corresponding to a given token.
  *
  * This function searches the opcode array to find the index of the given token. If the token matches an opcode,

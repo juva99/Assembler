@@ -84,7 +84,7 @@ int build_command(char *line, cmd_struct **command) {
                 return ERROR_ID_22;
             }
 
-            dup_argument(&(cmd->dst), arg);
+            cmd->dst = strduplic(arg);
             cmd->length = 2;
             cmd->dst_method = get_dst_add_method(cmd->opcode, cmd->dst);
             if (cmd->dst_method < 0) {
@@ -96,8 +96,11 @@ int build_command(char *line, cmd_struct **command) {
             break;
         }
         case 2: {
-            extract_next(line, arg, ',');
-            dup_argument(&(cmd->src), arg);
+            if (!extract_next(line, arg, ',')) {
+                free_command(cmd);
+                return ERROR_ID_41;
+            }
+            cmd->src = strduplic(arg);
             extract_next(line, arg, ' ');
             if (strcmp(line, "") != 0) {
                 /* error  - command extra text */
@@ -105,7 +108,7 @@ int build_command(char *line, cmd_struct **command) {
                 return ERROR_ID_22;
             }
 
-            dup_argument(&(cmd->dst), arg);
+            cmd->dst = strduplic(arg);
 
             cmd->src_method = get_src_add_method(cmd->opcode, cmd->src);
             cmd->dst_method = get_dst_add_method(cmd->opcode, cmd->dst);
@@ -144,14 +147,6 @@ int build_command(char *line, cmd_struct **command) {
         }
     }
     return ERROR_ID_0;
-}
-
-void dup_argument(char **dest, char *str) {
-    *(dest) = malloc(strlen(str) + 1);
-    if (*(dest) == NULL) {
-        handle_dynamic_alloc_error();
-    }
-    strcpy(*(dest), str);
 }
 
 int what_opcode(char *token) {

@@ -1,96 +1,103 @@
 #include "../include/file_manager.h"
 
 char *error_desc[] = {
-    /* 0  - no error*/
-    "",
+        /* 0  - no error*/
+        "",
 
-    /* externals errors */
-    /* 1 */
-    "File opening failed",
-    /* 2 */
-    "Dynamic memory allocation failed",
-    /* 3 */
-    "Creating macro table failed",
-    /* 4 */
-    "Opening processed file for writing failed",
-    /* 5 */
-    "",
-    /* 6 */
-    "",
-    /* 7 */
-    "",
-    /* 8 */
-    "",
-    /* 9 */
-    "Errors were found in first stage",
-    /* 10 */
-    "",
+        /* externals errors */
+        /* 1 */
+        "General: File opening failed",
+        /* 2 */
+        "General: Dynamic memory allocation failed",
+        /* 3 */
+        "General: Creating macro table failed",
+        /* 4 */
+        "General: Opening processed file for writing failed",
+        /* 5 */
+        "",
+        /* 6 */
+        "",
+        /* 7 */
+        "",
+        /* 8 */
+        "",
+        /* 9 */
+        "General: Errors were found in first stage",
+        /* 10 */
+        "",
 
-    /*internals errors*/
-    /* 11 */
-    "Trying to initailize macro, but it is not declared",
-    /* 12 */
-    "Macro name is invalid",
-    /* 13 */
-    "Macro declaration error - Extraneous text after end of declaration",
-    /* 14 */
-    "Macro declaration error - Macro name is used more than once", /*insert*/
-    /* 15 */
-    "Data - string declaration error - Extraneous text after first \"", /*encode string*/
-    /* 16 */
-    "Data - numeric declaraion error - No numeric values", /*encode numeric data*/
-    /* 17 */
-    "Data - numeric declaraion error - declaration ends with ','", /*encode numeric data*/
-    /* 18 */
-    "Data - numeric declaraion error - non-numeric value entered", /*encode numeric data*/
-    /* 19 */
-    "Invalid data type", /*encode_data - maybe the error can be removed*/
-    /* 20 */
-    "Entry label was never initialized", /*validate_entries, check if the error description is good */
-    /* 21 */
-    "Command - Invalid opcode", /*build_command */
-    /* 22 */
-    "Command - Extraneous text after command", /*build_command*/
-    /* 23 */
-    "Command - invalid dst",
-    /* 24 */
-    "Command - src or dst method illegal",
-    /* 25 */
-    "Command - invalid arguments count",
-    /* 26 */
-    "Symbol Table - Label name is used more than once",
-    /* 27 */
-    "Macro declaration error - Macro declaration without macro name",
-    /* 28 */
-    "Macro declaration error - Macro name cant be instruction, opcode or register name",
-    /* 29 */
-    "Macro declaration error - Macro name cannot be 'macr'",
-    /* 30 */
-    "Data - numeric value out of bound",
-    /* 31 */
-    "Command - numeric value out of bound",
-    /* 32 */
-    "Data - Binary file size exceeds maximum value",
-    /* 33 */
-    "Command - Symbol used is not defined",
-    /* 34 */
-    "Macro declaration error - Extraneous text after 'endmacr'",
-    /* 35 */
-    "Line too long",
-    /* 36 */
-    "Symbol name is missing",
-    /* 37 */
-    "Symbol name is invalid",
-    /* 38 */
-    "Symbol declaration cannot contain .extern or .entry"
+        /*internals errors*/
+        /* 11 */
+        "Macro: Trying to initialize macro, but it is not declared",
+        /* 12 */
+        "Macro: name is invalid",
+        /* 13 */
+        "Macro: Extra text after end of declaration",
+        /* 14 */
+        "Macro: Macro name is used more than once", /*insert*/
+        /* 15 */
+        "Data.String: Extra text after first \"", /*encode string*/
+        /* 16 */
+        "Data.Numeric: No numeric values", /*encode numeric data*/
+        /* 17 */
+        "Data.Numeric: declaration ends with ','", /*encode numeric data*/
+        /* 18 */
+        "Data.Numeric: non-numeric value entered", /*encode numeric data*/
+        /* 19 */
+        "Data: Invalid data type", /*encode_data - maybe the error can be removed*/
+        /* 20 */
+        "General: Entry label was never initialized", /*validate_entries, check if the error description is good */
+        /* 21 */
+        "Command: Invalid opcode", /*build_command */
+        /* 22 */
+        "Command: Extra text after command", /*build_command*/
+        /* 23 */
+        "Command: invalid dst",
+        /* 24 */
+        "Command: src or dst method illegal",
+        /* 25 */
+        "Command: invalid arguments count",
+        /* 26 */
+        "Symbol Table - Label name is used more than once",
+        /* 27 */
+        "Marco: Macro declaration without macro name",
+        /* 28 */
+        "Marco: Macro name cant be instruction, opcode or register name",
+        /* 29 */
+        "Marco: Macro name cannot be 'macr'",
+        /* 30 */
+        "Data.Numeric: value out of bound",
+        /* 31 */
+        "Command: numeric value out of bound",
+        /* 32 */
+        "General: Binary file size exceeds maximum value",
+        /* 33 */
+        "Command: Symbol used is not defined",
+        /* 34 */
+        "Macro: Extra text after 'endmacr'",
+        /* 35 */
+        "General: Line too long",
+        /* 36 */
+        "Symbol: name is missing",
+        /* 37 */
+        "Symbol: name is invalid",
+        /* 38 */
+        "Symbol: declaration cannot contain .extern or .entry",
+        /* 39 */
+        "Data.String: String missing \"",
+        /* 40 */
+        "Data.String: Extra text after string",
+        /* 41 */
+        "Command: Missing comma",
+        /* 42 */
+        "Symbol: no whitespace after ':'",
 };
 
 char *stage_name[] = {
-    "unassigned",
-    "pre-process",
-    "first",
-    "second"
-};
+        "unassigned",
+        "pre-process",
+        "first",
+        "second"};
 
 void create_file(file_struct *file, char *filename) {
     file->filename = filename;
@@ -105,8 +112,11 @@ void create_file(file_struct *file, char *filename) {
 
 void add_error_to_file(file_struct *file, int error_id, int error_line, STAGE_ERROR stage_error) {
     int i;
-
     i = file->errors_count;
+    /* skip if error ok */
+    if (error_id == ERROR_ID_0) {
+        return;
+    }
 
     if (file->errors_count == file->errors_size) {
         enlarge_errors_arr(file);
@@ -136,7 +146,7 @@ void enlarge_errors_arr(file_struct *file) {
 
 void print_errors(file_struct *file) {
     int i;
-    char *relevant_file;
+    char *relevant_file = NULL;
     if (file->errors_count == 0) {
         fprintf(stdout, "File %s passed\n", file->filename);
         return;
