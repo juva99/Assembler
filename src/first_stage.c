@@ -38,11 +38,12 @@ int first_stage_process(file_struct *curr_file) {
         sym_name[0] = '\0';
         /* check if line has a symbol #3 */
         if (is_symbol_declaration(line)) {
-            if (extract_symbol(line, sym_name, ':') == ERROR_ID_0) {
+            curr_error_id = extract_symbol(line, sym_name, ':');
+            if (curr_error_id == ERROR_ID_0) {
                 symbol = 1;
             } else {
                 /* error - symbol name is invalid */
-                add_error_to_file(curr_file, ERROR_ID_37, n_line, FIRST_STAGE);
+                add_error_to_file(curr_file, curr_error_id, n_line, FIRST_STAGE);
                 continue;
             }
         }
