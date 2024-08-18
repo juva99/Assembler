@@ -6,13 +6,13 @@ char *error_desc[] = {
 
         /* externals errors */
         /* 1 */
-        "General: File opening failed",
+        "General: file opening failed",
         /* 2 */
-        "General: Dynamic memory allocation failed",
+        "General: dynamic memory allocation failed",
         /* 3 */
-        "General: Creating macro table failed",
+        "General: creating macro table failed",
         /* 4 */
-        "General: Opening processed file for writing failed",
+        "General: opening processed file for writing failed",
         /* 5 */
         "",
         /* 6 */
@@ -22,35 +22,35 @@ char *error_desc[] = {
         /* 8 */
         "",
         /* 9 */
-        "General: Errors were found in first stage",
+        "General: errors were found in first stage",
         /* 10 */
         "",
 
         /*internals errors*/
         /* 11 */
-        "Macro: Trying to initialize macro, but it is not declared",
+        "Macro: trying to initialize macro, but it is not declared",
         /* 12 */
         "Macro: name is invalid",
         /* 13 */
-        "Macro: Extra text after end of declaration",
+        "Macro: extra text after end of declaration",
         /* 14 */
-        "Macro: Macro name is used more than once", /*insert*/
+        "Macro: macro name is used more than once", /*insert*/
         /* 15 */
-        "Data.String: Extra text after first \"", /*encode string*/
+        "Data.String: extra text after first \"", /*encode string*/
         /* 16 */
-        "Data.Numeric: No numeric values", /*encode numeric data*/
+        "Data.Numeric: no numeric values", /*encode numeric data*/
         /* 17 */
         "Data.Numeric: declaration ends with ','", /*encode numeric data*/
         /* 18 */
         "Data.Numeric: non-numeric value entered", /*encode numeric data*/
         /* 19 */
-        "Data: Invalid data type", /*encode_data - maybe the error can be removed*/
+        "Data: invalid data type", /*encode_data - maybe the error can be removed*/
         /* 20 */
-        "General: Entry label was never initialized", /*validate_entries, check if the error description is good */
+        "General: entry label was never initialized", /*validate_entries, check if the error description is good */
         /* 21 */
-        "Command: Invalid opcode", /*build_command */
+        "Command: invalid opcode", /*build_command */
         /* 22 */
-        "Command: Extra text in command", /*build_command*/
+        "Command: extra text in command", /*build_command*/
         /* 23 */
         "Command: invalid dst",
         /* 24 */
@@ -58,25 +58,25 @@ char *error_desc[] = {
         /* 25 */
         "Command: invalid arguments count",
         /* 26 */
-        "Symbol Table - Label name is used more than once",
+        "Symbol Table - label name is used more than once",
         /* 27 */
-        "Marco: Macro declaration without macro name",
+        "Marco: macro declaration without macro name",
         /* 28 */
-        "Marco: Macro name cant be instruction, opcode or register name",
+        "Marco: macro name cant be instruction, opcode or register name",
         /* 29 */
-        "Marco: Macro name cannot be 'macr'",
+        "Marco: macro name cannot be 'macr'",
         /* 30 */
         "Data.Numeric: value out of bound",
         /* 31 */
         "Command: numeric value out of bound",
         /* 32 */
-        "General: Binary file size exceeds maximum value",
+        "General: binary file size exceeds maximum value",
         /* 33 */
-        "Command: Symbol used is not defined",
+        "Command: symbol used is not defined",
         /* 34 */
-        "Macro: Extra text after 'endmacr'",
+        "Macro: extra text after 'endmacr'",
         /* 35 */
-        "General: Line too long",
+        "General: line too long",
         /* 36 */
         "Symbol: name is missing",
         /* 37 */
@@ -84,13 +84,16 @@ char *error_desc[] = {
         /* 38 */
         "Symbol: declaration cannot contain .extern or .entry",
         /* 39 */
-        "Data.String: String missing \"",
+        "Data.String: string missing \"",
         /* 40 */
-        "Data.String: Extra text after string",
+        "Data.String: extra text after string",
         /* 41 */
-        "Command: Missing comma",
+        "Command: missing comma",
         /* 42 */
         "Symbol: no whitespace after ':'",
+        /* 43 */
+        "Marco: extra text in macro usage",
+
 };
 
 char *stage_name[] = {
