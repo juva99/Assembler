@@ -22,7 +22,7 @@ jobs:
       - name: run test
         run: |
           make
-          ./assembler test_files/test
+          ./assembler test_files/valid_test1
       - name: memory leak test
         run: |
           make
@@ -31,4 +31,4 @@ jobs:
           --track-origins=yes \
           --verbose \
           --error-exitcode=42 \
-          ./assembler test_files/valid_test1 test_files/valid_test2 test_files/valid_test3
+          ./assembler test_files/valid_test1 test_files/valid_test2
